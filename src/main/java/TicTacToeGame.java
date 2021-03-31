@@ -1,5 +1,6 @@
 package main.java;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 class TicTacToe {
@@ -58,9 +59,10 @@ class TicTacToe {
         int opp = EMPTY;              // The other side
 //        Best reply;           // Opponent's best reply
         int simpleEval;       // Result of an immediate evaluation
-        int bestRow = 0;
-        int bestColumn = 0;
+        int bestRow = -1;
+        int bestColumn = -1;
         int value = -1;
+        int bestDepth = 1000;
 
         if (side == HUMAN) {
             opp = COMPUTER;
@@ -70,50 +72,62 @@ class TicTacToe {
         }
 
         // Hoekje pakken wordt gezien als beste set in TicTacToe
-        if (boardIsEmpty()){
-            return new Best(side, 0,0);
+        if (boardIsEmpty()) {
+            return new Best(side, 0, 0, 0);
         }
 
         if ((simpleEval = positionValue()) != UNCLEAR)
             return new Best(simpleEval);
 
+        ArrayList<Best> bests = new ArrayList<>();
+
 
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[y].length; x++) {
                 if (board[y][x] == EMPTY) {
-                    place(y, x, opp);
-                    int moveVal = minmax(side, opp);
+                    place(y, x, side);
+                    int[] moveVal = minmax(side, opp, 1);
 
                     place(y, x, EMPTY);
 
-                    if (moveVal == 10){
-                        return new Best(side,y,x);
-                    } else if (moveVal == -10){
-                        return new Best(side,y,x);
-                    }
+                    bests.add(new Best(moveVal[0], y, x, moveVal[1]));
 
-                    else if (moveVal > value) {
+                    /*if (moveVal == 10) {
+//                        System.out.println(moveVal);
+                        bests.add(new Best(moveVal,y,x));
+//                        return new Best(side, y, x);
+                    } else if (moveVal == -10) {
+//                        System.out.println(moveVal);
+                        bests.add(new Best(moveVal,y,x));
+
+//                        return new Best(side, y, x);
+                    } else*/
+                    if (moveVal[0] > value || moveVal[1] < bestDepth) {
                         bestRow = y;
                         bestColumn = x;
-                        value = moveVal;
+                        value = moveVal[0];
+                        bestDepth = moveVal[1];
                     }
+
 
                 }
             }
         }
 
-        return new Best(value, bestRow, bestColumn);
+        System.out.println(bests);
+
+        return new Best(value, bestRow, bestColumn, 0);
     }
 
-    public int minmax(int side, int opp) {
-        if (isAWin(COMPUTER)) {
-            return 10;
-        } else if (isAWin(HUMAN)) {
-            return -10;
+    public int[] minmax(int side, int opp, int depth) {
+        if (isAWin(HUMAN)) {
+            return new int[]{-10, depth};
+        } else if (isAWin(COMPUTER)) {
+            return new int[]{10, depth};
         }
 
         if (boardIsFull()) {
-            return 0;
+            return new int[]{0, depth};
         }
 
 
@@ -124,17 +138,18 @@ class TicTacToe {
                 if (board[y][x] == EMPTY) {
                     place(y, x, side);
 
+                    int[] result = minmax(opp, side, depth++);
                     if (side == COMPUTER) {
-                        max = Math.max(max, minmax(opp, side));
+                        max = Math.max(max, result[0]);
                     } else if (side == HUMAN) {
-                        min = Math.min(min, minmax(opp, side));
+                        min = Math.min(min, result[0]);
                     }
 
                     place(y, x, EMPTY);
                 }
             }
         }
-        return side == HUMAN ? max : min;
+        return side == COMPUTER ? new int[]{max, depth} : new int[]{min, depth};
     }
 
 
@@ -172,10 +187,10 @@ class TicTacToe {
         return true;
     }
 
-    public boolean boardIsEmpty(){
-        for (int i = 0; i < board.length; i++){
-            for (int j = 0; j < board[i].length; j++){
-                if (board[i][j] != EMPTY){
+    public boolean boardIsEmpty() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] != EMPTY) {
                     return false;
                 }
             }
@@ -273,15 +288,28 @@ class TicTacToe {
         int row;
         int column;
         int val;
+        int depth;
 
         public Best(int v) {
-            this(v, 0, 0);
+            this(v, 0, 0, 0);
         }
 
-        public Best(int v, int r, int c) {
+        public Best(int v, int r, int c, int d) {
             val = v;
             row = r;
             column = c;
+            depth = d;
+        }
+
+
+        @Override
+        public String toString() {
+            return "Best{" +
+                    "row=" + row +
+                    ", column=" + column +
+                    ", val=" + val +
+                    ", depth=" + depth +
+                    '}';
         }
     }
 
