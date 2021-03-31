@@ -69,6 +69,10 @@ class TicTacToe {
             opp = HUMAN;
         }
 
+        // Hoekje pakken wordt gezien als beste set in TicTacToe
+        if (boardIsEmpty()){
+            return new Best(side, 0,0);
+        }
 
         if ((simpleEval = positionValue()) != UNCLEAR)
             return new Best(simpleEval);
@@ -82,7 +86,13 @@ class TicTacToe {
 
                     place(y, x, EMPTY);
 
-                    if (moveVal > value) {
+                    if (moveVal == 10){
+                        return new Best(side,y,x);
+                    } else if (moveVal == -10){
+                        return new Best(side,y,x);
+                    }
+
+                    else if (moveVal > value) {
                         bestRow = y;
                         bestColumn = x;
                         value = moveVal;
@@ -155,6 +165,17 @@ class TicTacToe {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] == EMPTY) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean boardIsEmpty(){
+        for (int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[i].length; j++){
+                if (board[i][j] != EMPTY){
                     return false;
                 }
             }
