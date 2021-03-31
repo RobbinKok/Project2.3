@@ -79,13 +79,18 @@ public class Reversie {
         for (int k=y-1; k<=y+1; k++) {
             for (int s=x-1; s<=x+1; s++) {
                 if ( k<0 || k>=board.length || s<0 || s>=board.length) {
-                    System.out.println("poop");
                     continue;
                 }
                 if (board[s][k]!=player && board[s][k]!=EMPTY && direction==4) {
                     if (flip(player, s, k, dir)) {
                         board[s][k]=player;
                     } 
+                }
+                if (board[s][k]!=player && board[s][k]!=EMPTY && direction==dir && dir!=4) {
+                    if (flip(player, s, k, dir)) {
+                        board[s][k]=player;
+                        return true;
+                    }
                 }
                 if (direction!=4 && dir==direction) {
                     if (board[s][k]==player) {
@@ -145,7 +150,7 @@ public class Reversie {
                             output.add(tmp);
                         }              
                     }
-                    if(dir ==5) {
+                    if(dir==5) {
                         
                         System.out.println("side= "+side);
                         System.out.println("dir 5: "+s+", "+k);
