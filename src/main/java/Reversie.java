@@ -195,11 +195,11 @@ public class Reversie {
     }
     
     public boolean blackTurn() {
-        return null;
+        return false;
     }
 
     public boolean gameOver() {
-        return null;
+        return false;
     }
 
     public static void main(String[] args) {
