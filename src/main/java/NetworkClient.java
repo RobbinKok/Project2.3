@@ -1,28 +1,86 @@
 package main.java;
 
+import main.java.utils.Observable;
+import main.java.utils.commands.CommandHandler;
+
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Future;
 
-public class NetworkClient {
+public class NetworkClient extends Observable {
+    private CommandHandler commandHandler;
+
     private AsynchronousSocketChannel client;
     private InetSocketAddress hostAddress;
 
     public NetworkClient(String host, int port) {
-        this.hostAddress = new InetSocketAddress(host, 11);
+        this.hostAddress = new InetSocketAddress(host, port);
 
-        try {
-            this.client = AsynchronousSocketChannel.open();
-        }
-        catch (Exception e) { }
-
-        listen();
     }
 
     public void connect() {
-        Future<Void> future = client.connect(this.hostAddress);
+        if (client == null || !client.isOpen())
+            try {
+                this.client = AsynchronousSocketChannel.open();
+            }
+            catch (Exception e) {}
+
+        client.connect(this.hostAddress, null, new CompletionHandler<Void, Object>() {
+            @Override
+            public void completed(Void unused, Object o) {
+                System.out.println("Connected to Server");
+                //onResponse();
+
+                commandHandler = new CommandHandler(client);
+                Thread thread = new Thread(commandHandler);
+                thread.start();
+            }
+
+            @Override
+            public void failed(Throwable throwable, Object o) {
+
+            }
+        });
+    }
+
+//    private void onResponse() {
+//        ByteBuffer buffer = ByteBuffer.allocate(1024);
+//        Future<Integer> result = client.read(buffer);
+//
+//        try {
+//            result.get();
+//            String echo = new String(buffer.array()).trim();
+//            System.out.println(echo);
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//        }
+
+//        client.read(buffer, null, new CompletionHandler<Integer, ByteBuffer>() {
+//            @Override
+//            public void completed(Integer integer, ByteBuffer byteBuffer) {
+//                System.out.println(new String(buffer.array()).trim());
+//            }
+//
+//            @Override
+//            public void failed(Throwable throwable, ByteBuffer byteBuffer) {
+//
+//            }
+//        });
+//    }
+
+    public void disconnect() {
+        try  {
+            client.close();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            commandHandler.halt();
+        }
     }
 
     public void login(String username) {
@@ -34,7 +92,7 @@ public class NetworkClient {
     }
 
     public void getList(ListType type) {
-        sendMessage("get " + type.toString()); //TODO: change enum values to gamelist or playerlist
+        sendMessage("get " + type.toString().toLowerCase()); //TODO: change enum values to gamelist or playerlist
     }
 
     public void subscribe(GameType gameType) {
@@ -54,33 +112,33 @@ public class NetworkClient {
     }
 
     public void forfeit() {
+        sendMessage("forfeit");
+    }
 
+    public void sendRawMessage(String message) {
+        sendMessage(message);
     }
 
     private void sendMessage(String message) {
-        byte[] byteMessage = message.getBytes();
+        byte[] byteMessage = (message + "\n").getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(byteMessage);
-        Future<Integer> writeResult = client.write(buffer);
+        client.write(buffer, null, new CompletionHandler<Integer, Object>() {
+            @Override
+            public void completed(Integer integer, Object o) {
+                System.out.println("Message send to server: " + message);
+//                onResponse();
+            }
 
-        try {
-            writeResult.get();
-            buffer.flip();
-            Future<Integer> readResult = client.read(buffer);
-
-            readResult.get();
-            String echo = new String(buffer.array()).trim();
-            buffer.clear();
-        }
-        catch (Exception e) {}
-    }
-
-    private void listen() {
-
+            @Override
+            public void failed(Throwable throwable, Object o) {
+                System.out.println("Error in writing to server");
+            }
+        });
     }
 
     public enum ListType {
-        Game,
-        Player
+        Gamelist,
+        Playerlist
     }
 
     public enum GameType {
