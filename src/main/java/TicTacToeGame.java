@@ -57,7 +57,6 @@ class TicTacToe {
     // Find optimal move
     private Best chooseMove(int side) {
         int opp = EMPTY;              // The other side
-//        Best reply;           // Opponent's best reply
         int simpleEval;       // Result of an immediate evaluation
         int bestRow = -1;
         int bestColumn = -1;
@@ -79,29 +78,14 @@ class TicTacToe {
         if ((simpleEval = positionValue()) != UNCLEAR)
             return new Best(simpleEval);
 
-        ArrayList<Best> bests = new ArrayList<>();
-
-
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[y].length; x++) {
                 if (board[y][x] == EMPTY) {
                     place(y, x, side);
-                    int[] moveVal = minmax(side, opp, 1);
+                    int[] moveVal = minmax(opp, side, 1);
 
                     place(y, x, EMPTY);
 
-                    bests.add(new Best(moveVal[0], y, x, moveVal[1]));
-
-                    /*if (moveVal == 10) {
-//                        System.out.println(moveVal);
-                        bests.add(new Best(moveVal,y,x));
-//                        return new Best(side, y, x);
-                    } else if (moveVal == -10) {
-//                        System.out.println(moveVal);
-                        bests.add(new Best(moveVal,y,x));
-
-//                        return new Best(side, y, x);
-                    } else*/
                     if (moveVal[0] > value || moveVal[1] < bestDepth) {
                         bestRow = y;
                         bestColumn = x;
@@ -114,16 +98,14 @@ class TicTacToe {
             }
         }
 
-        System.out.println(bests);
-
         return new Best(value, bestRow, bestColumn, 0);
     }
 
     public int[] minmax(int side, int opp, int depth) {
-        if (isAWin(HUMAN)) {
-            return new int[]{-10, depth};
-        } else if (isAWin(COMPUTER)) {
+        if (isAWin(COMPUTER)) {
             return new int[]{10, depth};
+        } else if (isAWin(HUMAN)) {
+            return new int[]{-10, depth};
         }
 
         if (boardIsFull()) {
