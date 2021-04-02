@@ -79,6 +79,7 @@ public class Reversie {
         for (int k=y-1; k<=y+1; k++) {
             for (int s=x-1; s<=x+1; s++) {
                 if ( k<0 || k>=board.length || s<0 || s>=board.length) {
+                    dir++;
                     continue;
                 }
                 if (board[s][k]!=player && board[s][k]!=EMPTY && direction==4) {
@@ -111,7 +112,7 @@ public class Reversie {
         for (int k=y-1; k<=y+1; k++) {
             for (int s=x-1; s<=x+1; s++) {
                 if (direction==dir) {
-                    if ( k<0 || k>=board.length || s<0 || s>=board.length || board[s][k]==player) {
+                    if (k<0 || k>=board.length || s<0 || s>=board.length || board[s][k]==player) {
                         int[] output = {-1, -1};
                         return output;
                     }
@@ -143,6 +144,10 @@ public class Reversie {
         int dir = 0;
             for (int k=y-1; k<=y+1; k++) {
                 for (int s=x-1; s<=x+1; s++) {
+                    if (k<0 || k>=board.length || s<0 || s>=board.length) {
+                        dir++;
+                        continue;
+                    }
                     if (board[s][k]!=player && board[s][k]!=EMPTY && dir!=4) {
                         // return flipColor(k, s, player, x, y);
                         int[] tmp = canFlip(s, k, player, dir);          
