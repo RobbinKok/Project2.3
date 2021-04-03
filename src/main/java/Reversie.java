@@ -68,6 +68,7 @@ public class Reversie {
     public void move(String[] coords) {
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
+        System.out.println("Is this a corner?: " +  isCorner(x,y));
         if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);
@@ -207,12 +208,37 @@ public class Reversie {
         return false;
     }
 
+    public boolean isCorner(int r, int c){
+        if (r == 0 && c == 0 || r == 7 && c ==7 || r == 0 && c == 7 || r == 7 && c == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void findAllScores(){
+        blackScore = 0;
+        whiteScore = 0;
+        for (int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[i].length; j++){
+                if (board[i][j] == WHITE){
+                    whiteScore++;
+                } else if (board[i][j] == BLACK){
+                    blackScore++;
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Reversie reversie = new Reversie();
         Scanner reader = new Scanner(System.in);
         String[] coords;
         while (true) {
-            System.out.println(reversie.toString());    
+                reversie.findAllScores();
+                System.out.println("Black: " + reversie.getBlackScore());
+                System.out.println("White: " + reversie.getWhiteScore());
+                System.out.println(reversie.toString());
                 System.out.println("Enter: X,Y");
                 String line = reader.nextLine();
                 coords = line.split(",");
