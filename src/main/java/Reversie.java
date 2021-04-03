@@ -230,6 +230,30 @@ public class Reversie {
         }
     }
 
+    private Best chooseMove(int side){
+        int opponent = EMPTY;
+        int simpleEval;
+        int bestRow = -1;
+        int bestColumn = -1;
+        int value = -1;
+        ArrayList<int[]> possibleMoves = possibleMoves(side);
+
+        if (side == BLACK){
+            opponent = WHITE;
+        }
+        if (side == WHITE){
+            opponent = BLACK;
+        }
+
+        //TODO: iedere possible move doorlopen en daar een minimax op uitoefenen
+        for (int[] move: possibleMoves){
+
+        }
+
+        return new Best(value, bestRow, bestColumn);
+    }
+
+
     public static void main(String[] args) {
         Reversie reversie = new Reversie();
         Scanner reader = new Scanner(System.in);
@@ -245,4 +269,20 @@ public class Reversie {
                 reversie.move(coords);
         }
     }
+
+    private class Best{
+        int row;
+        int column;
+        int val;
+
+        public Best(int v){
+            this(v,0,0);
+            
+        }
+
+        public Best(int v, int r, int c) {
+            val = v; row = r; column = c;
+        }
+    }
+
 }
