@@ -1,5 +1,7 @@
 package main.java.utils.commands;
 
-public interface Command {
-    void execute();
+public abstract class Command {
+    protected Object base;
+
+    abstract void execute();
 }

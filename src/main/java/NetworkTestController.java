@@ -1,8 +1,11 @@
 package main.java;
 
+import com.sun.media.jfxmediaimpl.platform.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import main.java.utils.Observable;
+import main.java.utils.Observer;
 
 public class NetworkTestController extends Controller {
     @FXML
