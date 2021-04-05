@@ -7,12 +7,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class OrthelloGameController extends GUIController
+public class OthelloGameController extends GUIController
 {
     @FXML
     private GridPane gridPane;
 
     int side = 0;
+
+    private NetworkClient networkClient;
+
+    public OthelloGameController(NetworkClient networkClient) {
+        this.networkClient = networkClient;
+    }
 
     @FXML
     private void initialize()

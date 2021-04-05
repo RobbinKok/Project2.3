@@ -1,5 +1,6 @@
 //package java;
 
+import utils.Callback;
 import utils.Observable;
 import utils.commands.CommandHandler;
 
@@ -20,7 +21,7 @@ public class NetworkClient extends Observable {
         this.hostAddress = new InetSocketAddress(host, port);
     }
 
-    public void connect() {
+    public void connect(Callback callback) {
         if (client == null || !client.isOpen())
             try {
                 this.client = AsynchronousSocketChannel.open();
@@ -32,11 +33,15 @@ public class NetworkClient extends Observable {
         client.connect(this.hostAddress, null, new CompletionHandler<>() {
             @Override
             public void completed(Void unused, Object o) {
-                System.out.println("Connected to Server");
+                ByteBuffer buffer = ByteBuffer.allocate(256);
+                Future<Integer> result = client.read(buffer);
+
+                try { result.get(); } // Remove the server welcome message.
+                catch (Exception ignored) {}
 
                 commandHandler = new CommandHandler(client);
-                Thread thread = new Thread(commandHandler);
-                thread.start();
+
+                callback.call(null);
             }
 
             @Override
@@ -47,7 +52,7 @@ public class NetworkClient extends Observable {
     }
 
     public void disconnect() {
-        commandHandler.halt();
+        this.commandHandler.halt();
 
         try  {
             client.close();
@@ -80,7 +85,7 @@ public class NetworkClient extends Observable {
     }
 
     public void challengePlayer(String name, GameType gameType) {
-        sendMessage("challenge " + name + " " + gameType.toString());
+        sendMessage("challenge " + "\"" + name + "\"" + " " + "\"" + gameType.toString() + "\"");
     }
 
     public void acceptChallenge(int challengeId) {
@@ -106,17 +111,6 @@ public class NetworkClient extends Observable {
         catch (Exception e) {
             System.out.println(e);
         }
-//        client.write(buffer, null, new CompletionHandler<Integer, Object>() {
-//            @Override
-//            public void completed(Integer integer, Object o) {
-//                System.out.println("Message send to server: " + message);
-//            }
-//
-//            @Override
-//            public void failed(Throwable throwable, Object o) {
-//                System.out.println("Error in writing to server");
-//            }
-//        });
     }
 
     public CommandHandler getCommandHandler() {

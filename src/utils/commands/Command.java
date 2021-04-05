@@ -1,7 +1,12 @@
 package utils.commands;
 
-public abstract class Command {
-    protected Object base;
+import utils.Callback;
 
-    abstract void execute();
+import java.util.concurrent.Callable;
+
+public abstract class Command {
+    protected String data;
+    protected Callback callback;
+
+    public abstract void execute(String data);
 }
