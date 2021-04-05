@@ -39,12 +39,12 @@ public class MpMenuController extends GUIController
 
         returnButton.setOnAction(value ->
         {
-            switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/Resources/MainMenuv1.fxml", new MainMenuController());
+            switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/src/resources/MainMenuv1.fxml", new MainMenuController());
         });
 
         goButton.setOnAction(value ->
         {
-            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/Resources/Lobby.fxml", new LobbyController());
+            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController());
         });
     }
 }

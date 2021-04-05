@@ -1,4 +1,4 @@
-//package main.java;
+//package java;
 
 import utils.Observable;
 import utils.commands.CommandHandler;

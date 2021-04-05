@@ -11,7 +11,7 @@ public class SettingsMenuController  extends GUIController
     {
         returnButton.setOnAction(value ->
         {
-            switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/Resources/MainMenuv1.fxml", new MainMenuController());
+            switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/src/resources/MainMenuv1.fxml", new MainMenuController());
         });
     }
 }

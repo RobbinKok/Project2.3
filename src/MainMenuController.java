@@ -29,19 +29,19 @@ public class MainMenuController extends GUIController
     {
         singlePlayerButton.setOnAction(value ->
         {
-                switchScene(singlePlayerButton.getScene(), System.getProperty("user.dir") + "/Resources/SingleplayerMenu.fxml", new SpMenuController());   
+                switchScene(singlePlayerButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
         });
         multiPlayerButton.setOnAction(value ->
         {
-                switchScene(multiPlayerButton.getScene(), System.getProperty("user.dir") + "/Resources/MultiplayerMenu.fxml", new MpMenuController());   
+                switchScene(multiPlayerButton.getScene(), System.getProperty("user.dir") + "/src/resources/MultiplayerMenu.fxml", new MpMenuController());
         });
         settingsButton.setOnAction(value ->
         {
-                switchScene(settingsButton.getScene(), System.getProperty("user.dir") + "/Resources/Settings.fxml", new SettingsMenuController());   
+                switchScene(settingsButton.getScene(), System.getProperty("user.dir") + "/src/resources/Settings.fxml", new SettingsMenuController());
         });
         ruleBookButton.setOnAction(value ->
         {
-                switchScene(ruleBookButton.getScene(), System.getProperty("user.dir") + "/Resources/RuleBook.fxml", new RuleBookController());   
+                switchScene(ruleBookButton.getScene(), System.getProperty("user.dir") + "/src/resources/RuleBook.fxml", new RuleBookController());
         });
         quitButton.setOnAction(value ->
         {

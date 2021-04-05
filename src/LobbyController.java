@@ -23,7 +23,7 @@ public class LobbyController extends GUIController
     {
         returnButton.setOnAction(value ->
         {
-            switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/Resources/Multiplayer.fxml", new MainMenuController());
+            switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/src/resources/Multiplayer.fxml", new MainMenuController());
         });
         
         playerList.getItems().add("Willem");
@@ -57,7 +57,7 @@ public class LobbyController extends GUIController
 
         goButton.setOnAction(value ->
         {
-            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/Resources/OrthelloGameview.fxml", new OrthelloGameController());
+            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OrthelloGameview.fxml", new OrthelloGameController());
         });
     }
 }

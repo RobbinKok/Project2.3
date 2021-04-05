@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.NetworkTestController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="java.NetworkTestController">
    <children>
       <Text layoutX="289.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Network Testing Dashboard" AnchorPane.leftAnchor="289.0" AnchorPane.rightAnchor="288.9267578125" AnchorPane.topAnchor="13.576171875">
          <font>
