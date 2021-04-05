@@ -1,4 +1,4 @@
-package main.java.utils;
+package utils;
 
 public abstract class Observer {
     protected Observable observable;

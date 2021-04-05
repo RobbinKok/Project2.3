@@ -1,7 +1,7 @@
-package main.java;
+//package main.java;
 
-import main.java.utils.Observable;
-import main.java.utils.commands.CommandHandler;
+import utils.Observable;
+import utils.commands.CommandHandler;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

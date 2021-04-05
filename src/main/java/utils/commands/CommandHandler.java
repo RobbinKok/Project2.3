@@ -1,4 +1,4 @@
-package main.java.utils.commands;
+package utils.commands;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
