@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="248.0" layoutY="101.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="99.0" AnchorPane.leftAnchor="248.0" AnchorPane.rightAnchor="252.0" AnchorPane.topAnchor="101.0">
+         <children>
+            <Button fx:id="singlePlayerButton" mnemonicParsing="false" text="Singleplayer" />
+            <Button fx:id="multiPlayerButton" mnemonicParsing="false" text="Multiplayer" />
+            <Button fx:id="settingsButton" mnemonicParsing="false" text="Settings" />
+            <Button fx:id="ruleBookButton" mnemonicParsing="false" text="Rulebook" />
+            <Button fx:id="quitButton" mnemonicParsing="false" text="Quit" />
+         </children>
+      </VBox>
+      <Text layoutX="264.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BoardGames" textAlignment="CENTER" wrappingWidth="67.294921875" AnchorPane.bottomAnchor="369.0" AnchorPane.leftAnchor="264.0" AnchorPane.rightAnchor="268.705078125" AnchorPane.topAnchor="14.0" />
+   </children>
+</AnchorPane>
