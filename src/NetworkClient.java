@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 
 public class NetworkClient extends Observable {
     private CommandHandler commandHandler;
+    private Thread commandHandlerThread;
 
     private AsynchronousSocketChannel client;
     private final InetSocketAddress hostAddress;
@@ -115,6 +116,11 @@ public class NetworkClient extends Observable {
 
     public CommandHandler getCommandHandler() {
         return commandHandler;
+    }
+
+    public void startCommandHandler() {
+        this.commandHandlerThread = new Thread(commandHandler);
+        this.commandHandlerThread.start();
     }
 
     public enum ListType {

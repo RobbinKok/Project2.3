@@ -55,7 +55,7 @@ public class LobbyController extends GUIController
             });
         }));
 
-        new Thread(this.networkClient.getCommandHandler()).start();
+        this.networkClient.startCommandHandler();
     }
 
     @FXML
@@ -104,6 +104,7 @@ public class LobbyController extends GUIController
         this.networkClient.getList(NetworkClient.ListType.Gamelist);
         this.networkClient.getList(NetworkClient.ListType.Playerlist);
 
+        // Hacky timer on UI Thread, runs every 5 seconds.
         Timeline getListTask = new Timeline(new KeyFrame(Duration.seconds(5), actionEvent -> networkClient.getList(NetworkClient.ListType.Playerlist)));
         getListTask.setCycleCount(Timeline.INDEFINITE);
         getListTask.play();
