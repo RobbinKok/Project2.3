@@ -37,6 +37,14 @@ public class LobbyController extends GUIController
 
         CommandHandler commandHandler = this.networkClient.getCommandHandler();
 
+        commandHandler.addCommand(CommandHandler.CommandType.Error, new ErrorCommand(data -> {
+            System.out.println(data);
+        }));
+
+        commandHandler.addCommand(CommandHandler.CommandType.Game, new GameCommand(data -> {
+
+        }));
+
         commandHandler.addCommand(CommandHandler.CommandType.Challenge, new ChallengeCommand(data -> {
 
         }));
@@ -81,7 +89,7 @@ public class LobbyController extends GUIController
         TableColumn<String, String> invite = new TableColumn<>("invite");
         tableView.getColumns().add(players);
         tableView.getColumns().add(invite);
-        
+
         //tableView.setItems(arg0);
         playerList.getSelectionModel().selectedItemProperty().addListener(
             new ChangeListener<String>() 

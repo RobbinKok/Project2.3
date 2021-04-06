@@ -1,8 +1,14 @@
 package utils.commands;
 
+import utils.Callback;
+
 public class ErrorCommand extends Command {
+    public ErrorCommand(Callback<String> callback) {
+        this.callback = callback;
+    }
+
     @Override
     public void execute(String data) {
-        System.out.println("Executing Error command");
+        this.callback.call(data);
     }
 }

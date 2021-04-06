@@ -31,11 +31,13 @@ public class CommandHandler implements Runnable {
 
         while (!shouldExit) {
             try {
+                buffer.clear();
                 Future<Integer> rawResult = socketChannel.read(this.buffer);
                 rawResult.get();
 
-                String result = new String(this.buffer.array()).trim();
-                unpackResponse(result);
+                String[] results = new String(this.buffer.array()).trim().split("\r\n");
+                for (String result : results)
+                    unpackResponse(result);
 
                 //TODO: Zero memory of buffer -> find a fix this is ugly.
                 for (int i = 0;  i < this.buffer.limit(); i++)
@@ -61,25 +63,25 @@ public class CommandHandler implements Runnable {
         if (response.isBlank())
             return;
 
-        System.out.println("Server: " + response);
-
         String[] explodedString = response.split("\\s+");
         String data = "";
 
+        System.out.println(response);
+
         switch (explodedString[0]) {
             case "OK":
-                explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
-                unpackResponse(ArrayUtil.stringFromStringArray(explodedString));
                 break;
             case "ERR":
-                commands.get(CommandType.Error).execute("");
+                explodedString = ArrayUtil.removeFromStringArray(explodedString,  0);
+                data = ArrayUtil.stringFromStringArray(explodedString);
+                commands.get(CommandType.Error).execute(data);
                 break;
             case "SVR":
                 explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
 
                 switch (explodedString[0]) {
                     case "GAME":
-                        commands.get(CommandType.Game).execute("");
+                        //commands.get(CommandType.Game).execute("");
                         break;
                     case "GAMELIST":
                         explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);

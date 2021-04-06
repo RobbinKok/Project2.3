@@ -22,7 +22,7 @@ public class NetworkClient extends Observable {
         this.hostAddress = new InetSocketAddress(host, port);
     }
 
-    public void connect(Callback callback) {
+    public void connect(Callback<Void> callback) {
         if (client == null || !client.isOpen())
             try {
                 this.client = AsynchronousSocketChannel.open();
