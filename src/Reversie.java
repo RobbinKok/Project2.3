@@ -91,6 +91,7 @@ public class Reversie {
         if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);
+            gameOver();
         }
     }
 
@@ -229,6 +230,26 @@ public class Reversie {
     }
 
     public boolean gameOver() {
+        boolean noEmpty = true;
+        boolean noMoves = false;
+        ArrayList<int[]> movesB = possibleMoves(BLACK);
+        ArrayList<int[]> movesW = possibleMoves(WHITE);
+        if (movesB.size()==0 && movesW.size()==0) noMoves=true;
+        for (int i=0; i<board.length; i++) {
+            for (int j=0; j<board.length; j++) {
+                if (board[j][i]==EMPTY) noEmpty=false;
+            }
+        }
+        System.out.println(noEmpty);
+        if (noEmpty) {
+            System.out.println("Game Over");
+            return true;
+        }
+        if (noMoves) {
+            System.out.println("Game Over");
+            System.out.println("No moves possible");
+            return true;
+        }
         return false;
     }
 
