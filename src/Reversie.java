@@ -334,7 +334,7 @@ public class Reversie {
 
             board[x][y] = _side;
 
-            int[] result = minmax(opp, _side, depth + 1);
+            int[] result = minmax(opp, _side, depth + 1, x, y);
             if (_side == WHITE) {
                 max = Math.max(max, result[0]);
             } else if (_side == BLACK) {
