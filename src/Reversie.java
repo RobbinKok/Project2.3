@@ -268,7 +268,7 @@ public class Reversie {
             int x = move[0];
             int y = move[1];
             board[x][y] = _side;
-            int[] moveVal = minmax(opponent, _side, 1);
+            int[] moveVal = minmax(opponent, _side, 1, x, y);
 
             board[x][y] = EMPTY;
 
@@ -282,8 +282,12 @@ public class Reversie {
         return new Best(value, bestColumn, bestRow);
     }
 
-    private int[] minmax(int _side, int opp, int depth) {
-        if (depth == 8 /* || game over*/) {
+    private int[] minmax(int _side, int opp, int depth, int current_x, int current_y) {
+        if (isCorner(current_x, current_y)) {
+            return new int[]{_side == WHITE ? 1000 : -1000, depth};
+        } else if (isAroundCorner(current_x, current_y)) {
+            return new int[]{_side == WHITE ? -1000 : 1000, depth};
+        } else if (depth == 8 /* || game over*/) {
             findAllScores();
             if (_side == WHITE) {
                 return new int[]{whiteScore, depth};
@@ -304,7 +308,8 @@ public class Reversie {
 
             board[x][y] = _side;
 
-            int[] result = minmax(opp, _side, depth + 1);
+
+            int[] result = minmax(opp, _side, depth + 1, x, y);
             if (_side == WHITE) {
                 max = Math.max(max, result[0]);
             } else if (_side == BLACK) {
