@@ -214,6 +214,20 @@ public class Reversie {
         }
     }
 
+    public boolean isAroundCorner(int r, int c){
+        if (r == 0 && c ==1 || r == 1 && c == 0 || r == 1 && c == 1 ){
+            return true;
+        } else if (r == 6 && c == 0 || r == 7 && c == 1 || r == 6 && c == 1){
+            return true;
+        } else if (r == 0 && c == 6 || r ==1 && c == 6 || r ==1 && c == 7){
+            return true;
+        } else if (r == 6 && c == 7 || r == 7 && c ==6 || r == 6 && c == 6){
+            return true;
+        } else {
+            return  false;
+        }
+    }
+
     void findAllScores() {
         blackScore = 0;
         whiteScore = 0;
@@ -253,7 +267,6 @@ public class Reversie {
         for (int[] move : possibleMoves) {
             int x = move[0];
             int y = move[1];
-
             board[x][y] = _side;
             int[] moveVal = minmax(opponent, _side, 1);
 
