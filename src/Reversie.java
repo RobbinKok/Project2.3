@@ -70,7 +70,6 @@ public class Reversie {
     }
 
     public void playMove(int x, int y) {
-        // TODO: Fill board based on player color (better implementation)
         board[x][y] = side;
         // gui
         if(side == BLACK) gui.changeNodeColor(x, y, Color.BLACK); else gui.changeNodeColor(x, y, Color.WHITE);
@@ -181,12 +180,11 @@ public class Reversie {
                             output.add(tmp);
                         }
                     }
-                    if(dir==5) {
-
-                        System.out.println("side= "+side);
-                        System.out.println("dir 5: "+s+", "+k);
-                        System.out.println("player: "+ board[x][y]);
-                    }
+                    // if(dir==5) {
+                    //     System.out.println("side= "+side);
+                    //     System.out.println("dir 5: "+s+", "+k);
+                    //     System.out.println("player: "+ board[x][y]);
+                    // }
                     dir++;
                 }
             }
@@ -203,13 +201,11 @@ public class Reversie {
                 }
             }
         }
-        output.forEach(e -> {System.out.println("mogelijke zet: "+ e[0]+","+e[1]);});
+        if (output.size()==0) {
+            if (side==BLACK) this.side=WHITE; else this.side=BLACK;
+        }
+        // output.forEach(e -> {System.out.println("mogelijke zet: "+ e[0]+","+e[1]);});
         return output;
-    }
-
-    public boolean legalMove(int x, int y) {
-        // TODO: Check if the move is legal
-        return true;
     }
 
     public boolean moveOK(int x, int y) {
