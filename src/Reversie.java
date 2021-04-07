@@ -1,4 +1,4 @@
-//package main.java;
+//package java;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,13 +19,13 @@ public class Reversie {
     public  static final int WHITE_WIN    = 3;
 
     private int[][] board = new int[8][8];
-    private int side=BLACK; 
+    private int side=BLACK;
     private int blackScore;
     private int whiteScore;
 
     OrthelloGameController gui;
 
-    public Reversie(OrthelloGameController gui) 
+    public Reversie(OrthelloGameController gui)
     {
         this.gui = gui;
         resetBoard();
@@ -68,13 +68,13 @@ public class Reversie {
         board[4][4] = BLACK;
         gui.changeNodeColor(4, 4, Color.BLACK);
     }
- 
+
     public void playMove(int x, int y) {
         // TODO: Fill board based on player color (better implementation)
         board[x][y] = side;
         // gui
         if(side == BLACK) gui.changeNodeColor(x, y, Color.BLACK); else gui.changeNodeColor(x, y, Color.WHITE);
-        
+
         if (side==BLACK) this.side=WHITE; else this.side=BLACK;
         gui.updateCurrentPlayer(side);
         findAllScores();
@@ -103,18 +103,18 @@ public class Reversie {
                     continue;
                 }
                 if (board[s][k]!=player && board[s][k]!=EMPTY && direction==4) {
-                    if (flip(player, s, k, dir)) 
+                    if (flip(player, s, k, dir))
                     {
                         if(side == BLACK) gui.changeNodeColor(s, k, Color.BLACK); else gui.changeNodeColor(s, k, Color.WHITE);
-                        
+
                         board[s][k]=player;
-                    } 
+                    }
                 }
                 if (board[s][k]!=player && board[s][k]!=EMPTY && direction==dir && dir!=4) {
                     if (flip(player, s, k, dir)) {
                         board[s][k]=player;
                         if(side == BLACK) gui.changeNodeColor(s, k, Color.BLACK); else gui.changeNodeColor(s, k, Color.WHITE);
-                        
+
                         return true;
                     }
                 }
@@ -151,18 +151,18 @@ public class Reversie {
                 }
                 dir++;
             }
-        }        
+        }
         int[] tmp = {-1, -1};
         return tmp;
-    } 
+    }
 
 
-    /** 
-     * 
+    /**
+     *
      * |0|1|2|
      * |3|4|5|
      * |6|7|8|
-     * 
+     *
      * **/
     public ArrayList<int[]> checkBorders(int x, int y, int player) {
         ArrayList<int[]> output = new ArrayList<>();
@@ -175,13 +175,13 @@ public class Reversie {
                     }
                     if (board[s][k]!=player && board[s][k]!=EMPTY && dir!=4) {
                         // return flipColor(k, s, player, x, y);
-                        int[] tmp = canFlip(s, k, player, dir);          
+                        int[] tmp = canFlip(s, k, player, dir);
                         if(tmp[0]!=-1) {
                             output.add(tmp);
-                        }              
+                        }
                     }
                     if(dir==5) {
-                        
+
                         System.out.println("side= "+side);
                         System.out.println("dir 5: "+s+", "+k);
                         System.out.println("player: "+ board[x][y]);
@@ -193,7 +193,7 @@ public class Reversie {
     }
 
     public ArrayList<int[]> possibleMoves(int player) {
-        ArrayList<int[]> output = new ArrayList<>(); 
+        ArrayList<int[]> output = new ArrayList<>();
         for (int i=0; i<board.length; i++) {
             for (int j=0; j<board.length; j++) {
                 if (board[j][i] == player) {
@@ -223,7 +223,7 @@ public class Reversie {
         System.out.println("Non-legal move.");
         return false;
     }
-    
+
     public boolean blackTurn() {
         return false;
     }
@@ -240,72 +240,131 @@ public class Reversie {
         }
     }
 
-    void findAllScores(){
+    public boolean isAroundCorner(int r, int c){
+        if (r == 0 && c ==1 || r == 1 && c == 0 || r == 1 && c == 1 ){
+            return true;
+        } else if (r == 6 && c == 0 || r == 7 && c == 1 || r == 6 && c == 1){
+            return true;
+        } else if (r == 0 && c == 6 || r ==1 && c == 6 || r ==1 && c == 7){
+            return true;
+        } else if (r == 6 && c == 7 || r == 7 && c ==6 || r == 6 && c == 6){
+            return true;
+        } else {
+            return  false;
+        }
+    }
+
+    void findAllScores() {
         blackScore = 0;
         whiteScore = 0;
-        for (int i = 0; i < board.length; i++){
-            for (int j = 0; j < board[i].length; j++){
-                if (board[i][j] == WHITE){
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == WHITE) {
                     whiteScore++;
-                } else if (board[i][j] == BLACK){
+                } else if (board[i][j] == BLACK) {
                     blackScore++;
                 }
             }
         }
     }
 
-    private Best chooseMove(int side){
+    public String[] chooseMove() {
+        Best move = this.chooseMove(WHITE);
+        return new String[]{String.valueOf(move.row), String.valueOf(move.column)};
+    }
+
+    private Best chooseMove(int _side) {
         int opponent = EMPTY;
         int simpleEval;
         int bestRow = -1;
         int bestColumn = -1;
-        int value = -1;
-        ArrayList<int[]> possibleMoves = possibleMoves(side);
+        int value = Integer.MIN_VALUE;
+        ArrayList<int[]> possibleMoves = possibleMoves(_side);
 
-        if (side == BLACK){
+        if (_side == BLACK) {
             opponent = WHITE;
         }
-        if (side == WHITE){
+        if (_side == WHITE) {
             opponent = BLACK;
         }
 
-        //TODO: iedere possible move doorlopen en daar een minimax op uitoefenen
-        for (int[] move: possibleMoves){
 
+        //TODO: iedere possible move doorlopen en daar een minimax op uitoefenen
+        for (int[] move : possibleMoves) {
+            int x = move[0];
+            int y = move[1];
+            board[x][y] = _side;
+            int[] moveVal = minmax(opponent, _side, 1, x, y);
+
+            board[x][y] = EMPTY;
+
+            if (moveVal[0] > value) {
+                bestRow = y;
+                bestColumn = x;
+                value = moveVal[0];
+            }
         }
 
-        return new Best(value, bestRow, bestColumn);
+        return new Best(value, bestColumn, bestRow);
     }
 
-
-    /*public static void main(String[] args) {
-        Reversie reversie = new Reversie();
-        Scanner reader = new Scanner(System.in);
-        String[] coords;
-        while (true) {
-                reversie.findAllScores();
-                System.out.println("Black: " + reversie.getBlackScore());
-                System.out.println("White: " + reversie.getWhiteScore());
-                System.out.println(reversie.toString());
-                System.out.println("Enter: X,Y");
-                String line = reader.nextLine();
-                coords = line.split(",");
-                reversie.move(coords);
+    private int[] minmax(int _side, int opp, int depth, int current_x, int current_y) {
+        if (isCorner(current_x, current_y)) {
+            return new int[]{_side == WHITE ? 1000 : -1000, depth};
+        } else if (isAroundCorner(current_x, current_y)) {
+            return new int[]{_side == WHITE ? -1000 : 1000, depth};
+        } else if (depth == 8 /* || game over*/) {
+            findAllScores();
+            if (_side == WHITE) {
+                return new int[]{whiteScore, depth};
+            } else if (_side == BLACK) {
+                return new int[]{-blackScore, depth};
+            }
         }
-    }*/
 
-    private class Best{
+
+        int min = 1000;
+        int max = -1000;
+
+        ArrayList<int[]> possibleMoves = possibleMoves(_side);
+
+        for (int[] move : possibleMoves) {
+            int x = move[0];
+            int y = move[1];
+
+            board[x][y] = _side;
+
+            int[] result = minmax(opp, _side, depth + 1);
+            if (_side == WHITE) {
+                max = Math.max(max, result[0]);
+            } else if (_side == BLACK) {
+                min = Math.min(min, result[0]);
+            }
+
+            board[x][y] = EMPTY;
+        }
+
+        return _side == WHITE ? new int[]{max, depth} : new int[]{min, depth};
+    }
+
+    public boolean computerPlays() {
+        return this.side == WHITE;
+    }
+
+    private class Best {
         int row;
         int column;
         int val;
 
-        public Best(int v){
-            this(v,0,0);
-            
+        public Best(int v) {
+            this(v, 0, 0);
+
         }
 
         public Best(int v, int r, int c) {
-            val = v; row = r; column = c;
+            val = v;
+            row = r;
+            column = c;
         }
     }
 
