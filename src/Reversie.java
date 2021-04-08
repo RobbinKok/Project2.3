@@ -24,14 +24,14 @@ public class Reversie extends Game {
     private int blackScore;
     private int whiteScore;
 
-    OrthelloGameController gui = null;
+    OthelloGameController gui = null;
 
 
     public Reversie() {
         resetBoard();
     }
 
-    public Reversie(OrthelloGameController gui) {
+    public Reversie(OthelloGameController gui) {
         this.gui = gui;
         resetBoard();
     }
