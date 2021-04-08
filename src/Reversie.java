@@ -90,7 +90,9 @@ public class Reversie {
         if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);
-            gameOver();
+            if (gameOver()) {
+                winner();
+            }
         }
     }
 
@@ -221,8 +223,16 @@ public class Reversie {
         return false;
     }
 
-    public boolean blackTurn() {
-        return false;
+    public void winner() {
+        findAllScores();
+        if (blackScore > whiteScore) {
+            System.out.println("Black Wins!");
+        } else 
+        if (blackScore < whiteScore) {
+            System.out.println("White Wins!");
+        } else {
+            System.out.println("It's a draw");
+        }
     }
 
     public boolean gameOver() {
@@ -236,7 +246,6 @@ public class Reversie {
                 if (board[j][i]==EMPTY) noEmpty=false;
             }
         }
-        System.out.println(noEmpty);
         if (noEmpty) {
             System.out.println("Game Over");
             return true;
