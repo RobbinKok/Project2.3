@@ -2,6 +2,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -12,18 +13,16 @@ public class OrthelloGameController extends GUIController
 {
     @FXML
     private GridPane gridPane;
-
     @FXML
     private Text playerOne;
-
     @FXML
     private Text playerTwo;
-
     @FXML
     private Text currentPlayer;
-
     @FXML
     private ListView<String> movesList;
+    @FXML
+    private Button giveUpButton;
 
     //int side = 0;
     Reversie reversie;
@@ -38,6 +37,12 @@ public class OrthelloGameController extends GUIController
         System.out.println(playerOne);
         //setScore(0, 3);
         //setScore(1, 96);
+
+        giveUpButton.setOnAction(value ->
+        {
+            switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
+        });
+
     }
 
     public void setScore(int blackScore, int whiteScore)
@@ -132,4 +137,5 @@ public class OrthelloGameController extends GUIController
         }
         return result;
     }
+
 }

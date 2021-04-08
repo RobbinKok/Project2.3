@@ -34,7 +34,7 @@ public class TicTacToeGameController  extends GUIController
     private void initialize() throws IOException
     {
         fillGrid();
-        //game = new TicTacToe(this);
+        // game = new TicTacToe(this);
         returnButton.setOnAction(value ->
         {
             switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/Resources/MainMenuv1.fxml", new MainMenuController());
@@ -76,11 +76,10 @@ public class TicTacToeGameController  extends GUIController
             if(node.getOpacity() < 1)
             {
                 // todo
-
                 Image tmp = side==0 ? image1 : image2;
                 node.setImage(tmp);
                 node.setOpacity(1);
-                side = side==0 ? 1 : 0;
+                side= side==0 ? 1 : 0;
             }
         });
         gridPane.add(node, x, y);
