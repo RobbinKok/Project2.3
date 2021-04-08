@@ -10,11 +10,12 @@ public class AardappelKroket {
     private Scanner reader = new Scanner(System.in);
     private Reversie reversie;
     private AI ai;
+    private boolean playing = true;
 
     public AardappelKroket() {
         reversie = new Reversie();
         ai = new AI(reversie);
-        while (true) {
+        while (playing) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
             System.out.println("White: " + reversie.getWhiteScore());
@@ -22,6 +23,7 @@ public class AardappelKroket {
             System.out.println("Enter: X,Y");
             reversie.move(move());
         }
+        System.out.println("DONE!");
     }
 
     private String[] move() {
@@ -36,6 +38,11 @@ public class AardappelKroket {
 //        }
         AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? Game.COMPUTER : Game.PLAYER);
         System.out.println("x " + aiBest.row + " y " + aiBest.column);
+        
+        if (aiBest.row == -1 && aiBest.column == -1) {
+            playing = false;
+        }
+        
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

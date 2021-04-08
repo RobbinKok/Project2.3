@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class AI {
 
     private Game game;
+
     public AI(Game game) {
         this.game = game;
     }
@@ -16,7 +17,7 @@ public class AI {
         int value = Integer.MIN_VALUE;
         int bestDepth = Integer.MAX_VALUE;
 
-        for(int[] move : game.getPossibleMoves(side)) {
+        for (int[] move : game.getPossibleMoves(side)) {
             int x = move[0];
             int y = move[1];
 
@@ -37,12 +38,18 @@ public class AI {
         return new AIBest(value, bX, bY, bestDepth);
     }
 
-    private MinMaxResult minimax(int side, int opp, int depth, int  current_x, int current_y) {
+    private MinMaxResult minimax(int side, int opp, int depth, int current_x, int current_y) {
         int check = game.check(depth, current_x, current_y);
 
         if (check != 0) {
             return new MinMaxResult(check, depth);
         }
+
+        ArrayList<int[]> moves = game.getPossibleMoves(side);
+
+//        if (moves.isEmpty()) {
+//            return new MinMaxResult(0, depth);
+//        }
 
 //        if (game.boardIsFull()) {
 //            return new MinMaxResult(0, depth);
@@ -51,10 +58,11 @@ public class AI {
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
 
-        for (int[] move : game.getPossibleMoves(side)) {
+
+
+        for (int[] move : moves) {
             int x = move[0];
             int y = move[1];
-
 
 
             int[][] board = game.getBoard();
