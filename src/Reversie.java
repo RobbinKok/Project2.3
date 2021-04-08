@@ -330,7 +330,6 @@ public class Reversie extends Game {
             opponent = BLACK;
         }
 
-
         //TODO: iedere possible move doorlopen en daar een minimax op uitoefenen
         for (int[] move : possibleMoves) {
             int x = move[0];
