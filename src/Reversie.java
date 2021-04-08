@@ -403,6 +403,14 @@ public class Reversie extends Game {
         board[y][x] = side;
     }
 
+    public void switchSide(){
+        if (this.side == BLACK){
+            this.side = WHITE;
+        } else if (this.side == WHITE){
+            this.side = BLACK;
+        }
+    }
+
     @Override
     public int check(int depth, int current_x, int current_y) {
         /*if (isCorner(current_x, current_y)) {

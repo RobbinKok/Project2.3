@@ -1,5 +1,7 @@
 package AI;
 
+import java.util.ArrayList;
+
 public class AI {
 
     private Game game;
