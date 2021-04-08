@@ -1,6 +1,7 @@
 import AI.AI;
 import AI.AIBest;
 import AI.Game;
+import TicTacToe.TicTacToeGame;
 
 import java.util.Scanner;
 
