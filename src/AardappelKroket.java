@@ -25,15 +25,18 @@ public class AardappelKroket {
     }
 
     private String[] move() {
-        if (reversie.computerPlays()) {
-//            String[] compMove = reversie.chooseMove();
-//            System.out.println("Computer Move = " + Arrays.toString(compMove));
-            AIBest aiBest = ai.chooseMove(Game.COMPUTER);
-            return new String[]{ String.valueOf(aiBest.row), String.valueOf(aiBest.column) };
-        } else {
-            String line = reader.nextLine();
-            return line.split(",");
-        }
+//        if (reversie.computerPlays()) {
+////            String[] compMove = reversie.chooseMove();
+////            System.out.println("Computer Move = " + Arrays.toString(compMove));
+//            AIBest aiBest = ai.chooseMove(Game.COMPUTER);
+//            return new String[]{ String.valueOf(aiBest.row), String.valueOf(aiBest.column) };
+//        } else {
+//            String line = reader.nextLine();
+//            return line.split(",");
+//        }
+        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? Game.COMPUTER : Game.PLAYER);
+        System.out.println("x " + aiBest.row + " y " + aiBest.column);
+        return new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)};
     }
 
     public static void main(String[] args) {
