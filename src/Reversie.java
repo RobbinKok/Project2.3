@@ -11,9 +11,8 @@ import AI.Game;
 import javafx.scene.paint.Color;
 
 public class Reversie extends Game {
-
-    private static final int BLACK = 0;
-    private static final int WHITE = 1;
+    public static final int BLACK = 0;
+    public static final int WHITE = 1;
     private static final int EMPTY = 2;
 
     public static final int BLACK_WIN = 0;
@@ -22,12 +21,11 @@ public class Reversie extends Game {
     public static final int WHITE_WIN = 3;
 
     private int[][] board = new int[8][8];
-    private int side = BLACK;
+    public int side = BLACK;
     private int blackScore;
     private int whiteScore;
 
     OthelloGameController gui = null;
-
 
     public Reversie() {
         resetBoard();
@@ -67,16 +65,10 @@ public class Reversie extends Game {
         for (int i = 0; i < board.length; i++) {
             Arrays.fill(board[i], EMPTY);
         }
-        board[3][4] = WHITE;
-        board[3][3] = BLACK;
-        board[4][3] = WHITE;
-        board[4][4] = BLACK;
-        if (gui != null) {
-            gui.changeNodeColor(3, 4, Color.WHITE);
-            gui.changeNodeColor(3, 3, Color.BLACK);
-            gui.changeNodeColor(4, 3, Color.WHITE);
-            gui.changeNodeColor(4, 4, Color.BLACK);
-        }
+        board[3][4] = BLACK;
+        board[3][3] = WHITE;
+        board[4][3] = BLACK;
+        board[4][4] = WHITE;
     }
 
     public void playMove(int x, int y) {
@@ -86,29 +78,32 @@ public class Reversie extends Game {
 
         Platform.runLater(() -> {
             // gui
-            if (gui != null)
-                if (side == BLACK) gui.changeNodeColor(x, y, Color.BLACK);
-                else gui.changeNodeColor(x, y, Color.WHITE);
+            if (gui != null) {
+                if (side == BLACK)
+                    gui.changeNodeColor(x, y, Color.BLACK);
+                else
+                    gui.changeNodeColor(x, y, Color.WHITE);
 
-            if (side == BLACK) this.side = WHITE;
-            else this.side = BLACK;
-            if (gui != null)
                 gui.updateCurrentPlayer(side);
-            findAllScores();
-            if (gui != null)
+
                 // sets the score in the gui
                 gui.setScore(blackScore, whiteScore);
 
-            if (gui != null)
                 // adds the move to the movelist in the gui
                 gui.addMove(side, x + 1, y + 1);
+            }
         });
+
+        if (side == BLACK)
+            this.side = WHITE;
+        else
+            this.side = BLACK;
     }
 
     public void move(String[] coords) {
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
-        System.out.println("Is this a corner?: " +  isCorner(x,y));
+//        System.out.println("Is this a corner?: " +  isCorner(x,y));
         if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);

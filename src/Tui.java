@@ -39,7 +39,7 @@ public class Tui {
             if (t.boardIsEmpty()) {
                 return 0;
             } else {
-                AIBest aiBest = ai.chooseMove(Game.COMPUTER);
+                AIBest aiBest = ai.chooseMove(t.COMPUTER);
                 return aiBest.row * 3 + aiBest.column;
             }
         } else {

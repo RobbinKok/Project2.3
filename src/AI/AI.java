@@ -11,7 +11,7 @@ public class AI {
     }
 
     public AIBest chooseMove(int side) {
-        int opp = side == Game.PLAYER ? Game.COMPUTER : Game.PLAYER;
+        int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
         int bX = -1;
         int bY = -1;
         int value = Integer.MIN_VALUE;
@@ -24,7 +24,7 @@ public class AI {
             int current = game.getBoard()[y][x];
 
             game.place(y, x, side);
-            MinMaxResult moveVal = minimax(opp, side, 1, x, y);
+            MinMaxResult moveVal = minimax(opp, side, 2, x, y);
             game.place(y, x, current);
 
             if (moveVal.points > value/* || bestDepth < moveVal.depth*/) {
@@ -70,15 +70,15 @@ public class AI {
             game.place(x, y, side);
 
             MinMaxResult result = minimax(opp, side, depth + 1, x, y);
-            if (side == Game.COMPUTER) { // todo: replace with boolean
+            if (side == game.COMPUTER) { // todo: replace with boolean
                 max = Math.max(max, result.points);
-            } else if (side == Game.PLAYER) {
+            } else if (side == game.PLAYER) {
                 min = Math.min(min, result.points);
             }
 
             game.place(x, y, current);
         }
 
-        return new MinMaxResult(side == Game.COMPUTER ? max : min, depth);
+        return new MinMaxResult(side == game.COMPUTER ? max : min, depth);
     }
 }

@@ -1,3 +1,7 @@
+import AI.AI;
+import AI.Game;
+import AI.AIBest;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,16 +36,47 @@ public class OthelloGameController extends GUIController
 
     //int side = 0;
     Reversie reversie;
+    AI ai;
 
     private final NetworkClient networkClient;
-    private String player;
-    private String opponent;
+    private String firstPlayer;
 
     public OthelloGameController(NetworkClient networkClient) {
         this.networkClient = networkClient;
 
+        reversie = new Reversie(this);
+        ai = new AI(reversie);
+
+        if (networkClient.getPlayerName().equals(firstPlayer)) {
+            reversie.COMPUTER = Reversie.BLACK;
+            reversie.PLAYER = Reversie.WHITE;
+        }
+        else {
+            reversie.COMPUTER = Reversie.WHITE;
+            reversie.PLAYER = Reversie.BLACK;
+        }
+
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
+
+            commandHandler.addCommand(CommandHandler.CommandType.MyTurn, new Command() {
+                @Override
+                public void execute(String data) {
+                    int color = 0;
+                    if (networkClient.getPlayerName().equals(firstPlayer))
+                        color = reversie.PLAYER;
+                    else
+                        color = reversie.COMPUTER;
+
+                    AIBest aiBest = ai.chooseMove(color);
+
+                    System.out.println(aiBest);
+
+                    reversie.move(new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)});
+                    networkClient.move(aiBest.row,  aiBest.column, NetworkClient.GameType.Reversi);
+                    System.out.println("Making my move!");
+                }
+            });
 
             commandHandler.addCommand(CommandHandler.CommandType.Move, new MoveCommand(data -> {
                 String name, move, details;
@@ -49,29 +84,33 @@ public class OthelloGameController extends GUIController
                 move = data.get("MOVE");
                 details = data.get("DETAILS");
 
+                if (name.equals(networkClient.getPlayerName()))
+                    return;
+
                 int[] coords = NetworkClient.networkToLocalCoordinates(Integer.parseInt(move), NetworkClient.GameType.Reversi);
                 String[] stringCoords = new String[] {String.valueOf(coords[0]), String.valueOf(coords[1])};
+
                 reversie.move(stringCoords);
 
                 System.out.println("Player: " + name + " made move " + move + " with message: " + details);
             }));
 
             commandHandler.addCommand(CommandHandler.CommandType.Result, new MatchCommand(data -> {
-                String scoreOne, scoreTwo, comment;
-
-                scoreOne = data.get("PLAYERONESCORE");
-                scoreTwo = data.get("PLAYERTWOSCORE");
-                comment = data.get("COMMENT");
-
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Results");
-                    alert.setHeaderText("Score");
-                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
-                    alert.showAndWait();
-
-                    switchScene(gridPane.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(networkClient));
-                });
+//                String scoreOne, scoreTwo, comment;
+//
+//                scoreOne = data.get("PLAYERONESCORE");
+//                scoreTwo = data.get("PLAYERTWOSCORE");
+//                comment = data.get("COMMENT");
+//
+//                Platform.runLater(() -> {
+////                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+////                    alert.setTitle("Results");
+////                    alert.setHeaderText("Score");
+////                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
+////                    alert.showAndWait();
+//                });
+//
+//                switchScene(gridPane.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
             }));
         }
     }
@@ -80,7 +119,7 @@ public class OthelloGameController extends GUIController
     private void initialize()
     {
         fillGrid();
-        reversie = new Reversie(this);
+
         //gridpane.set
 
         System.out.println(playerOne);
@@ -91,7 +130,6 @@ public class OthelloGameController extends GUIController
         {
             switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
         });
-
     }
 
     public void setScore(int blackScore, int whiteScore)
@@ -133,6 +171,11 @@ public class OthelloGameController extends GUIController
                 addNode(x, y);
             }
         }
+
+        changeNodeColor(3, 4, Color.BLACK);
+        changeNodeColor(3, 3, Color.WHITE);
+        changeNodeColor(4, 3, Color.BLACK);
+        changeNodeColor(4, 4, Color.WHITE);
     }
 
     private void addNode(int x, int y)
@@ -202,19 +245,12 @@ public class OthelloGameController extends GUIController
         return this.networkClient;
     }
 
-    public void setOpponent(String opponent) {
-        this.opponent = opponent;
+    public void setFirstPlayer(String firstPlayer) {
+        this.firstPlayer = firstPlayer;
     }
 
-    public String getOpponent() {
-        return this.opponent;
+    public String getFirstPlayer() {
+        return this.firstPlayer;
     }
 
-    public String getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(String player) {
-        this.player = player;
-    }
 }

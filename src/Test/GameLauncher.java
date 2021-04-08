@@ -28,7 +28,7 @@ public class GameLauncher {
         if (game.boardIsEmpty()) {
             return 0;
         }
-        AIBest aiBest = ai.chooseMove(game.computerPlays() ? Game.COMPUTER : Game.PLAYER);
+        AIBest aiBest = ai.chooseMove(game.computerPlays() ? game.COMPUTER : game.PLAYER);
 
         return aiBest.row * 3 + aiBest.column;
     }

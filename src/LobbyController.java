@@ -69,20 +69,12 @@ public class LobbyController extends GUIController
 
             if (gameType.equals("Reversi")) {
                 OthelloGameController othelloGameController = new OthelloGameController(networkClient);
-                othelloGameController.setOpponent(data.get("OPPONENT"));
-                othelloGameController.setPlayer(networkClient.getPlayerName());
-                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", new OthelloGameController(networkClient));
+                othelloGameController.setFirstPlayer(data.get("PLAYERTOMOVE"));
+                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", othelloGameController);
             }
             else if (gameType.equals("Tic-tac-toe"))
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/TicTacToe.fxml",  new TicTacToeGameController(networkClient));
         }));
-
-        commandHandler.addCommand(CommandHandler.CommandType.MyTurn, new Command() {
-            @Override
-            public void execute(String data) {
-                System.out.println(data);
-            }
-        });
 
         commandHandler.addCommand(CommandHandler.CommandType.GameList, new GameListCommand(data -> {
             Platform.runLater(() -> {
@@ -134,7 +126,6 @@ public class LobbyController extends GUIController
         tableView.setOnMouseClicked(mouseEvent -> {
             String id = tableView.getSelectionModel().getSelectedItem().getId();
             networkClient.acceptChallenge(Integer.parseInt(id));
-            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", new OthelloGameController(networkClient));
         });
 
         subscribeButton.setOnMouseClicked(mouseEvent -> {

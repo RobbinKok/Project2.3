@@ -16,10 +16,10 @@ public class CommandHandler implements Runnable {
 
     private final HashMap<CommandType, Command> commands;
 
-    private ByteBuffer buffer;
+
 
     public CommandHandler(AsynchronousSocketChannel socketChannel) {
-        this.buffer = ByteBuffer.allocate(256);
+
         this.socketChannel = socketChannel;
         this.commands = new HashMap<>();
     }
@@ -32,20 +32,23 @@ public class CommandHandler implements Runnable {
 
         while (!shouldExit) {
             try {
-                buffer.clear();
-                Future<Integer> rawResult = socketChannel.read(this.buffer);
+                ByteBuffer buffer = ByteBuffer.allocate(256);
+
+                Future<Integer> rawResult = socketChannel.read(buffer);
                 rawResult.get();
 
-                String[] results = new String(this.buffer.array()).trim().split("\r\n");
+                String[] results = new String(buffer.array()).trim().split("\r\n");
                 for (String result : results)
                     unpackResponse(result);
 
                 //TODO: Zero memory of buffer -> find a fix this is ugly.
-                for (int i = 0;  i < this.buffer.limit(); i++)
-                    this.buffer.put(i, (byte)0);
+                for (int i = 0;  i < buffer.limit(); i++)
+                    buffer.put(i, (byte)0);
             }
             catch (Exception e) {
-                System.out.println(e);
+                for (int i = 0; i < e.getStackTrace().length; i++) {
+                    System.out.println(e.getStackTrace()[i]);
+                }
             }
         }
     }
@@ -122,6 +125,7 @@ public class CommandHandler implements Runnable {
                                 explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
                                 data = ArrayUtil.stringFromStringArray(explodedString);
                                 commands.get(CommandType.Result).execute(data);
+                                break;
                         }
                         break;
                     case "GAMELIST":

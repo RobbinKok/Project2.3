@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public abstract class Game {
 
-    public static final int PLAYER = 0;
-    public static final int COMPUTER = 1;
+    public int PLAYER = 0;
+    public int COMPUTER = 1;
     public static final int EMPTY = 2;
 
     public static final int PLAYER_WIN = 0;

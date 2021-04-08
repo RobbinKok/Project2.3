@@ -36,7 +36,7 @@ public class AardappelKroket {
 //            String line = reader.nextLine();
 //            return line.split(",");
 //        }
-        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? Game.COMPUTER : Game.PLAYER);
+        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER);
         System.out.println("x " + aiBest.row + " y " + aiBest.column);
         
         if (aiBest.row == -1 && aiBest.column == -1) {
