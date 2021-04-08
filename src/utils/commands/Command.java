@@ -1,5 +1,10 @@
 package utils.commands;
 
-public interface Command {
-    void execute();
+import utils.Callback;
+
+public abstract class Command {
+    protected String data;
+    protected Callback callback;
+
+    public abstract void execute(String data);
 }

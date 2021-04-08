@@ -8,6 +8,7 @@ public class AardappelKroket {
 
     public AardappelKroket() {
         // reversie = new Reversie();
+
         while (true) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());

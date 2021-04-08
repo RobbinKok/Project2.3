@@ -23,9 +23,9 @@ public class Reversie {
     private int blackScore;
     private int whiteScore;
 
-    OrthelloGameController gui;
+    OthelloGameController gui;
 
-    public Reversie(OrthelloGameController gui)
+    public Reversie(OthelloGameController gui)
     {
         this.gui = gui;
         resetBoard();
@@ -59,14 +59,14 @@ public class Reversie {
         for (int i = 0; i < board.length; i++) {
             Arrays.fill(board[i], EMPTY);
         }
-        board[3][4] = WHITE;
-        gui.changeNodeColor(3, 4, Color.WHITE);
-        board[3][3] = BLACK;
-        gui.changeNodeColor(3, 3, Color.BLACK);
-        board[4][3] = WHITE;
-        gui.changeNodeColor(4, 3, Color.WHITE);
-        board[4][4] = BLACK;
-        gui.changeNodeColor(4, 4, Color.BLACK);
+        board[3][4] = BLACK;
+        gui.changeNodeColor(3, 4, Color.BLACK);
+        board[3][3] = WHITE;
+        gui.changeNodeColor(3, 3, Color.WHITE);
+        board[4][3] = BLACK;
+        gui.changeNodeColor(4, 3, Color.BLACK);
+        board[4][4] = WHITE;
+        gui.changeNodeColor(4, 4, Color.WHITE);
     }
 
     public void playMove(int x, int y) {

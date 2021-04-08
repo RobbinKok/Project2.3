@@ -48,7 +48,7 @@ public class SpMenuController extends GUIController
             System.out.println(gameType);
             if(gameType.equals("Othello"))
             {
-                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OrthelloGameview.fxml", new OrthelloGameController());
+                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OrthelloGameview.fxml", new OthelloGameController(null));
             }
             else if(gameType.equals("Tic Tac Toe"))
             {

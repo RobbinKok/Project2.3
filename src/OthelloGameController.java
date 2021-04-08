@@ -8,8 +8,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import utils.commands.Command;
+import utils.commands.CommandHandler;
+import utils.commands.MoveCommand;
 
-public class OrthelloGameController extends GUIController
+public class OthelloGameController extends GUIController
 {
     @FXML
     private GridPane gridPane;
@@ -26,6 +29,27 @@ public class OrthelloGameController extends GUIController
 
     //int side = 0;
     Reversie reversie;
+
+    private final NetworkClient networkClient;
+
+    public OthelloGameController(NetworkClient networkClient) {
+        this.networkClient = networkClient;
+
+        CommandHandler commandHandler = networkClient.getCommandHandler();
+
+        commandHandler.addCommand(CommandHandler.CommandType.Move, new MoveCommand(data -> {
+            String name, move, details;
+            name = data.get("PLAYER");
+            move = data.get("MOVE");
+            details = data.get("DETAILS");
+
+            int[] coords = NetworkClient.networkToLocalCoordinates(Integer.parseInt(move), NetworkClient.GameType.Reversi);
+            String[] stringCoords = new String[] {String.valueOf(coords[0]), String.valueOf(coords[1])};
+            reversie.move(stringCoords);
+
+            System.out.println("Player: " + name + " made move " + move + " with message: " + details);
+        }));
+    }
 
     @FXML
     private void initialize()
@@ -100,7 +124,15 @@ public class OrthelloGameController extends GUIController
                 side = side==0 ? 1 : 0;*/
 
                 String[] coords = new String[]{String.valueOf(x), String.valueOf(y)};
-                reversie.move(coords);
+
+
+                if (reversie.moveOK(x, y)) {
+                    if (isMultiplayer())
+                        networkClient.move(x, y, NetworkClient.GameType.Reversi);
+                }
+                else {
+                    System.out.println("Move not valid!");
+                }
             }
         });
         gridPane.add(node, x, y);
@@ -138,4 +170,11 @@ public class OrthelloGameController extends GUIController
         return result;
     }
 
+    private boolean isMultiplayer() {
+        return this.networkClient != null;
+    }
+
+    public NetworkClient getNetworkClient() {
+        return this.networkClient;
+    }
 }

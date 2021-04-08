@@ -23,7 +23,7 @@ public class NetworkTestController extends Controller {
 
     @FXML
     private void onConnect() {
-        client.connect();
+        client.connect(null);
     }
 
     @FXML
