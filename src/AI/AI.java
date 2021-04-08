@@ -56,10 +56,8 @@ public class AI {
 
 
             int[][] board = game.getBoard();
-
-            board[x][y] = side;
-            game.setBoard(board);
-//            game.place(x, y, side);
+            int current = board[y][x];
+            game.place(x, y, side);
 
             MinMaxResult result = minimax(opp, side, depth + 1, x, y);
             if (side == Game.COMPUTER) { // todo: replace with boolean
@@ -68,10 +66,7 @@ public class AI {
                 min = Math.min(min, result.points);
             }
 
-
-            board[x][y] = Game.EMPTY;
-            game.setBoard(board);
-//            game.place(x, y, current);
+            game.place(x, y, current);
         }
 
         return new MinMaxResult(side == Game.COMPUTER ? max : min, depth);

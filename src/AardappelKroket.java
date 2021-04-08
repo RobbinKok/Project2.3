@@ -36,6 +36,12 @@ public class AardappelKroket {
 //        }
         AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? Game.COMPUTER : Game.PLAYER);
         System.out.println("x " + aiBest.row + " y " + aiBest.column);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)};
     }
 

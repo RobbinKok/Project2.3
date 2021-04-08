@@ -100,7 +100,8 @@ public class Reversie extends Game {
     public void move(String[] coords) {
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
-        System.out.println("Is this a corner?: " + isCorner(x, y));
+        // System.out.println("Is this a corner?: " + isCorner(x, y));
+        System.out.println("x: "+x+" y: "+y+" side: "+side);
         if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);
@@ -334,10 +335,10 @@ public class Reversie extends Game {
         for (int[] move : possibleMoves) {
             int x = move[0];
             int y = move[1];
-            board[x][y] = _side;
+            board[y][x] = _side;
             int[] moveVal = minmax(opponent, _side, 1, x, y);
 
-            board[x][y] = EMPTY;
+            board[y][x] = EMPTY;
 
             if (moveVal[0] > value) {
                 bestRow = y;
@@ -373,7 +374,7 @@ public class Reversie extends Game {
             int x = move[0];
             int y = move[1];
 
-            board[x][y] = _side;
+            board[y][x] = _side;
 
             int[] result = minmax(opp, _side, depth + 1, x, y);
             if (_side == WHITE) {
@@ -382,7 +383,7 @@ public class Reversie extends Game {
                 min = Math.min(min, result[0]);
             }
 
-            board[x][y] = EMPTY;
+            board[y][x] = EMPTY;
         }
 
         return _side == WHITE ? new int[]{max, depth} : new int[]{min, depth};
@@ -399,11 +400,7 @@ public class Reversie extends Game {
 
     @Override
     public void place(int x, int y, int side) {
-        if (side == EMPTY) {
-            board[x][y] = EMPTY;
-        } else {
-            move(new String[]{String.valueOf(x), String.valueOf(y)});
-        }
+        board[y][x] = side;
     }
 
     @Override
