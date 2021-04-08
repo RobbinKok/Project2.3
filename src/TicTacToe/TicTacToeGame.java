@@ -128,7 +128,7 @@ public class TicTacToeGame extends Game {
 
     // AI.AI logics
     @Override
-    public int check(int depth) {
+    public int check(int depth, int current_x, int current_y) {
         if (isAWin(Game.COMPUTER)) {
             return 10;
         } else if (isAWin(Game.PLAYER)) {

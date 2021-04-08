@@ -10,6 +10,14 @@
             "request": "launch",
             "vmArgs": "--module-path \"C:\\Program Files\\Java\\javafx-sdk-11.0.2\\lib\" --add-modules=javafx.controls,javafx.fxml,javafx.graphics",
             "mainClass": "App",
+            "projectName": "src_72f9607e"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "vmArgs": "--module-path \"C:\\Program Files\\Java\\javafx-sdk-11.0.2\\lib\" --add-modules=javafx.controls,javafx.fxml,javafx.graphics",
+            "mainClass": "App",
             "projectName": "java_a32dc067"
         },
         {

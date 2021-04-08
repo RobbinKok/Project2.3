@@ -407,14 +407,14 @@ public class Reversie extends Game {
     }
 
     @Override
-    public int check(int depth) {
+    public int check(int depth, int current_x, int current_y) {
         /*if (isCorner(current_x, current_y)) {
             return new int[]{_side == WHITE ? 1000 : -1000, depth};
         } else if (isAroundCorner(current_x, current_y)) {
             return new int[]{_side == WHITE ? -1000 : 1000, depth};
         } else */
 
-        if (depth == 8 /* || game over*/) {
+        if (depth == 2 /* || game over*/) {
             findAllScores();
             if (side == WHITE) {
                 return whiteScore;

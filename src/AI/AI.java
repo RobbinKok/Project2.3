@@ -35,8 +35,8 @@ public class AI {
         return new AIBest(value, bX, bY, bestDepth);
     }
 
-    private MinMaxResult minimax(int side, int opp, int depth) {
-        int check = game.check(depth);
+    private MinMaxResult minimax(int side, int opp, int depth, int  current_x, int current_y) {
+        int check = game.check(depth, current_x, current_y);
 
         if (check != 0) {
             return new MinMaxResult(check, depth);
@@ -61,7 +61,7 @@ public class AI {
             game.setBoard(board);
 //            game.place(x, y, side);
 
-            MinMaxResult result = minimax(opp, side, depth + 1);
+            MinMaxResult result = minimax(opp, side, depth + 1, x, y);
             if (side == Game.COMPUTER) { // todo: replace with boolean
                 max = Math.max(max, result.points);
             } else if (side == Game.PLAYER) {

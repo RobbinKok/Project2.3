@@ -40,5 +40,8 @@
             <Text layoutX="53.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Move List" textAlignment="CENTER" />
          </children>
       </Pane>
+      <Text fx:id="playerOne" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1:" />
+      <Text fx:id="playerTwo" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 2:" />
+      <Text fx:id="currentPlayer" layoutX="210.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Player:" textAlignment="CENTER" wrappingWidth="180.0" />
    </children>
 </AnchorPane>
