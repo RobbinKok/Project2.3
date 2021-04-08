@@ -18,11 +18,11 @@ public class AI {
             int x = move[0];
             int y = move[1];
 
-            int current = game.getBoard()[x][y];
+            int current = game.getBoard()[y][x];
 
-            game.place(x, y, side);
-            MinMaxResult moveVal = minimax(opp, side, 1);
-            game.place(x, y, current);
+            game.place(y, x, side);
+            MinMaxResult moveVal = minimax(opp, side, 1, x, y);
+            game.place(y, x, current);
 
             if (moveVal.points > value/* || bestDepth < moveVal.depth*/) {
                 bX = x;
