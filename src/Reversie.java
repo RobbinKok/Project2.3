@@ -5,23 +5,29 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
+import javafx.scene.paint.Color;
+
 public class Reversie {
 
     private static final int BLACK = 0;
     private static final int WHITE = 1;
     private static final int EMPTY = 2;
 
-    public static final int BLACK_WIN = 0;
-    public static final int DRAW = 1;
-    public static final int UNCLEAR = 2;
-    public static final int WHITE_WIN = 3;
+    public  static final int BLACK_WIN    = 0;
+    public  static final int DRAW         = 1;
+    public  static final int UNCLEAR      = 2;
+    public  static final int WHITE_WIN    = 3;
 
     private int[][] board = new int[8][8];
-    private int side = BLACK;
+    private int side=BLACK;
     private int blackScore;
     private int whiteScore;
 
-    public Reversie() {
+    OrthelloGameController gui;
+
+    public Reversie(OrthelloGameController gui)
+    {
+        this.gui = gui;
         resetBoard();
     }
 
@@ -37,7 +43,7 @@ public class Reversie {
     public String toString() {
         String output = "";
         for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
+            for(int j = 0; j < board[i].length; j++) {
                 if (board[j][i] != EMPTY) {
                     output += board[j][i] + " ";
                 } else {
@@ -49,54 +55,73 @@ public class Reversie {
         return output;
     }
 
-    private void resetBoard() {
+    private void resetBoard(){
         for (int i = 0; i < board.length; i++) {
             Arrays.fill(board[i], EMPTY);
         }
         board[3][4] = WHITE;
+        gui.changeNodeColor(3, 4, Color.WHITE);
         board[3][3] = BLACK;
+        gui.changeNodeColor(3, 3, Color.BLACK);
         board[4][3] = WHITE;
+        gui.changeNodeColor(4, 3, Color.WHITE);
         board[4][4] = BLACK;
+        gui.changeNodeColor(4, 4, Color.BLACK);
     }
 
     public void playMove(int x, int y) {
-        // TODO: Fill board based on player color (better implementation)
         board[x][y] = side;
-        if (side == BLACK) this.side = WHITE;
-        else this.side = BLACK;
+        // gui
+        if(side == BLACK) gui.changeNodeColor(x, y, Color.BLACK); else gui.changeNodeColor(x, y, Color.WHITE);
+
+        if (side==BLACK) this.side=WHITE; else this.side=BLACK;
+        gui.updateCurrentPlayer(side);
+        findAllScores();
+        // sets the score in the gui
+        gui.setScore(blackScore, whiteScore);
+        // adds the move to the movelist in the gui
+        gui.addMove(side, x+1, y+1);
     }
 
     public void move(String[] coords) {
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
-        System.out.println("Is this a corner?: " + isCorner(x, y));
+        System.out.println("Is this a corner?: " +  isCorner(x,y));
         if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);
+            if (gameOver()) {
+                winner();
+            }
         }
     }
 
     public boolean flip(int player, int x, int y, int direction) {
         int dir = 0;
-        for (int k = y - 1; k <= y + 1; k++) {
-            for (int s = x - 1; s <= x + 1; s++) {
-                if (k < 0 || k >= board.length || s < 0 || s >= board.length) {
+        for (int k=y-1; k<=y+1; k++) {
+            for (int s=x-1; s<=x+1; s++) {
+                if ( k<0 || k>=board.length || s<0 || s>=board.length) {
                     dir++;
                     continue;
                 }
-                if (board[s][k] != player && board[s][k] != EMPTY && direction == 4) {
-                    if (flip(player, s, k, dir)) {
-                        board[s][k] = player;
+                if (board[s][k]!=player && board[s][k]!=EMPTY && direction==4) {
+                    if (flip(player, s, k, dir))
+                    {
+                        if(side == BLACK) gui.changeNodeColor(s, k, Color.BLACK); else gui.changeNodeColor(s, k, Color.WHITE);
+
+                        board[s][k]=player;
                     }
                 }
-                if (board[s][k] != player && board[s][k] != EMPTY && direction == dir && dir != 4) {
+                if (board[s][k]!=player && board[s][k]!=EMPTY && direction==dir && dir!=4) {
                     if (flip(player, s, k, dir)) {
-                        board[s][k] = player;
+                        board[s][k]=player;
+                        if(side == BLACK) gui.changeNodeColor(s, k, Color.BLACK); else gui.changeNodeColor(s, k, Color.WHITE);
+
                         return true;
                     }
                 }
-                if (direction != 4 && dir == direction) {
-                    if (board[s][k] == player) {
+                if (direction!=4 && dir==direction) {
+                    if (board[s][k]==player) {
                         return true;
                     }
                 }
@@ -111,14 +136,14 @@ public class Reversie {
      */
     public int[] canFlip(int x, int y, int player, int direction) {
         int dir = 0;
-        for (int k = y - 1; k <= y + 1; k++) {
-            for (int s = x - 1; s <= x + 1; s++) {
-                if (direction == dir) {
-                    if (k < 0 || k >= board.length || s < 0 || s >= board.length || board[s][k] == player) {
+        for (int k=y-1; k<=y+1; k++) {
+            for (int s=x-1; s<=x+1; s++) {
+                if (direction==dir) {
+                    if (k<0 || k>=board.length || s<0 || s>=board.length || board[s][k]==player) {
                         int[] output = {-1, -1};
                         return output;
                     }
-                    if (board[s][k] != player && board[s][k] != EMPTY) {
+                    if (board[s][k]!=player && board[s][k]!=EMPTY) {
                         return canFlip(s, k, player, direction);
                     }
                     // System.out.println("x= "+ s+ " y= "+ k);
@@ -135,54 +160,54 @@ public class Reversie {
 
 
     /**
+     *
      * |0|1|2|
      * |3|4|5|
      * |6|7|8|
-     **/
+     *
+     * **/
     public ArrayList<int[]> checkBorders(int x, int y, int player) {
         ArrayList<int[]> output = new ArrayList<>();
         int dir = 0;
-        for (int k = y - 1; k <= y + 1; k++) {
-            for (int s = x - 1; s <= x + 1; s++) {
-                if (k < 0 || k >= board.length || s < 0 || s >= board.length) {
-                    dir++;
-                    continue;
-                }
-                if (board[s][k] != player && board[s][k] != EMPTY && dir != 4) {
-                    // return flipColor(k, s, player, x, y);
-                    int[] tmp = canFlip(s, k, player, dir);
-                    if (tmp[0] != -1) {
-                        output.add(tmp);
+            for (int k=y-1; k<=y+1; k++) {
+                for (int s=x-1; s<=x+1; s++) {
+                    if (k<0 || k>=board.length || s<0 || s>=board.length) {
+                        dir++;
+                        continue;
                     }
+                    if (board[s][k]!=player && board[s][k]!=EMPTY && dir!=4) {
+                        // return flipColor(k, s, player, x, y);
+                        int[] tmp = canFlip(s, k, player, dir);
+                        if(tmp[0]!=-1) {
+                            output.add(tmp);
+                        }
+                    }
+                    // if(dir==5) {
+                    //     System.out.println("side= "+side);
+                    //     System.out.println("dir 5: "+s+", "+k);
+                    //     System.out.println("player: "+ board[x][y]);
+                    // }
+                    dir++;
                 }
-                dir++;
             }
-        }
         return output;
     }
 
     public ArrayList<int[]> possibleMoves(int player) {
         ArrayList<int[]> output = new ArrayList<>();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
+        for (int i=0; i<board.length; i++) {
+            for (int j=0; j<board.length; j++) {
                 if (board[j][i] == player) {
                     ArrayList<int[]> tmp = checkBorders(j, i, player);
                     output.addAll(tmp);
                 }
             }
         }
-        if (output.size() == 0) {
-            if (side == BLACK) this.side = WHITE;
+        if (output.size()==0) {
+            if (side==BLACK) this.side=WHITE; else this.side=BLACK;
         }
-//        output.forEach(e -> {
-//            System.out.println("mogelijke zet: " + e[0] + "," + e[1]);
-//        });
+        // output.forEach(e -> {System.out.println("mogelijke zet: "+ e[0]+","+e[1]);});
         return output;
-    }
-
-    public boolean legalMove(int x, int y) {
-        // TODO: Check if the move is legal
-        return true;
     }
 
     public boolean moveOK(int x, int y) {
@@ -192,22 +217,49 @@ public class Reversie {
             return false;
         }
         for (int[] move : moves) {
-            if (move[0] == x && move[1] == y) return true;
+            if (move[0]==x && move[1]==y) return true;
         }
         System.out.println("Non-legal move.");
         return false;
     }
 
-    public boolean blackTurn() {
-        return false;
+    public void winner() {
+        findAllScores();
+        if (blackScore > whiteScore) {
+            System.out.println("Black Wins!");
+        } else 
+        if (blackScore < whiteScore) {
+            System.out.println("White Wins!");
+        } else {
+            System.out.println("It's a draw");
+        }
     }
 
     public boolean gameOver() {
+        boolean noEmpty = true;
+        boolean noMoves = false;
+        ArrayList<int[]> movesB = possibleMoves(BLACK);
+        ArrayList<int[]> movesW = possibleMoves(WHITE);
+        if (movesB.size()==0 && movesW.size()==0) noMoves=true;
+        for (int i=0; i<board.length; i++) {
+            for (int j=0; j<board.length; j++) {
+                if (board[j][i]==EMPTY) noEmpty=false;
+            }
+        }
+        if (noEmpty) {
+            System.out.println("Game Over");
+            return true;
+        }
+        if (noMoves) {
+            System.out.println("Game Over");
+            System.out.println("No moves possible");
+            return true;
+        }
         return false;
     }
 
-    public boolean isCorner(int r, int c) {
-        if (r == 0 && c == 0 || r == 7 && c == 7 || r == 0 && c == 7 || r == 7 && c == 0) {
+    public boolean isCorner(int r, int c){
+        if (r == 0 && c == 0 || r == 7 && c ==7 || r == 0 && c == 7 || r == 7 && c == 0) {
             return true;
         } else {
             return false;
@@ -307,7 +359,6 @@ public class Reversie {
             int y = move[1];
 
             board[x][y] = _side;
-
 
             int[] result = minmax(opp, _side, depth + 1, x, y);
             if (_side == WHITE) {
