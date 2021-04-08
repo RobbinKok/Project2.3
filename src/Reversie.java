@@ -5,29 +5,35 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
+
 import javafx.application.Platform;
+import AI.Game;
 import javafx.scene.paint.Color;
 
-public class Reversie {
+public class Reversie extends Game {
 
     private static final int BLACK = 0;
     private static final int WHITE = 1;
     private static final int EMPTY = 2;
 
-    public  static final int BLACK_WIN    = 0;
-    public  static final int DRAW         = 1;
-    public  static final int UNCLEAR      = 2;
-    public  static final int WHITE_WIN    = 3;
+    public static final int BLACK_WIN = 0;
+    public static final int DRAW = 1;
+    public static final int UNCLEAR = 2;
+    public static final int WHITE_WIN = 3;
 
     private int[][] board = new int[8][8];
-    private int side=BLACK;
+    private int side = BLACK;
     private int blackScore;
     private int whiteScore;
 
-    OthelloGameController gui;
+    OthelloGameController gui = null;
 
-    public Reversie(OthelloGameController gui)
-    {
+
+    public Reversie() {
+        resetBoard();
+    }
+
+    public Reversie(OthelloGameController gui) {
         this.gui = gui;
         resetBoard();
         findAllScores();
@@ -61,37 +67,41 @@ public class Reversie {
         for (int i = 0; i < board.length; i++) {
             Arrays.fill(board[i], EMPTY);
         }
-        board[3][4] = BLACK;
-        gui.changeNodeColor(3, 4, Color.BLACK);
-        board[3][3] = WHITE;
-        gui.changeNodeColor(3, 3, Color.WHITE);
-        board[4][3] = BLACK;
-        gui.changeNodeColor(4, 3, Color.BLACK);
-        board[4][4] = WHITE;
-        gui.changeNodeColor(4, 4, Color.WHITE);
+        board[3][4] = WHITE;
+        board[3][3] = BLACK;
+        board[4][3] = WHITE;
+        board[4][4] = BLACK;
+        if (gui != null) {
+            gui.changeNodeColor(3, 4, Color.WHITE);
+            gui.changeNodeColor(3, 3, Color.BLACK);
+            gui.changeNodeColor(4, 3, Color.WHITE);
+            gui.changeNodeColor(4, 4, Color.BLACK);
+        }
     }
 
     public void playMove(int x, int y) {
         board[x][y] = side;
+
         findAllScores();
 
         Platform.runLater(() -> {
             // gui
-            if(side == BLACK)
-                gui.changeNodeColor(x, y, Color.BLACK);
-            else
-                gui.changeNodeColor(x, y, Color.WHITE);
+            if (gui != null)
+                if (side == BLACK) gui.changeNodeColor(x, y, Color.BLACK);
+                else gui.changeNodeColor(x, y, Color.WHITE);
 
-            if (side==BLACK)
-                this.side=WHITE;
-            else
-                this.side=BLACK;
+            if (side == BLACK) this.side = WHITE;
+            else this.side = BLACK;
+            if (gui != null)
+                gui.updateCurrentPlayer(side);
+            findAllScores();
+            if (gui != null)
+                // sets the score in the gui
+                gui.setScore(blackScore, whiteScore);
 
-            gui.updateCurrentPlayer(side);
-            // sets the score in the gui
-            gui.setScore(blackScore, whiteScore);
-            // adds the move to the movelist in the gui
-            gui.addMove(side, x+1, y+1);
+            if (gui != null)
+                // adds the move to the movelist in the gui
+                gui.addMove(side, x + 1, y + 1);
         });
     }
 
@@ -116,18 +126,22 @@ public class Reversie {
                     dir++;
                     continue;
                 }
-                if (board[s][k]!=player && board[s][k]!=EMPTY && direction==4) {
-                    if (flip(player, s, k, dir))
-                    {
-                        if(side == BLACK) gui.changeNodeColor(s, k, Color.BLACK); else gui.changeNodeColor(s, k, Color.WHITE);
+                if (board[s][k] != player && board[s][k] != EMPTY && direction == 4) {
+                    if (flip(player, s, k, dir)) {
+                        if (gui != null)
+                            if (side == BLACK) gui.changeNodeColor(s, k, Color.BLACK);
+                            else gui.changeNodeColor(s, k, Color.WHITE);
+
 
                         board[s][k]=player;
                     }
                 }
-                if (board[s][k]!=player && board[s][k]!=EMPTY && direction==dir && dir!=4) {
+                if (board[s][k] != player && board[s][k] != EMPTY && direction == dir && dir != 4) {
                     if (flip(player, s, k, dir)) {
-                        board[s][k]=player;
-                        if(side == BLACK) gui.changeNodeColor(s, k, Color.BLACK); else gui.changeNodeColor(s, k, Color.WHITE);
+                        board[s][k] = player;
+                        if (gui != null)
+                            if (side == BLACK) gui.changeNodeColor(s, k, Color.BLACK);
+                            else gui.changeNodeColor(s, k, Color.WHITE);
 
                         return true;
                     }
@@ -148,14 +162,14 @@ public class Reversie {
      */
     public int[] canFlip(int x, int y, int player, int direction) {
         int dir = 0;
-        for (int k=y-1; k<=y+1; k++) {
-            for (int s=x-1; s<=x+1; s++) {
-                if (direction==dir) {
-                    if (k<0 || k>=board.length || s<0 || s>=board.length || board[s][k]==player) {
+        for (int k = y - 1; k <= y + 1; k++) {
+            for (int s = x - 1; s <= x + 1; s++) {
+                if (direction == dir) {
+                    if (k < 0 || k >= board.length || s < 0 || s >= board.length || board[s][k] == player) {
                         int[] output = {-1, -1};
                         return output;
                     }
-                    if (board[s][k]!=player && board[s][k]!=EMPTY) {
+                    if (board[s][k] != player && board[s][k] != EMPTY) {
                         return canFlip(s, k, player, direction);
                     }
                     // System.out.println("x= "+ s+ " y= "+ k);
@@ -215,8 +229,9 @@ public class Reversie {
                 }
             }
         }
-        if (output.size()==0) {
-            if (side==BLACK) this.side=WHITE; else this.side=BLACK;
+        if (output.size() == 0) {
+            if (side == BLACK) this.side = WHITE;
+            else this.side = BLACK;
         }
         // output.forEach(e -> {System.out.println("mogelijke zet: "+ e[0]+","+e[1]);});
         return output;
@@ -306,87 +321,50 @@ public class Reversie {
         }
     }
 
-    public String[] chooseMove() {
-        Best move = this.chooseMove(WHITE);
-        return new String[]{String.valueOf(move.row), String.valueOf(move.column)};
+    public boolean computerPlays() {
+        return this.side == WHITE;
     }
 
-    private Best chooseMove(int _side) {
-        int opponent = EMPTY;
-        int simpleEval;
-        int bestRow = -1;
-        int bestColumn = -1;
-        int value = Integer.MIN_VALUE;
-        ArrayList<int[]> possibleMoves = possibleMoves(_side);
-
-        if (_side == BLACK) {
-            opponent = WHITE;
-        }
-        if (_side == WHITE) {
-            opponent = BLACK;
-        }
-
-
-        //TODO: iedere possible move doorlopen en daar een minimax op uitoefenen
-        for (int[] move : possibleMoves) {
-            int x = move[0];
-            int y = move[1];
-            board[x][y] = _side;
-            int[] moveVal = minmax(opponent, _side, 1, x, y);
-
-            board[x][y] = EMPTY;
-
-            if (moveVal[0] > value) {
-                bestRow = y;
-                bestColumn = x;
-                value = moveVal[0];
-            }
-        }
-
-        return new Best(value, bestColumn, bestRow);
+    @Override
+    public ArrayList<int[]> getPossibleMoves(int side) {
+        return possibleMoves(side);
     }
 
-    private int[] minmax(int _side, int opp, int depth, int current_x, int current_y) {
-        if (isCorner(current_x, current_y)) {
+    @Override
+    public void place(int x, int y, int side) {
+        board[y][x] = side;
+    }
+
+    public void switchSide(){
+        if (this.side == BLACK){
+            this.side = WHITE;
+        } else if (this.side == WHITE){
+            this.side = BLACK;
+        }
+    }
+
+    @Override
+    public int check(int depth, int current_x, int current_y) {
+        /*if (isCorner(current_x, current_y)) {
             return new int[]{_side == WHITE ? 1000 : -1000, depth};
         } else if (isAroundCorner(current_x, current_y)) {
             return new int[]{_side == WHITE ? -1000 : 1000, depth};
-        } else if (depth == 8 /* || game over*/) {
+        } else */
+
+        if (depth == 2 /* || game over*/) {
             findAllScores();
-            if (_side == WHITE) {
-                return new int[]{whiteScore, depth};
-            } else if (_side == BLACK) {
-                return new int[]{-blackScore, depth};
+            if (side == WHITE) {
+                return whiteScore;
+            } else if (side == BLACK) {
+                return -blackScore;
             }
         }
-
-
-        int min = 1000;
-        int max = -1000;
-
-        ArrayList<int[]> possibleMoves = possibleMoves(_side);
-
-        for (int[] move : possibleMoves) {
-            int x = move[0];
-            int y = move[1];
-
-            board[x][y] = _side;
-
-            int[] result = minmax(opp, _side, depth + 1, x, y);
-            if (_side == WHITE) {
-                max = Math.max(max, result[0]);
-            } else if (_side == BLACK) {
-                min = Math.min(min, result[0]);
-            }
-
-            board[x][y] = EMPTY;
-        }
-
-        return _side == WHITE ? new int[]{max, depth} : new int[]{min, depth};
+        return 0;
     }
 
-    public boolean computerPlays() {
-        return this.side == WHITE;
+    @Override
+    public boolean boardIsFull() {
+        return false;
     }
 
     private class Best {
@@ -406,4 +384,13 @@ public class Reversie {
         }
     }
 
+    @Override
+    public int[][] getBoard() {
+        return board;
+    }
+
+    @Override
+    public void setBoard(int[][] board) {
+        this.board = board;
+    }
 }
