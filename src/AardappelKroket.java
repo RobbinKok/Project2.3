@@ -1,3 +1,7 @@
+import AI.AI;
+import AI.AIBest;
+import AI.Game;
+
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -5,9 +9,11 @@ import java.util.Scanner;
 public class AardappelKroket {
     private Scanner reader = new Scanner(System.in);
     private Reversie reversie;
+    private AI ai;
 
     public AardappelKroket() {
-        // reversie = new Reversie();
+        reversie = new Reversie();
+        ai = new AI(reversie);
         while (true) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
@@ -20,9 +26,10 @@ public class AardappelKroket {
 
     private String[] move() {
         if (reversie.computerPlays()) {
-            String[] compMove = reversie.chooseMove();
-            System.out.println("Computer Move = " + Arrays.toString(compMove));
-            return compMove;
+//            String[] compMove = reversie.chooseMove();
+//            System.out.println("Computer Move = " + Arrays.toString(compMove));
+            AIBest aiBest = ai.chooseMove(Game.COMPUTER);
+            return new String[]{ String.valueOf(aiBest.row), String.valueOf(aiBest.column) };
         } else {
             String line = reader.nextLine();
             return line.split(",");

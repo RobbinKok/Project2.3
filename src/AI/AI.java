@@ -18,11 +18,13 @@ public class AI {
             int x = move[0];
             int y = move[1];
 
+            int current = game.getBoard()[x][y];
+
             game.place(x, y, side);
             MinMaxResult moveVal = minimax(opp, side, 1);
-            game.place(x, y, Game.EMPTY);
+            game.place(x, y, current);
 
-            if (moveVal.points > value || bestDepth < moveVal.depth) {
+            if (moveVal.points > value/* || bestDepth < moveVal.depth*/) {
                 bX = x;
                 bY = y;
                 value = moveVal.points;
@@ -34,15 +36,15 @@ public class AI {
     }
 
     private MinMaxResult minimax(int side, int opp, int depth) {
-        int check = game.check();
+        int check = game.check(depth);
 
         if (check != 0) {
             return new MinMaxResult(check, depth);
         }
 
-        if (game.boardIsFull()) {
-            return new MinMaxResult(0, depth);
-        }
+//        if (game.boardIsFull()) {
+//            return new MinMaxResult(0, depth);
+//        }
 
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
@@ -51,7 +53,13 @@ public class AI {
             int x = move[0];
             int y = move[1];
 
-            game.place(x, y, side);
+
+
+            int[][] board = game.getBoard();
+
+            board[x][y] = side;
+            game.setBoard(board);
+//            game.place(x, y, side);
 
             MinMaxResult result = minimax(opp, side, depth + 1);
             if (side == Game.COMPUTER) { // todo: replace with boolean
@@ -60,7 +68,10 @@ public class AI {
                 min = Math.min(min, result.points);
             }
 
-            game.place(x, y, Game.EMPTY);
+
+            board[x][y] = Game.EMPTY;
+            game.setBoard(board);
+//            game.place(x, y, current);
         }
 
         return new MinMaxResult(side == Game.COMPUTER ? max : min, depth);

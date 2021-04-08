@@ -19,7 +19,11 @@ public abstract class Game {
 
     public abstract void place(int x, int y, int side);
 
-    public abstract int check();
+    public abstract int check(int depth);
 
     public abstract boolean boardIsFull();
+
+    public abstract int[][] getBoard();
+
+    public abstract void setBoard(int[][] board);
 }
