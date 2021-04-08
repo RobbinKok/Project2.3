@@ -18,6 +18,8 @@ public class NetworkClient extends Observable {
     private AsynchronousSocketChannel client;
     private final InetSocketAddress hostAddress;
 
+    private String playerName;
+
     public NetworkClient(String host, int port) {
         this.hostAddress = new InetSocketAddress(host, port);
     }
@@ -168,5 +170,13 @@ public class NetworkClient extends Observable {
         coords[1] = (int)Math.floor(coord / dimension);
 
         return coords;
+    }
+
+    public String getPlayerName() {
+        return this.playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }

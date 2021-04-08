@@ -52,7 +52,7 @@ public class SpMenuController extends GUIController
             }
             else if(gameType.equals("Tic Tac Toe"))
             {
-                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/TicTacToe.fxml", new TicTacToeGameController());
+                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/TicTacToe.fxml", new TicTacToeGameController(null));
             }
         });
     }

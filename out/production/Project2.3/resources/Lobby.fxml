@@ -4,7 +4,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
@@ -13,11 +12,13 @@
    <children>
       <Text layoutX="284.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lobby" />
       <Button fx:id="returnButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Return" />
-      <ListView fx:id="playerList" layoutX="23.0" layoutY="79.0" prefHeight="268.0" prefWidth="264.0" AnchorPane.leftAnchor="20.0" />
-      <TableView fx:id="tableView" layoutX="300.0" layoutY="79.0" prefHeight="268.0" prefWidth="278.0" AnchorPane.rightAnchor="20.0" />
+      <ListView fx:id="playerList" layoutX="23.0" layoutY="115.0" prefHeight="232.0" prefWidth="264.0" AnchorPane.leftAnchor="20.0" />
+      <TableView fx:id="tableView" layoutX="300.0" layoutY="115.0" prefHeight="232.0" prefWidth="278.0" AnchorPane.rightAnchor="20.0" />
       <Button fx:id="goButton" layoutX="548.0" layoutY="361.0" mnemonicParsing="false" text="Go" />
       <ComboBox fx:id="gameTypes" layoutX="302.0" layoutY="45.0" prefHeight="25.0" prefWidth="205.0" promptText="GameType" />
       <Button fx:id="subscribeButton" layoutX="512.0" layoutY="45.0" mnemonicParsing="false" text="Subscribe" />
       <CheckBox fx:id="playAsAI" layoutX="456.0" layoutY="365.0" mnemonicParsing="false" text="Play as AI" />
+      <Text layoutX="20.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Players Online" />
+      <Text layoutX="300.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Challenges" />
    </children>
 </AnchorPane>

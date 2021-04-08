@@ -1,5 +1,6 @@
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -56,8 +57,19 @@ public class MpMenuController extends GUIController
 
         goButton.setOnAction(value ->
         {
+            if (this.userNameTextField.getText().isBlank()) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Warning");
+                    alert.setContentText("Username can not be empty!");
+                    alert.showAndWait();
+                });
+                return;
+            }
+
             this.networkClient.connect((data) -> {
-                this.networkClient.login(this.userNameTextField.getText());
+                this.networkClient.setPlayerName(this.userNameTextField.getText());
+                this.networkClient.login(this.networkClient.getPlayerName());
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
             });
         });

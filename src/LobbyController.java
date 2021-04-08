@@ -42,7 +42,16 @@ public class LobbyController extends GUIController
         CommandHandler commandHandler = this.networkClient.getCommandHandler();
 
         commandHandler.addCommand(CommandHandler.CommandType.Error, new ErrorCommand(data -> {
-            System.out.println(data);
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error!");
+                alert.setHeaderText("Network Error Response");
+                alert.setContentText(data);
+                alert.showAndWait();
+
+                if (data.contains("Duplicate name exists"))
+                    switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/MultiplayerMenu.fxml", new MpMenuController());
+            });
         }));
 
         commandHandler.addCommand(CommandHandler.CommandType.Challenge, new ChallengeCommand(data -> {
@@ -52,18 +61,21 @@ public class LobbyController extends GUIController
             number = data.get("CHALLENGENUMBER");
             type = data.get("GAMETYPE");
 
-            System.out.println("Player: " + name + " has challenged you to: " + type + " with number " + number);
-
             this.challenges.add(new Challenge(name, number, type));
-
         }));
 
-        commandHandler.addCommand(CommandHandler.CommandType.Match, new Command() {
-            @Override
-            public void execute(String data) {
+        commandHandler.addCommand(CommandHandler.CommandType.Match, new MatchCommand(data -> {
+            String gameType = data.get("GAMETYPE");
+
+            if (gameType.equals("Reversi")) {
+                OthelloGameController othelloGameController = new OthelloGameController(networkClient);
+                othelloGameController.setOpponent(data.get("OPPONENT"));
+                othelloGameController.setPlayer(networkClient.getPlayerName());
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", new OthelloGameController(networkClient));
             }
-        });
+            else if (gameType.equals("Tic-tac-toe"))
+                switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/TicTacToe.fxml",  new TicTacToeGameController(networkClient));
+        }));
 
         commandHandler.addCommand(CommandHandler.CommandType.MyTurn, new Command() {
             @Override
@@ -85,7 +97,10 @@ public class LobbyController extends GUIController
                 playerList.getItems().removeAll(playerList.getItems());
 
                 for(String name : data) {
-                    this.playerList.getItems().add(name);
+                    if (name.equals(networkClient.getPlayerName()))
+                        this.playerList.getItems().add(name + " (Me)");
+                    else
+                        this.playerList.getItems().add(name);
                 }
             });
         }));
@@ -122,34 +137,46 @@ public class LobbyController extends GUIController
             switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", new OthelloGameController(networkClient));
         });
 
-        //tableView.setItems(arg0);
-        playerList.getSelectionModel().selectedItemProperty().addListener(
-            new ChangeListener<String>() 
-            {
-                public void changed(ObservableValue<? extends String> ov, 
-                    String old_val, String new_val) 
-                    {
-                        // geselecteerde waarde -> new_val
-                        System.out.println(new_val);
-                    }
-                }
-            );
-
         subscribeButton.setOnMouseClicked(mouseEvent -> {
             String gameType = gameTypes.getSelectionModel().getSelectedItem();
+            System.out.println(gameType);
             networkClient.subscribe(NetworkClient.GameType.valueOf(gameType));
         });
 
         goButton.setOnAction(value ->
         {
-            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", new OthelloGameController(this.networkClient));
+            switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", new OthelloGameController(networkClient));
         });
 
         playerList.setOnMouseClicked(mouseEvent -> {
             String name = playerList.getSelectionModel().getSelectedItem();
 
-            if (!name.isBlank() || !name.isEmpty())
+            if (name.isBlank() || name.isEmpty())
+                return;
+
+            if (name.contains(networkClient.getPlayerName())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Cannot Challenge Yourself!");
+                alert.show();
+                return;
+            }
+
+            String selectedGame = gameTypes.getSelectionModel().getSelectedItem();
+
+            if (selectedGame == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setContentText("Please select a GameType");
+                alert.showAndWait();
+                return;
+            }
+
+            if (selectedGame.equals("Reversi"))
                 this.networkClient.challengePlayer(name, NetworkClient.GameType.Reversi);
+            else if (selectedGame.equals("Tic-tac-toe")) {
+                this.networkClient.challengePlayer(name, NetworkClient.GameType.TicTacToe);
+            }
         });
 
         this.networkClient.getList(NetworkClient.ListType.Playerlist);

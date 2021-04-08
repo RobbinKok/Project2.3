@@ -2,6 +2,7 @@ package utils.commands;
 
 import utils.ArrayUtil;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ public class CommandHandler implements Runnable {
     }
 
     public void addCommand(CommandType type, Command command) {
+        if (commands.containsKey(type))
+            return;
+
         synchronized (this.commands) {
             this.commands.put(type, command);
         }
@@ -112,6 +116,12 @@ public class CommandHandler implements Runnable {
                                 data = ArrayUtil.stringFromStringArray(explodedString);
                                 commands.get(CommandType.Move).execute(data);
                                 break;
+                            case "WIN":
+                            case "LOSS":
+                            case "DRAW":
+                                explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+                                data = ArrayUtil.stringFromStringArray(explodedString);
+                                commands.get(CommandType.Result).execute(data);
                         }
                         break;
                     case "GAMELIST":
@@ -131,6 +141,7 @@ public class CommandHandler implements Runnable {
     public enum CommandType {
         Move,
         Match,
+        Result,
         MyTurn,
         GameList,
         PlayerList,

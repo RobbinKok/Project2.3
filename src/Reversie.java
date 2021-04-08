@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
 public class Reversie {
@@ -29,6 +30,7 @@ public class Reversie {
     {
         this.gui = gui;
         resetBoard();
+        findAllScores();
     }
 
     public int getBlackScore() {
@@ -71,16 +73,26 @@ public class Reversie {
 
     public void playMove(int x, int y) {
         board[x][y] = side;
-        // gui
-        if(side == BLACK) gui.changeNodeColor(x, y, Color.BLACK); else gui.changeNodeColor(x, y, Color.WHITE);
-
-        if (side==BLACK) this.side=WHITE; else this.side=BLACK;
-        gui.updateCurrentPlayer(side);
         findAllScores();
-        // sets the score in the gui
-        gui.setScore(blackScore, whiteScore);
-        // adds the move to the movelist in the gui
-        gui.addMove(side, x+1, y+1);
+
+        Platform.runLater(() -> {
+            // gui
+            if(side == BLACK)
+                gui.changeNodeColor(x, y, Color.BLACK);
+            else
+                gui.changeNodeColor(x, y, Color.WHITE);
+
+            if (side==BLACK)
+                this.side=WHITE;
+            else
+                this.side=BLACK;
+
+            gui.updateCurrentPlayer(side);
+            // sets the score in the gui
+            gui.setScore(blackScore, whiteScore);
+            // adds the move to the movelist in the gui
+            gui.addMove(side, x+1, y+1);
+        });
     }
 
     public void move(String[] coords) {

@@ -1,7 +1,9 @@
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -10,6 +12,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import utils.commands.Command;
 import utils.commands.CommandHandler;
+import utils.commands.MatchCommand;
 import utils.commands.MoveCommand;
 
 public class OthelloGameController extends GUIController
@@ -31,24 +34,46 @@ public class OthelloGameController extends GUIController
     Reversie reversie;
 
     private final NetworkClient networkClient;
+    private String player;
+    private String opponent;
 
     public OthelloGameController(NetworkClient networkClient) {
         this.networkClient = networkClient;
 
-        CommandHandler commandHandler = networkClient.getCommandHandler();
+        if (isMultiplayer()) {
+            CommandHandler commandHandler = networkClient.getCommandHandler();
 
-        commandHandler.addCommand(CommandHandler.CommandType.Move, new MoveCommand(data -> {
-            String name, move, details;
-            name = data.get("PLAYER");
-            move = data.get("MOVE");
-            details = data.get("DETAILS");
+            commandHandler.addCommand(CommandHandler.CommandType.Move, new MoveCommand(data -> {
+                String name, move, details;
+                name = data.get("PLAYER");
+                move = data.get("MOVE");
+                details = data.get("DETAILS");
 
-            int[] coords = NetworkClient.networkToLocalCoordinates(Integer.parseInt(move), NetworkClient.GameType.Reversi);
-            String[] stringCoords = new String[] {String.valueOf(coords[0]), String.valueOf(coords[1])};
-            reversie.move(stringCoords);
+                int[] coords = NetworkClient.networkToLocalCoordinates(Integer.parseInt(move), NetworkClient.GameType.Reversi);
+                String[] stringCoords = new String[] {String.valueOf(coords[0]), String.valueOf(coords[1])};
+                reversie.move(stringCoords);
 
-            System.out.println("Player: " + name + " made move " + move + " with message: " + details);
-        }));
+                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
+            }));
+
+            commandHandler.addCommand(CommandHandler.CommandType.Result, new MatchCommand(data -> {
+                String scoreOne, scoreTwo, comment;
+
+                scoreOne = data.get("PLAYERONESCORE");
+                scoreTwo = data.get("PLAYERTWOSCORE");
+                comment = data.get("COMMENT");
+
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Results");
+                    alert.setHeaderText("Score");
+                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
+                    alert.showAndWait();
+
+                    switchScene(gridPane.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(networkClient));
+                });
+            }));
+        }
     }
 
     @FXML
@@ -125,7 +150,6 @@ public class OthelloGameController extends GUIController
 
                 String[] coords = new String[]{String.valueOf(x), String.valueOf(y)};
 
-
                 if (reversie.moveOK(x, y)) {
                     if (isMultiplayer())
                         networkClient.move(x, y, NetworkClient.GameType.Reversi);
@@ -176,5 +200,21 @@ public class OthelloGameController extends GUIController
 
     public NetworkClient getNetworkClient() {
         return this.networkClient;
+    }
+
+    public void setOpponent(String opponent) {
+        this.opponent = opponent;
+    }
+
+    public String getOpponent() {
+        return this.opponent;
+    }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(String player) {
+        this.player = player;
     }
 }

@@ -29,6 +29,11 @@ public class TicTacToeGameController  extends GUIController
     private GridPane gridPane;
 
     //private TicTacToe game;
+    private NetworkClient networkClient;
+
+    public TicTacToeGameController(NetworkClient networkClient) {
+        this.networkClient = networkClient;
+    }
 
     @FXML
     private void initialize() throws IOException
