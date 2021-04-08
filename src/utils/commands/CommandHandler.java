@@ -81,7 +81,38 @@ public class CommandHandler implements Runnable {
 
                 switch (explodedString[0]) {
                     case "GAME":
-                        //commands.get(CommandType.Game).execute("");
+                        explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+
+                        switch (explodedString[0]) {
+                            case "CHALLENGE":
+                                explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+
+                                if (explodedString[0].equals("CANCELLED")) {
+                                    explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+                                    data = ArrayUtil.stringFromStringArray(explodedString);
+                                    commands.get(CommandType.ChallengeCancelled).execute(data);
+                                    break;
+                                }
+
+                                data = ArrayUtil.stringFromStringArray(explodedString);
+                                commands.get(CommandType.Challenge).execute(data);
+                                break;
+                            case "MATCH":
+                                explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+                                data = ArrayUtil.stringFromStringArray(explodedString);
+                                commands.get(CommandType.Match).execute(data);
+                                break;
+                            case "YOURTURN":
+                                explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+                                data = ArrayUtil.stringFromStringArray(explodedString);
+                                commands.get(CommandType.MyTurn).execute(data);
+                                break;
+                            case "MOVE":
+                                explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
+                                data = ArrayUtil.stringFromStringArray(explodedString);
+                                commands.get(CommandType.Move).execute(data);
+                                break;
+                        }
                         break;
                     case "GAMELIST":
                         explodedString = ArrayUtil.removeFromStringArray(explodedString, 0);
@@ -98,10 +129,13 @@ public class CommandHandler implements Runnable {
     }
 
     public enum CommandType {
-        Game,
+        Move,
+        Match,
+        MyTurn,
         GameList,
         PlayerList,
         Error,
-        Challenge
+        Challenge,
+        ChallengeCancelled
     }
 }

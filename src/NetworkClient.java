@@ -81,8 +81,8 @@ public class NetworkClient extends Observable {
         sendMessage("subscribe " + gameType.toString());
     }
 
-    public void move(int x, int y) {
-        sendMessage("move " + localToNetworkCoordinates(x, y));
+    public void move(int x, int y, GameType type) {
+        sendMessage("move " + localToNetworkCoordinates(x, y, type));
     }
 
     public void challengePlayer(String name, GameType gameType) {
@@ -123,6 +123,10 @@ public class NetworkClient extends Observable {
         this.commandHandlerThread.start();
     }
 
+    public boolean isConnected() {
+        return this.client.isOpen();
+    }
+
     public enum ListType {
         Gamelist,
         Playerlist
@@ -133,7 +137,36 @@ public class NetworkClient extends Observable {
         TicTacToe
     }
 
-    private int localToNetworkCoordinates(int x, int y) {
-        return 0;
+    public static int localToNetworkCoordinates(int x, int y, GameType type) {
+        int dimension = 0;
+
+        if (type.equals(GameType.Reversi))
+            dimension = 8;
+        else if (type.equals(GameType.TicTacToe))
+            dimension = 3;
+
+        int networkCoordinate = 0;
+        for (int i = 0; i < y; i++) {
+            networkCoordinate += dimension;
+        }
+        networkCoordinate += x;
+
+        return networkCoordinate;
+    }
+
+    public static int[] networkToLocalCoordinates(int coord, GameType type) {
+        int dimension = 0;
+
+        if (type.equals(GameType.Reversi))
+            dimension = 8;
+        else if (type.equals(GameType.TicTacToe))
+            dimension = 3;
+
+        int[] coords = new int[2];
+
+        coords[0] = Math.floorMod(coord, dimension);
+        coords[1] = (int)Math.floor(coord / dimension);
+
+        return coords;
     }
 }

@@ -1,6 +1,5 @@
 package utils;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -41,7 +40,14 @@ public class ArrayUtil {
     }
 
     public static HashMap<String, String> stringToHashMap(String string) {
-        // TODO: Extract all the keys and values from the data string provided by command handler.
-        return new HashMap<>();
+        HashMap<String, String> results = new HashMap<>();
+
+        Pattern pattern = Pattern.compile("(\\w+)\\:\\s\\\"([\\w-]+)\\\"");
+        Matcher matcher = pattern.matcher(string);
+
+        while(matcher.find())
+            results.put(matcher.group(1), matcher.group(2));
+
+        return results;
     }
 }

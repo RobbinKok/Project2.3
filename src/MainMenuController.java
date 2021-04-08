@@ -1,13 +1,7 @@
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.io.IOException;
-import java.io.FileInputStream;
-
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
+
+import java.io.IOException;
 
 public class MainMenuController extends GUIController
 {
@@ -48,6 +42,5 @@ public class MainMenuController extends GUIController
                 // gebruik platform.exit!!!!
                 System.exit(0);
         });
-        
     }
 }
