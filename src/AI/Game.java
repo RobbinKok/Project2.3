@@ -2,7 +2,7 @@ package AI;
 
 import java.util.ArrayList;
 
-public abstract class Game {
+public abstract class Game implements Cloneable {
 
     public int PLAYER = 0;
     public int COMPUTER = 1;
@@ -26,4 +26,9 @@ public abstract class Game {
     public abstract int[][] getBoard();
 
     public abstract void setBoard(int[][] board);
+
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
 }

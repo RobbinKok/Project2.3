@@ -13,8 +13,12 @@ public class AardappelKroket {
     private boolean playing = true;
 
     public AardappelKroket() {
+        long startTime = System.currentTimeMillis();
         reversie = new Reversie();
         ai = new AI(reversie);
+        reversie.COMPUTER = Reversie.WHITE;
+        reversie.PLAYER = Reversie.BLACK;
+        reversie.side = Reversie.BLACK;
         while (playing) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
@@ -24,6 +28,8 @@ public class AardappelKroket {
             reversie.move(move());
         }
         System.out.println("DONE!");
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
     }
 
     private String[] move() {
