@@ -19,6 +19,7 @@ public class NetworkClient extends Observable {
     private final InetSocketAddress hostAddress;
 
     private String playerName;
+    private String firstPlayer;
 
     public NetworkClient(String host, int port) {
         this.hostAddress = new InetSocketAddress(host, port);
@@ -178,5 +179,13 @@ public class NetworkClient extends Observable {
 
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
+    }
+
+    public String getFirstPlayer() {
+        return this.firstPlayer;
+    }
+
+    public void setFirstPlayer(String firstPlayer) {
+        this.firstPlayer = firstPlayer;
     }
 }

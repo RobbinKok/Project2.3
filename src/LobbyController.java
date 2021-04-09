@@ -68,8 +68,8 @@ public class LobbyController extends GUIController
             String gameType = data.get("GAMETYPE");
 
             if (gameType.equals("Reversi")) {
+                networkClient.setFirstPlayer(data.get("PLAYERTOMOVE"));
                 OthelloGameController othelloGameController = new OthelloGameController(networkClient);
-                othelloGameController.setFirstPlayer(data.get("PLAYERTOMOVE"));
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", othelloGameController);
             }
             else if (gameType.equals("Tic-tac-toe"))
@@ -97,7 +97,8 @@ public class LobbyController extends GUIController
             });
         }));
 
-        this.networkClient.startCommandHandler();
+        if (!this.networkClient.getCommandHandler().isRunning())
+            this.networkClient.startCommandHandler();
     }
 
     @FXML

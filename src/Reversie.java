@@ -92,12 +92,12 @@ public class Reversie extends Game {
                 // adds the move to the movelist in the gui
                 gui.addMove(side, x + 1, y + 1);
             }
-        });
 
-        if (side == BLACK)
-            this.side = WHITE;
-        else
-            this.side = BLACK;
+            if (side == BLACK)
+                this.side = WHITE;
+            else
+                this.side = BLACK;
+        });
     }
 
     public void move(String[] coords) {

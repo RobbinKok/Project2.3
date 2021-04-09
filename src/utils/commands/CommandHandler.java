@@ -13,10 +13,9 @@ import java.util.concurrent.Future;
 public class CommandHandler implements Runnable {
     private final AsynchronousSocketChannel socketChannel;
     private boolean shouldExit;
+    private boolean isRunning;
 
     private final HashMap<CommandType, Command> commands;
-
-
 
     public CommandHandler(AsynchronousSocketChannel socketChannel) {
 
@@ -26,10 +25,12 @@ public class CommandHandler implements Runnable {
 
     @Override
     public void run() {
+        isRunning = true;
+
         if (socketChannel == null) {
             shouldExit = true;
         }
-
+        int number = 0;
         while (!shouldExit) {
             try {
                 ByteBuffer buffer = ByteBuffer.allocate(256);
@@ -41,6 +42,8 @@ public class CommandHandler implements Runnable {
                 for (String result : results)
                     unpackResponse(result);
 
+                number++;
+                System.out.println("Number of responses: " + number);
                 //TODO: Zero memory of buffer -> find a fix this is ugly.
                 for (int i = 0;  i < buffer.limit(); i++)
                     buffer.put(i, (byte)0);
@@ -51,6 +54,7 @@ public class CommandHandler implements Runnable {
                 }
             }
         }
+        isRunning = false;
     }
 
     public void halt() {
@@ -141,7 +145,11 @@ public class CommandHandler implements Runnable {
                 }
         }
     }
-
+    
+    public boolean isRunning() {
+        return isRunning;
+    }
+    
     public enum CommandType {
         Move,
         Match,
