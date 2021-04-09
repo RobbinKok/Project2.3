@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.net.InetSocketAddress;
+
 public class NetworkTestController extends Controller {
     @FXML
     private TextArea serverOutput;
@@ -23,7 +25,7 @@ public class NetworkTestController extends Controller {
 
     @FXML
     private void onConnect() {
-        client.connect(null);
+        client.connect(new InetSocketAddress("127.0.0.1", 7789), null);
     }
 
     @FXML

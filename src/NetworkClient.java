@@ -21,11 +21,13 @@ public class NetworkClient extends Observable {
     private String playerName;
     private String firstPlayer;
 
+    private boolean playAsAI;
+
     public NetworkClient(String host, int port) {
         this.hostAddress = new InetSocketAddress(host, port);
     }
 
-    public void connect(Callback<Void> callback) {
+    public void connect(InetSocketAddress address, Callback<Void> callback) {
         if (client == null || !client.isOpen())
             try {
                 this.client = AsynchronousSocketChannel.open();
@@ -34,14 +36,16 @@ public class NetworkClient extends Observable {
                 System.out.println(e);
             }
 
-        client.connect(this.hostAddress, null, new CompletionHandler<>() {
+        client.connect(address, null, new CompletionHandler<>() {
             @Override
             public void completed(Void unused, Object o) {
                 ByteBuffer buffer = ByteBuffer.allocate(256);
                 Future<Integer> result = client.read(buffer);
 
                 try { result.get(); } // Remove the server welcome message.
-                catch (Exception ignored) {}
+                catch (Exception e) {
+                    System.out.println(e);
+                }
 
                 commandHandler = new CommandHandler(client);
 
@@ -187,5 +191,13 @@ public class NetworkClient extends Observable {
 
     public void setFirstPlayer(String firstPlayer) {
         this.firstPlayer = firstPlayer;
+    }
+
+    public void setPlayAsAI(boolean value) {
+        this.playAsAI = value;
+    }
+
+    public boolean getPlayAsAI() {
+        return this.playAsAI;
     }
 }

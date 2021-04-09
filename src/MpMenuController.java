@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.Properties;
 
 public class MpMenuController extends GUIController
@@ -67,7 +68,7 @@ public class MpMenuController extends GUIController
                 return;
             }
 
-            this.networkClient.connect((data) -> {
+            this.networkClient.connect(new InetSocketAddress(hostTextField.getText(), Integer.parseInt(portTextField.getText())), (data) -> {
                 this.networkClient.setPlayerName(this.userNameTextField.getText());
                 this.networkClient.login(this.networkClient.getPlayerName());
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));

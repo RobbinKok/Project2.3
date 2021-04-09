@@ -20,6 +20,7 @@ import utils.commands.MatchCommand;
 import utils.commands.MoveCommand;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class OthelloGameController extends GUIController
 {
@@ -63,18 +64,21 @@ public class OthelloGameController extends GUIController
             commandHandler.addCommand(CommandHandler.CommandType.MyTurn, new Command() {
                 @Override
                 public void execute(String data) {
-                    AIBest aiBest = ai.chooseMove(reversie.COMPUTER);
+//                    AIBest aiBest = ai.chooseMove(reversie.COMPUTER);
+//                    System.out.println(aiBest);
+//                    reversie.move(new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)});
+//                    networkClient.move(aiBest.row,  aiBest.column, NetworkClient.GameType.Reversi);
 
-                    System.out.println(aiBest);
+                    if (networkClient.getPlayAsAI()) {
+                        ArrayList<int[]> possibleMoves = reversie.possibleMoves(reversie.COMPUTER);
+                        int[] move = possibleMoves.get(new Random().nextInt(possibleMoves.size() - 1));
 
-                    reversie.move(new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)});
-
-                    try {
-                        Thread.sleep(500);
+                        if (reversie.moveOK(move[0], move[1])) {
+                            reversie.move(new String[]{String.valueOf(move[0]), String.valueOf(move[1])});
+                            networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
+                        }
                     }
-                    catch (Exception ignored) {}
 
-                    networkClient.move(aiBest.row,  aiBest.column, NetworkClient.GameType.Reversi);
                     System.out.println("Making my move!");
                 }
             });
@@ -95,6 +99,7 @@ public class OthelloGameController extends GUIController
                 String[] stringCoords = new String[] {String.valueOf(coords[0]), String.valueOf(coords[1])};
 
                 reversie.move(stringCoords);
+                //System.out.println(reversie);
 
                 System.out.println("Player: " + name + " made move " + move + " with message: " + details);
             }));
@@ -115,7 +120,7 @@ public class OthelloGameController extends GUIController
 
                 });
 
-                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
+//                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
             }));
         }
     }
@@ -199,6 +204,7 @@ public class OthelloGameController extends GUIController
                 String[] coords = new String[]{String.valueOf(x), String.valueOf(y)};
 
                 if (reversie.moveOK(x, y)) {
+                    reversie.move(coords);
                     if (isMultiplayer())
                         networkClient.move(x, y, NetworkClient.GameType.Reversi);
                 }

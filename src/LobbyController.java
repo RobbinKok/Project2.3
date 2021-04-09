@@ -69,6 +69,7 @@ public class LobbyController extends GUIController
 
             if (gameType.equals("Reversi")) {
                 networkClient.setFirstPlayer(data.get("PLAYERTOMOVE"));
+                networkClient.setPlayAsAI(playAsAI.isSelected());
                 OthelloGameController othelloGameController = new OthelloGameController(networkClient);
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", othelloGameController);
             }

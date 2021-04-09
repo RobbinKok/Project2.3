@@ -224,23 +224,28 @@ public class Reversie extends Game {
                 }
             }
         }
-        if (output.size() == 0) {
-            if (side == BLACK) this.side = WHITE;
-            else this.side = BLACK;
-        }
+//        if (output.size() == 0) {
+//            if (side == BLACK) this.side = WHITE;
+//            else this.side = BLACK;
+//        }
         // output.forEach(e -> {System.out.println("mogelijke zet: "+ e[0]+","+e[1]);});
         return output;
     }
 
     public boolean moveOK(int x, int y) {
+        System.out.println("Checking for move: " + x + " : " + y);
         ArrayList<int[]> moves = possibleMoves(side);
         if (x < 0 || y < 0 || x >= board.length || y >= board.length) {
             System.out.println("Move out of bounds.");
             return false;
         }
+        for(int[] debug: moves)
+            System.out.println("Possible move: " + debug[0] + " : " + debug[1]);
+
         for (int[] move : moves) {
             if (move[0]==x && move[1]==y) return true;
         }
+        System.out.println("x:"+ x + " y:" + y);
         System.out.println("Non-legal move.");
         return false;
     }
