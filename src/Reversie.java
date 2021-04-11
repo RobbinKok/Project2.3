@@ -103,14 +103,20 @@ public class Reversie extends Game {
     public void move(String[] coords) {
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
+//
+//        ArrayList<int[]> move = possibleMoves(side);
+//        for (int[] moves: move){
+//            System.out.println("Check move: " + moves[0] + " : " + moves[1]);
+//        }
+
 //        System.out.println("Is this a corner?: " +  isCorner(x,y));
-        if (moveOK(x, y)) {
+//        if (moveOK(x, y)) {
             flip(side, x, y, 4);
             playMove(x, y);
             if (gameOver()) {
                 winner();
             }
-        }
+//        }
     }
 
     public boolean flip(int player, int x, int y, int direction) {
@@ -220,6 +226,11 @@ public class Reversie extends Game {
             for (int j=0; j<board.length; j++) {
                 if (board[j][i] == player) {
                     ArrayList<int[]> tmp = checkBorders(j, i, player);
+
+                    for (int[] moves : tmp){
+                        System.out.println("CheckBorders " + moves[0] + ":" + moves[1]);
+                    }
+
                     output.addAll(tmp);
                 }
             }
@@ -235,6 +246,7 @@ public class Reversie extends Game {
     public boolean moveOK(int x, int y) {
         System.out.println("Checking for move: " + x + " : " + y);
         ArrayList<int[]> moves = possibleMoves(side);
+
         if (x < 0 || y < 0 || x >= board.length || y >= board.length) {
             System.out.println("Move out of bounds.");
             return false;

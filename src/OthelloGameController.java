@@ -20,6 +20,7 @@ import utils.commands.MatchCommand;
 import utils.commands.MoveCommand;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class OthelloGameController extends GUIController
@@ -73,10 +74,13 @@ public class OthelloGameController extends GUIController
                         ArrayList<int[]> possibleMoves = reversie.possibleMoves(reversie.COMPUTER);
                         int[] move = possibleMoves.get(new Random().nextInt(possibleMoves.size() - 1));
 
-                        if (reversie.moveOK(move[0], move[1])) {
+//                        if (reversie.moveOK(move[0], move[1])) {
                             reversie.move(new String[]{String.valueOf(move[0]), String.valueOf(move[1])});
+                        try{
+                            Thread.sleep(2000);
+                        } catch (Exception ignored){}
                             networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
-                        }
+//                        }
                     }
 
                     System.out.println("Making my move!");
