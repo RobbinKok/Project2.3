@@ -2,6 +2,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.concurrent.ForkJoinPool;
 
 public class MainMenuController extends GUIController
