@@ -281,7 +281,7 @@ public class ReversieV2 extends GameV2 {
         int score = 0;
         if (isRegion5(column, row)) {
             score = 10;
-        } else if (depth == 7) {
+        } else if (depth == 8) {
             if (isRegion5(column, row)) {
                 score = 10;
             } else if (isRegion4(column, row)) {

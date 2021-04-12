@@ -88,10 +88,10 @@ public class AIv2 {
 
         @Override
         public void run() {
-            value = miniMax(this.opp, this.side, this.depth, this.row, this.column, this.board);
+            value = miniMax(this.opp, this.side, this.depth, this.row, this.column, this.board, Integer.MIN_VALUE, Integer.MAX_VALUE);
         }
 
-        private MinMaxResult miniMax(int side, int opp, int depth, int current_x, int current_y, int[][] board) {
+        private MinMaxResult miniMax(int side, int opp, int depth, int current_x, int current_y, int[][] board, int alpha, int beta) {
             int check = game.checkScore(board, current_x, current_y, depth);
 
             if (check != 0) {
@@ -111,11 +111,17 @@ public class AIv2 {
 //                board[move_column][move_row] = side;
                 board = game.place(board, column, row, side);
 
-                MinMaxResult result = miniMax(opp, side, depth + 1, move_row, move_column, board);
+                MinMaxResult result = miniMax(opp, side, depth + 1, move_row, move_column, board, alpha, beta);
                 if (side == game.COMPUTER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
+                    alpha = Math.max(alpha, result.points);
+                    if (beta <=  alpha)
+                        break;
                 } else if (side == game.PLAYER) {
                     min = Math.min(min, result.points);
+                    beta = Math.min(beta, result.points);
+                    if (beta <= alpha)
+                        break;
                 }
 
 //                board[move_column][move_row] = current;
