@@ -107,7 +107,7 @@ public class AIv2 {
                 int move_row = move[0];
                 int move_column = move[1];
 
-                int current = board[move_column][move_row];
+                int[][] current = board;
 //                board[move_column][move_row] = side;
                 board = game.place(board, column, row, side);
 
@@ -124,6 +124,7 @@ public class AIv2 {
                         break;
                 }
 
+                board = current;
 //                board[move_column][move_row] = current;
 //                game.place(board, column, row, current);
             }
