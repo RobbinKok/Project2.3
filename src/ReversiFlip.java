@@ -33,7 +33,7 @@ public class ReversiFlip {
                     dir++;
                     continue;
                 }
-                if (board[s][k] != player && board[s][k] != EMPTY && direction == 4 /*&& direction != dir*/) {
+                if (board[s][k] != player && board[s][k] != EMPTY && direction == 4 && direction != dir) {
                     if (flip(player, s, k, dir)) {
                         if (gui != null)
                             gui.changeNodeColor(s, k, player == 0 ? Color.BLACK : Color.WHITE);

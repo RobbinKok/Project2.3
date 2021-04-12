@@ -107,7 +107,8 @@ public class AIv2 {
                 int move_column = move[1];
 
                 int current = board[move_column][move_row];
-                board[move_column][move_row] = side;
+//                board[move_column][move_row] = side;
+                game.place(board, column, row, side);
 
                 MinMaxResult result = miniMax(opp, side, depth + 1, move_row, move_column, board);
                 if (side == game.COMPUTER) { // todo: replace with boolean
@@ -116,7 +117,8 @@ public class AIv2 {
                     min = Math.min(min, result.points);
                 }
 
-                board[move_column][move_row] = current;
+//                board[move_column][move_row] = current;
+                game.place(board, column, row, current);
             }
 
             return new MinMaxResult(side == game.COMPUTER ? max : min, depth);

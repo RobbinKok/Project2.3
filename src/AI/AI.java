@@ -11,7 +11,7 @@ public class AI {
         this.game = game;
     }
 
-    public AIBest chooseMove(int side) {
+    public AIBest chooseMove(int side, int[][] board) {
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
         int bX = -1;
         int bY = -1;
@@ -19,7 +19,7 @@ public class AI {
         int bestDepth = Integer.MAX_VALUE;
 
 
-        int[][] board = this.game.getBoard();
+//        int[][] board = this.game.getBoard();
         for (int[] move : game.getPossibleMoves(board, side)) {
             int x = move[0];
             int y = move[1];

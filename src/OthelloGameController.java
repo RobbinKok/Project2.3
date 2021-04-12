@@ -1,4 +1,4 @@
-import AI.AIv2;
+import AI.AI;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -36,7 +36,7 @@ public class OthelloGameController extends GUIController {
 
     //int side = 0;
     private final ReversieV2 reversie;
-    private final AIv2 ai;
+    private final AI ai;
 
     private final NetworkClient networkClient;
 
@@ -53,7 +53,7 @@ public class OthelloGameController extends GUIController {
         }
 
         reversie = new ReversieV2(computerColor, playerColor, this);
-        ai = new AIv2(reversie);
+        ai = new AI(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
@@ -62,18 +62,18 @@ public class OthelloGameController extends GUIController {
                 @Override
                 public void execute(String data) {
                     if (networkClient.getPlayAsAI()) {
-//                        AIBest bestMove = ai.chooseMove(playerColor);
+                        AIBest bestMove = ai.chooseMove(playerColor, reversie.getBoard());
 //                        reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
-                        ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), playerColor);
-                        for (int[] coords : moves) {
-                            System.out.println(NetworkClient.localToNetworkCoordinates(coords[0], coords[1], NetworkClient.GameType.Reversi));
-                        }
-                        int[] move = moves.get(new Random().nextInt(moves.size()));
+//                        ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), playerColor);
+//                        for (int[] coords : moves) {
+//                            System.out.println(NetworkClient.localToNetworkCoordinates(coords[0], coords[1], NetworkClient.GameType.Reversi));
+//                        }
+//                        int[] move = moves.get(new Random().nextInt(moves.size()));
 
-                        networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
+                        networkClient.move(bestMove.column, bestMove.row, NetworkClient.GameType.Reversi);
 
-                        reversie.playMove(move[0], move[1], playerColor);
+                        reversie.playMove(bestMove.column, bestMove.row, playerColor);
 
                         try {
                             Thread.sleep(1000);
