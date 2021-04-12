@@ -13,11 +13,11 @@ public class AardappelKroket {
 
     public AardappelKroket() {
         long startTime = System.currentTimeMillis();
-        reversie = new ReversieV2(0, 1);
+        reversie = new ReversieV2(ReversieV2.WHITE, ReversieV2.BLACK);
         ai = new AI(reversie);
-        reversie.COMPUTER = Reversie.WHITE;
-        reversie.PLAYER = Reversie.BLACK;
-        reversie.side = Reversie.BLACK;
+//        reversie.COMPUTER = Reversie.WHITE;
+//        reversie.PLAYER = Reversie.BLACK;
+//        reversie.side = Reversie.BLACK;
         while (playing) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
@@ -42,7 +42,7 @@ public class AardappelKroket {
 //            String line = reader.nextLine();
 //            return line.split(",");
 //        }
-        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER, reversie.getBoard());
+        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER);
         System.out.println("x " + aiBest.row + " y " + aiBest.column);
         
         if (aiBest.row == -1 && aiBest.column == -1) {
