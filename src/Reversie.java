@@ -32,7 +32,7 @@ public class Reversie extends Game {
     }
 
     public Reversie(OthelloGameController gui) {
-        this.gui = gui;
+//        this.gui = gui;
         resetBoard();
         findAllScores();
     }

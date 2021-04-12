@@ -1,6 +1,5 @@
 package Test;
 
-import AI.AI;
 import AI.AIv2;
 import AI.AIBest;
 import TicTacToe.TicTacToeGame;
@@ -12,7 +11,7 @@ public class GameLauncher {
 
     public GameLauncher() {
         game = new TicTacToeGame();
-        ai = new AIv2(game);
+//        ai = new AIv2(game);
 
 
         while (!game.gameOver()) {

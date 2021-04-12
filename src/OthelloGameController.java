@@ -1,6 +1,4 @@
-import AI.AI;
 import AI.AIv2;
-import AI.Game;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -8,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -21,11 +18,9 @@ import utils.commands.MatchCommand;
 import utils.commands.MoveCommand;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
-public class OthelloGameController extends GUIController
-{
+public class OthelloGameController extends GUIController {
     @FXML
     private GridPane gridPane;
     @FXML
@@ -40,25 +35,25 @@ public class OthelloGameController extends GUIController
     private Button giveUpButton;
 
     //int side = 0;
-    Reversie reversie;
-    AIv2 ai;
+    private final ReversieV2 reversie;
+    private final AIv2 ai;
 
     private final NetworkClient networkClient;
 
     public OthelloGameController(NetworkClient networkClient) {
         this.networkClient = networkClient;
-
-        reversie = new Reversie(this);
-        ai = new AIv2(reversie);
+        int playerColor, computerColor;
 
         if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
-            reversie.COMPUTER = Reversie.BLACK;
-            reversie.PLAYER = Reversie.WHITE;
+            playerColor = Reversie.BLACK;
+            computerColor = Reversie.WHITE;
+        } else {
+            playerColor = Reversie.WHITE;
+            computerColor = Reversie.BLACK;
         }
-        else {
-            reversie.COMPUTER = Reversie.WHITE;
-            reversie.PLAYER = Reversie.BLACK;
-        }
+
+        reversie = new ReversieV2(computerColor, playerColor, this);
+        ai = new AIv2(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
@@ -66,30 +61,29 @@ public class OthelloGameController extends GUIController
             commandHandler.addCommand(CommandHandler.CommandType.MyTurn, new Command() {
                 @Override
                 public void execute(String data) {
-//                    AIBest aiBest = ai.chooseMove(reversie.COMPUTER);
-//                    System.out.println(aiBest);
-//                    reversie.move(new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)});
-//                    networkClient.move(aiBest.row,  aiBest.column, NetworkClient.GameType.Reversi);
-
                     if (networkClient.getPlayAsAI()) {
-                        ArrayList<int[]> possibleMoves = reversie.possibleMoves(reversie.COMPUTER);
+//                        AIBest bestMove = ai.chooseMove(playerColor);
+//                        reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
+                        ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), playerColor);
+                        for (int[] coords : moves) {
+                            System.out.println(NetworkClient.localToNetworkCoordinates(coords[0], coords[1], NetworkClient.GameType.Reversi));
+                        }
+                        int[] move = moves.get(new Random().nextInt(moves.size()));
 
+                        networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
 
-//                        int[] move = possibleMoves.get(new Random().nextInt(possibleMoves.size() - 1));
-                        AIBest aiBest = ai.chooseMove(reversie.COMPUTER);
+                        reversie.playMove(move[0], move[1], playerColor);
 
-//                        if (reversie.moveOK(move[0], move[1])) {
-//                            reversie.move(new String[]{String.valueOf(move[0]), String.valueOf(move[1])});
-                            reversie.move(new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)});
-                        try{
+                        try {
                             Thread.sleep(1000);
-                        } catch (Exception ignored){}
-//                            networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
-                            networkClient.move(aiBest.row, aiBest.column, NetworkClient.GameType.Reversi);
-//                        }
+                        } catch (Exception ignored) {
+                        }
+
+//                    networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
                     }
 
+                    System.out.println(reversie);
                     System.out.println("Making my move!");
                 }
             });
@@ -103,16 +97,13 @@ public class OthelloGameController extends GUIController
                 if (name.equals(networkClient.getPlayerName())) {
                     return;
                 }
-
-                System.out.println("MOVE Playing for: " + reversie.side);
+//                System.out.println("MOVE Playing for: " + reversie.side);
 
                 int[] coords = NetworkClient.networkToLocalCoordinates(Integer.parseInt(move), NetworkClient.GameType.Reversi);
-                String[] stringCoords = new String[] {String.valueOf(coords[0]), String.valueOf(coords[1])};
 
-                reversie.move(stringCoords);
-                //System.out.println(reversie);
+                reversie.playMove(coords[0], coords[1], computerColor);
 
-                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
+//                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
             }));
 
             commandHandler.addCommand(CommandHandler.CommandType.Result, new MatchCommand(data -> {
@@ -137,8 +128,7 @@ public class OthelloGameController extends GUIController
     }
 
     @FXML
-    private void initialize()
-    {
+    private void initialize() {
         fillGrid();
 
         //gridpane.set
@@ -153,42 +143,30 @@ public class OthelloGameController extends GUIController
         });
     }
 
-    public void setScore(int blackScore, int whiteScore)
-    {
-            playerOne.setText("Black: " + blackScore);
-            playerTwo.setText("White: " + whiteScore);
+    public void setScore(int blackScore, int whiteScore) {
+        playerOne.setText("Black: " + blackScore);
+        playerTwo.setText("White: " + whiteScore);
     }
 
-    public void updateCurrentPlayer(int side)
-    {
-        if(side == 0)
-        {
+    public void updateCurrentPlayer(int side) {
+        if (side == 0) {
             currentPlayer.setText("Current Player: Black");
-        }
-        else
-        {
+        } else {
             currentPlayer.setText("Current Player: White");
         }
     }
 
-    public void addMove(int side, int x, int y)
-    {
-        if(side == 0)
-        {
+    public void addMove(int side, int x, int y) {
+        if (side == 0) {
 //            movesList.getItems().add("Black to [" + x + "," + y + "]");
-        }
-        else
-        {
+        } else {
 //            movesList.getItems().add("White to [" + x + "," + y + "]");
         }
     }
 
-    private void fillGrid()
-    {
-        for(int x = 0; x < 8; x++)
-        {
-            for(int y = 0; y < 8; y++)
-            {
+    private void fillGrid() {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
                 addNode(x, y);
             }
         }
@@ -199,57 +177,46 @@ public class OthelloGameController extends GUIController
         changeNodeColor(4, 4, Color.WHITE);
     }
 
-    private void addNode(int x, int y)
-    {
+    private void addNode(int x, int y) {
         Circle node = new Circle(0, 0, 10);
         node.setStroke(Color.BLACK);
         node.setOpacity(0);
         node.setOnMouseClicked(value -> {
-            if(node.getOpacity() < 1)
-            {
+            if (node.getOpacity() < 1) {
                 /*Color tmp = side==0 ? Color.BLACK : Color.WHITE;
                 node.setFill(tmp);
                 node.setOpacity(1);
                 side = side==0 ? 1 : 0;*/
 
-                String[] coords = new String[]{String.valueOf(x), String.valueOf(y)};
+                reversie.playMove(x, y, reversie.side);
 
-                if (reversie.moveOK(x, y)) {
-                    reversie.move(coords);
-                    if (isMultiplayer())
-                        networkClient.move(x, y, NetworkClient.GameType.Reversi);
-                }
-                else {
-                    System.out.println("Move not valid!");
-                }
+                if (isMultiplayer())
+                    networkClient.move(x, y, NetworkClient.GameType.Reversi);
             }
         });
         gridPane.add(node, x, y);
+        gridPane.add(new Text(String.valueOf(NetworkClient.localToNetworkCoordinates(x, y, NetworkClient.GameType.Reversi))), x, y);
         GridPane.setHalignment(node, HPos.CENTER);
     }
 
-    public void changeNodeColor(int x, int y, Color color)
-    {
-        Node node = getNodeByRowColumnIndex(y, x, this.gridPane);
-        Circle circle = (Circle)node;
-        
+    public void changeNodeColor(int column, int row, Color color) {
+        Node node = getNodeByRowColumnIndex(row, column, this.gridPane);
+        Circle circle = (Circle) node;
+
         circle.setFill(color);
         node.setOpacity(1);
     }
 
-    public Node getNodeByRowColumnIndex (final int row, final int column, GridPane gridPane) {
+    public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> childrens = gridPane.getChildren();
-    
+
         for (Node node : childrens) {
-            try 
-            {
-                if(GridPane.getRowIndex(node) != null)
-                {
-                    if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) 
-                    {
-                    result = node;
-                    break;
+            try {
+                if (GridPane.getRowIndex(node) != null) {
+                    if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+                        result = node;
+                        break;
                     }
                 }
             } catch (Exception e) {

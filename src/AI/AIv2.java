@@ -3,15 +3,11 @@ package AI;
 import java.util.ArrayList;
 
 public class AIv2 {
+    private GameV2 game;
 
-
-    private Game game;
-
-
-    public AIv2(Game game) {
+    public AIv2(GameV2 game) {
         this.game = game;
     }
-
 
     public synchronized AIBest chooseMove(int side) {
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
@@ -23,14 +19,14 @@ public class AIv2 {
         ArrayList<MiniMax> miniMaxArray = new ArrayList<>();
         ArrayList<Thread> threads = new ArrayList<>();
 
-        for (int[] move : game.getPossibleMoves(side)) {
+        int[][] board = game.getBoard();
+        for (int[] move : game.getPossibleMoves(board, side)) {
             int row = move[0];
             int column = move[1];
 
-            int[][] board = game.getBoard();
             int current = board[column][row];
-            board[column][row] = side;
-//            game.place(column, row, side);
+//            board[column][row] = side;
+            game.place(board, column, row, side);
 
             // runnable
             MiniMax miniMax = new MiniMax(board, opp, side, 2, row, column);
@@ -39,8 +35,8 @@ public class AIv2 {
             miniMaxArray.add(miniMax);
             threads.add(thread);
 
-//            game.place(column, row, current);
-            board[column][row] = current;
+            game.place(board, column, row, current);
+//            board[column][row] = current;
         }
 
         for (Thread thread : threads) {
@@ -95,13 +91,13 @@ public class AIv2 {
         }
 
         private MinMaxResult miniMax(int side, int opp, int depth, int current_x, int current_y, int[][] board) {
-            int check = game.check(depth, current_x, current_y);
+            int check = game.checkScore(board, depth, current_x, current_y);
 
             if (check != 0) {
                 return new MinMaxResult(check, depth);
             }
 
-            ArrayList<int[]> moves = game.getPossibleMoves(side/*, board*/);
+            ArrayList<int[]> moves = game.getPossibleMoves(board, side/*, board*/);
 
             int max = Integer.MIN_VALUE;
             int min = Integer.MAX_VALUE;

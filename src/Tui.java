@@ -15,7 +15,7 @@ public class Tui {
         do {
             System.out.println("*** new AI.Game ***\n");
             t = new TicTacToeGame();
-            ai = new AIv2(t);
+//            ai = new AIv2(t);
             if (t.computerPlays())
                 System.out.println("I start:\n");
             else

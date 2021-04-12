@@ -18,19 +18,27 @@ public class ReversiFlip {
         this.gui = gui;
     }
 
-    public boolean flip(int player, int x, int y, int direction) {
+    /**
+     * k = ROW
+     * s = COLUMN
+     * |0|1|2|
+     * |3|4|5|
+     * |6|7|8|
+     **/
+    public boolean flip(int player, int column, int row, int direction) {
         int dir = 0;
-        for (int k = y - 1; k <= y + 1; k++) {
-            for (int s = x - 1; s <= x + 1; s++) {
+        for (int k = row - 1; k <= row + 1; k++) {
+            for (int s = column - 1; s <= column + 1; s++) {
                 if (k < 0 || k >= board.length || s < 0 || s >= board.length) {
                     dir++;
                     continue;
                 }
-                if (board[s][k] != player && board[s][k] != EMPTY && direction == 4) {
+                if (board[s][k] != player && board[s][k] != EMPTY && direction == 4 /*&& direction != dir*/) {
                     if (flip(player, s, k, dir)) {
                         if (gui != null)
-                            if (player == ReversieV2.WHITE) gui.changeNodeColor(s, k, Color.BLACK);
-                            else gui.changeNodeColor(s, k, Color.WHITE);
+                            gui.changeNodeColor(s, k, player == 0 ? Color.BLACK : Color.WHITE);
+//                            if (player == ReversieV2.WHITE) gui.changeNodeColor(s, k, Color.BLACK);
+//                            else gui.changeNodeColor(s, k, Color.WHITE);
                         board[s][k] = player;
                     }
                 }
@@ -38,8 +46,9 @@ public class ReversiFlip {
                     if (flip(player, s, k, dir)) {
                         board[s][k] = player;
                         if (gui != null)
-                            if (player == ReversieV2.WHITE) gui.changeNodeColor(s, k, Color.BLACK); // TODO: KIJKEN OF SIDE ECHT WEL PLAYER MOCHT WORDEN
-                            else gui.changeNodeColor(s, k, Color.WHITE);
+                            gui.changeNodeColor(s, k, player == 0 ? Color.BLACK : Color.WHITE);
+//                            if (player == ReversieV2.WHITE) gui.changeNodeColor(s, k, Color.BLACK); // TODO: KIJKEN OF SIDE ECHT WEL PLAYER MOCHT WORDEN
+//                            else gui.changeNodeColor(s, k, Color.WHITE);
 
                         return true;
                     }
@@ -56,12 +65,14 @@ public class ReversiFlip {
     }
 
     /**
+     * k = ROW
+     * s = COLUMN
      * return -1,-1 direction heeft geen mogelijke zet.
      */
-    public int[] canFlip(int x, int y, int player, int direction) {
+    public int[] canFlip(int column, int row, int player, int direction) {
         int dir = 0;
-        for (int k = y - 1; k <= y + 1; k++) {
-            for (int s = x - 1; s <= x + 1; s++) {
+        for (int k = row - 1; k <= row + 1; k++) {
+            for (int s = column - 1; s <= column + 1; s++) {
                 if (direction == dir) {
                     if (k < 0 || k >= board.length || s < 0 || s >= board.length || board[s][k] == player) {
                         int[] output = {-1, -1};

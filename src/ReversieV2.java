@@ -14,7 +14,7 @@ public class ReversieV2 extends GameV2 {
 
     public int side;
 
-    public OthelloGameController gui = null;
+    private OthelloGameController gui;
 
     private int blackScore;
     private int whiteScore;
@@ -29,11 +29,10 @@ public class ReversieV2 extends GameV2 {
         findAllScores();
     }
 
-    public ReversieV2(int playerColor, int computerColor, OthelloGameController gui) {
+    public ReversieV2(int playerColor, int computerColor, OthelloGameController othelloGameController) {
         this(playerColor, computerColor);
-        this.gui = gui;
+        gui = othelloGameController;
     }
-
 
     public int getBlackScore() {
         return blackScore;
@@ -80,11 +79,11 @@ public class ReversieV2 extends GameV2 {
         flip.flip(side, column, row, 4);
         playingBoard = flip.getBoard();
 
-        playingBoard[row][column] = side;
+        playingBoard[column][row] = side;
 
         findAllScores();
 
-        if (this.gui != null) {
+        if (gui != null) {
             if (side == BLACK)
                 gui.changeNodeColor(column, row, Color.BLACK);
             else
@@ -103,12 +102,22 @@ public class ReversieV2 extends GameV2 {
     }
 
 
+    /**
+     * k = ROW
+     * s = COLUMN
+     *
+     * @param column
+     * @param row
+     * @param side
+     * @param board
+     * @return
+     */
     public ArrayList<int[]> checkBorders(int column, int row, int side, int[][] board) {
         ArrayList<int[]> output = new ArrayList<>();
         ReversiFlip flip = new ReversiFlip(board);
         int dir = 0;
-        for (int k = column - 1; k <= column + 1; k++) {
-            for (int s = row - 1; s <= row + 1; s++) {
+        for (int k = row - 1; k <= row + 1; k++) {
+            for (int s = column - 1; s <= column + 1; s++) {
                 if (k < 0 || k >= board.length || s < 0 || s >= board.length) {
                     dir++;
                     continue;
@@ -136,30 +145,33 @@ public class ReversieV2 extends GameV2 {
     }
 
     /**
-     *         Arrays.stream(matrix).map(int[]::clone).toArray(int[][]::new)
+     * Arrays.stream(matrix).map(int[]::clone).toArray(int[][]::new)
+     *
      * @return
      */
     @Override
     public int[][] getBoard() {
         int[][] board = new int[8][8];
 
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board[i].length; j++) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
                 board[i][j] = playingBoard[i][j];
             }
         }
 
         return this.playingBoard;
     }
-
+    //0 8
+    // 1 9
+    // 2 10
 
     @Override
     public ArrayList<int[]> getPossibleMoves(int[][] board, int side) {
         ArrayList<int[]> output = new ArrayList<>();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                if (board[j][i] == side) {
-                    ArrayList<int[]> tmp = checkBorders(j, i, side, board);
+        for (int row = 0; row < board.length; row++) {
+            for (int column = 0; column < board[row].length; column++) {
+                if (board[column][row] == side) {
+                    ArrayList<int[]> tmp = checkBorders(column, row, side, board);
                     output.addAll(tmp);
                 }
             }
@@ -247,6 +259,21 @@ public class ReversieV2 extends GameV2 {
     }
 
     /**
+     * Board with regions
+     * Region 1 = 1, point = 3
+     * Region 2 = 2, point = 2
+     * Region 3 = 3, point = 5
+     * Region 4 = 4, point = -5
+     * Region 5 = 5, point = 10
+     * [5][4][3][3][3][3][4][5]
+     * [4][4][2][2][2][2][4][4]
+     * [3][2][1][1][1][1][2][3]
+     * [3][2][1][1][1][1][2][3]
+     * [3][2][1][1][1][1][2][3]
+     * [3][2][1][1][1][1][2][3]
+     * [4][4][2][2][2][2][4][4]
+     * [5][4][3][3][3][3][4][5]
+     *
      * @param row
      * @param column
      * @param depth
@@ -283,10 +310,10 @@ public class ReversieV2 extends GameV2 {
     @Override
     public String toString() {
         String output = "";
-        for (int i = 0; i < playingBoard.length; i++) {
-            for (int j = 0; j < playingBoard[i].length; j++) {
-                if (playingBoard[j][i] != EMPTY) {
-                    output += playingBoard[j][i] + " ";
+        for (int row = 0; row < playingBoard.length; row++) {
+            for (int column = 0; column < playingBoard[row].length; column++) {
+                if (playingBoard[column][row] != EMPTY) {
+                    output += playingBoard[column][row] + " ";
                 } else {
                     output += "- ";
                 }

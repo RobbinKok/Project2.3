@@ -1,4 +1,3 @@
-import AI.AI;
 import AI.AIBest;
 import AI.AIv2;
 
@@ -8,13 +7,13 @@ import java.util.Scanner;
 
 public class AardappelKroket {
     private Scanner reader = new Scanner(System.in);
-    private Reversie reversie;
+    private ReversieV2 reversie;
     private AIv2 ai;
     private boolean playing = true;
 
     public AardappelKroket() {
         long startTime = System.currentTimeMillis();
-        reversie = new Reversie();
+        reversie = new ReversieV2(0, 1);
         ai = new AIv2(reversie);
         reversie.COMPUTER = Reversie.WHITE;
         reversie.PLAYER = Reversie.BLACK;
@@ -25,7 +24,7 @@ public class AardappelKroket {
             System.out.println("White: " + reversie.getWhiteScore());
             System.out.println(reversie.toString());
             System.out.println("Enter: X,Y");
-            reversie.move(move());
+//            reversie.playMove(move());
         }
         System.out.println("DONE!");
         long estimatedTime = System.currentTimeMillis() - startTime;

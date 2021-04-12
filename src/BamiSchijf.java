@@ -1,10 +1,10 @@
-import AI.AI;
+import AI.AIv2;
 import AI.AIBest;
 
 public class BamiSchijf {
 
     private ReversieV2 reversie;
-    private AI ai;
+    private AIv2 ai;
     private boolean playing = true;
 
     public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class BamiSchijf {
     public BamiSchijf() {
         long startTime = System.currentTimeMillis();
         reversie = new ReversieV2(ReversieV2.BLACK, ReversieV2.WHITE);
-        ai = new AI(reversie);
+        ai = new AIv2(reversie);
         reversie.COMPUTER = Reversie.WHITE;
         reversie.PLAYER = Reversie.BLACK;
         reversie.side = Reversie.BLACK;
