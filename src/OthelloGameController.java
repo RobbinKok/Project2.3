@@ -1,4 +1,5 @@
 import AI.AI;
+import AI.AIv2;
 import AI.Game;
 import AI.AIBest;
 
@@ -40,7 +41,7 @@ public class OthelloGameController extends GUIController
 
     //int side = 0;
     Reversie reversie;
-    AI ai;
+    AIv2 ai;
 
     private final NetworkClient networkClient;
 
@@ -48,7 +49,7 @@ public class OthelloGameController extends GUIController
         this.networkClient = networkClient;
 
         reversie = new Reversie(this);
-        ai = new AI(reversie);
+        ai = new AIv2(reversie);
 
         if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
             reversie.COMPUTER = Reversie.BLACK;
@@ -72,14 +73,20 @@ public class OthelloGameController extends GUIController
 
                     if (networkClient.getPlayAsAI()) {
                         ArrayList<int[]> possibleMoves = reversie.possibleMoves(reversie.COMPUTER);
-                        int[] move = possibleMoves.get(new Random().nextInt(possibleMoves.size() - 1));
+
+
+
+//                        int[] move = possibleMoves.get(new Random().nextInt(possibleMoves.size() - 1));
+                        AIBest aiBest = ai.chooseMove(reversie.COMPUTER);
 
 //                        if (reversie.moveOK(move[0], move[1])) {
-                            reversie.move(new String[]{String.valueOf(move[0]), String.valueOf(move[1])});
+//                            reversie.move(new String[]{String.valueOf(move[0]), String.valueOf(move[1])});
+                            reversie.move(new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)});
                         try{
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         } catch (Exception ignored){}
-                            networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
+//                            networkClient.move(move[0], move[1], NetworkClient.GameType.Reversi);
+                            networkClient.move(aiBest.row, aiBest.column, NetworkClient.GameType.Reversi);
 //                        }
                     }
 
