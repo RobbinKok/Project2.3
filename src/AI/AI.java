@@ -24,11 +24,11 @@ public class AI {
             int x = move[0];
             int y = move[1];
 
-            int current = board[y][x];
+            int[][] oldBoard = board;
 
-            board = game.place(board, y, x, side);
+            board = game.place(board, x, y, side);
             MinMaxResult moveVal = minimax(board, opp, side, 2, x, y);
-            board = game.place(board, y, x, current);
+            board = oldBoard;
 
             if (moveVal.points > value/* || bestDepth < moveVal.depth*/) {
                 bX = x;
@@ -68,8 +68,7 @@ public class AI {
             int y = move[1];
 
 
-            int current = board[y][x];
-            printBoard(board);
+            int[][] current = board;
             System.out.println("x = " + x + ", y = " + y + "current = " + side);
             board = game.place(board, x, y, side);
 
@@ -80,7 +79,7 @@ public class AI {
                 min = Math.min(min, result.points);
             }
 
-//            board = game.place(board, x, y, current);
+            board = current;
         }
 
         return new MinMaxResult(side == game.COMPUTER ? max : min, depth);

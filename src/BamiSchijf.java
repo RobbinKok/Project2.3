@@ -13,11 +13,11 @@ public class BamiSchijf {
 
     public BamiSchijf() {
         long startTime = System.currentTimeMillis();
-        reversie = new ReversieV2(ReversieV2.BLACK, ReversieV2.WHITE);
+        reversie = new ReversieV2(ReversieV2.WHITE, ReversieV2.BLACK);
         ai = new AIv2(reversie);
-        reversie.COMPUTER = Reversie.WHITE;
-        reversie.PLAYER = Reversie.BLACK;
-        reversie.side = Reversie.BLACK;
+//        reversie.COMPUTER = Reversie.WHITE;
+//        reversie.PLAYER = Reversie.BLACK;
+//        reversie.side = Reversie.BLACK;
         while (playing) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
@@ -49,7 +49,7 @@ public class BamiSchijf {
         }
 
 
-        reversie.playMove(aiBest.column, aiBest.row, side);
+        reversie.playMove(aiBest.row, aiBest.column, side);
 
 //        return new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)};
     }

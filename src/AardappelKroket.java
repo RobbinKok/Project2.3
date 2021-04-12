@@ -42,7 +42,7 @@ public class AardappelKroket {
 //            String line = reader.nextLine();
 //            return line.split(",");
 //        }
-        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER);
+        AIBest aiBest = ai.chooseMove(reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER, reversie.getBoard());
         System.out.println("x " + aiBest.row + " y " + aiBest.column);
         
         if (aiBest.row == -1 && aiBest.column == -1) {
@@ -50,13 +50,14 @@ public class AardappelKroket {
         }
         
         try {
-            Thread.sleep(500);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         reversie.playMove(aiBest.column, aiBest.column, reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER);
+        System.out.println(reversie.toString());
         return new String[]{String.valueOf(aiBest.row), String.valueOf(aiBest.column)};
     }
 

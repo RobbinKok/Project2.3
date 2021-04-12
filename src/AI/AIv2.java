@@ -9,7 +9,7 @@ public class AIv2 {
         this.game = game;
     }
 
-    public synchronized AIBest chooseMove(int side) {
+    public AIBest chooseMove(int side) {
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
         int bRow = -1;
         int bColumn = -1;
@@ -24,9 +24,9 @@ public class AIv2 {
             int row = move[0];
             int column = move[1];
 
-            int current = board[column][row];
+            int[][] current = game.getBoard();
 //            board[column][row] = side;
-            game.place(board, column, row, side);
+            board = game.place(board, column, row, side);
 
             // runnable
             MiniMax miniMax = new MiniMax(board, opp, side, 2, row, column);
@@ -35,7 +35,8 @@ public class AIv2 {
             miniMaxArray.add(miniMax);
             threads.add(thread);
 
-            game.place(board, column, row, current);
+//            game.place(board, column, row, current);
+            board = current;
 //            board[column][row] = current;
         }
 
@@ -91,7 +92,7 @@ public class AIv2 {
         }
 
         private MinMaxResult miniMax(int side, int opp, int depth, int current_x, int current_y, int[][] board) {
-            int check = game.checkScore(board, depth, current_x, current_y);
+            int check = game.checkScore(board, current_x, current_y, depth);
 
             if (check != 0) {
                 return new MinMaxResult(check, depth);
@@ -108,7 +109,7 @@ public class AIv2 {
 
                 int current = board[move_column][move_row];
 //                board[move_column][move_row] = side;
-                game.place(board, column, row, side);
+                board = game.place(board, column, row, side);
 
                 MinMaxResult result = miniMax(opp, side, depth + 1, move_row, move_column, board);
                 if (side == game.COMPUTER) { // todo: replace with boolean
@@ -118,7 +119,7 @@ public class AIv2 {
                 }
 
 //                board[move_column][move_row] = current;
-                game.place(board, column, row, current);
+//                game.place(board, column, row, current);
             }
 
             return new MinMaxResult(side == game.COMPUTER ? max : min, depth);

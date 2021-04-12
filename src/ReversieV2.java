@@ -151,20 +151,17 @@ public class ReversieV2 extends GameV2 {
      */
     @Override
     public int[][] getBoard() {
-        int[][] board = new int[8][8];
+//        int[][] board = new int[8][8];
+//
+//        for (int i = 0; i < board.length; i++) {
+//            for (int j = 0; j < board[i].length; j++) {
+//                board[i][j] = playingBoard[i][j];
+//            }
+//        }
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                board[i][j] = playingBoard[i][j];
-            }
-        }
-
-        return this.playingBoard;
+//        return this.playingBoard;
+        return Arrays.stream(this.playingBoard).map(int[]::clone).toArray(int[][]::new);
     }
-    //0 8
-    // 1 9
-    // 2 10
-
     @Override
     public ArrayList<int[]> getPossibleMoves(int[][] board, int side) {
         ArrayList<int[]> output = new ArrayList<>();
@@ -202,10 +199,10 @@ public class ReversieV2 extends GameV2 {
      */
     @Override
     public int[][] place(int[][] board, int row, int column, int side) {
-        ReversiFlip flip = new ReversiFlip(board, gui);
+        ReversiFlip flip = new ReversiFlip(board);
         flip.flip(side, column, row, 4);
-        playingBoard = flip.getBoard();
-        board[row][column] = side;
+        board = flip.getBoard();
+        board[column][row] = side;
         return board;
     }
 
@@ -284,7 +281,7 @@ public class ReversieV2 extends GameV2 {
         int score = 0;
         if (isRegion5(column, row)) {
             score = 10;
-        } else if (depth == 5) {
+        } else if (depth == 7) {
             if (isRegion5(column, row)) {
                 score = 10;
             } else if (isRegion4(column, row)) {

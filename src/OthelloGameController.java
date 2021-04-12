@@ -1,4 +1,4 @@
-import AI.AI;
+import AI.AIv2;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -36,7 +36,7 @@ public class OthelloGameController extends GUIController {
 
     //int side = 0;
     private final ReversieV2 reversie;
-    private final AI ai;
+    private final AIv2 ai;
 
     private final NetworkClient networkClient;
 
@@ -53,7 +53,7 @@ public class OthelloGameController extends GUIController {
         }
 
         reversie = new ReversieV2(computerColor, playerColor, this);
-        ai = new AI(reversie);
+        ai = new AIv2(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
@@ -62,7 +62,7 @@ public class OthelloGameController extends GUIController {
                 @Override
                 public void execute(String data) {
                     if (networkClient.getPlayAsAI()) {
-                        AIBest bestMove = ai.chooseMove(playerColor, reversie.getBoard());
+                        AIBest bestMove = ai.chooseMove(playerColor);
 //                        reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
 //                        ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), playerColor);
@@ -71,9 +71,9 @@ public class OthelloGameController extends GUIController {
 //                        }
 //                        int[] move = moves.get(new Random().nextInt(moves.size()));
 
-                        networkClient.move(bestMove.column, bestMove.row, NetworkClient.GameType.Reversi);
+                        networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
 
-                        reversie.playMove(bestMove.column, bestMove.row, playerColor);
+                        reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
                         try {
                             Thread.sleep(1000);
