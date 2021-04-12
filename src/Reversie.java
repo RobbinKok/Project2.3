@@ -152,14 +152,14 @@ public class Reversie extends Game {
         return false;
     }
 
-    public int[] canFlip(int x, int y, int player, int direction) {
-        return canFlip(x, y, player, direction, board);
-    }
+//    public int[] canFlip(int x, int y, int player, int direction) {
+//        return canFlip(x, y, player, direction, board);
+//    }
 
     /**
      * return -1,-1 direction heeft geen mogelijke zet.
      */
-    public int[] canFlip(int x, int y, int player, int direction, int[][] board) {
+    public int[] canFlip(int x, int y, int player, int direction/*, int[][] board*/) {
         int dir = 0;
         for (int k = y - 1; k <= y + 1; k++) {
             for (int s = x - 1; s <= x + 1; s++) {
@@ -169,7 +169,7 @@ public class Reversie extends Game {
                         return output;
                     }
                     if (board[s][k] != player && board[s][k] != EMPTY) {
-                        return canFlip(s, k, player, direction, board);
+                        return canFlip(s, k, player, direction/*, board*/);
                     }
                     // System.out.println("x= "+ s+ " y= "+ k);
                     // System.out.println(dir+" (dir) &"+ direction+" (direction)");
@@ -356,18 +356,18 @@ public class Reversie extends Game {
         return this.side == WHITE;
     }
 
-    @Override
-    public ArrayList<int[]> getPossibleMoves(int side) {
-        return possibleMoves(side);
-    }
+//    @Override
+//    public ArrayList<int[]> getPossibleMoves(int side) {
+//        return possibleMoves(side);
+//    }
 
     @Override
-    public ArrayList<int[]> getPossibleMoves(int side, int[][] _board) {
+    public ArrayList<int[]> getPossibleMoves(int side/*, int[][] _board*/) {
         ArrayList<int[]> output = new ArrayList<>();
-        for (int i = 0; i < _board.length; i++) {
-            for (int j = 0; j < _board.length; j++) {
-                if (_board[j][i] == side) {
-                    ArrayList<int[]> tmp = checkBorders(j, i, side, _board);
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                if (board[j][i] == side) {
+                    ArrayList<int[]> tmp = checkBorders(j, i, side/*, _board*/);
                     output.addAll(tmp);
                 }
             }

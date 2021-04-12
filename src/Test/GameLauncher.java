@@ -1,18 +1,18 @@
 package Test;
 
 import AI.AI;
-import AI.Game;
+import AI.AIv2;
 import AI.AIBest;
 import TicTacToe.TicTacToeGame;
 
 public class GameLauncher {
     private TicTacToeGame game;
-    private AI ai;
+    private AIv2 ai;
 
 
     public GameLauncher() {
         game = new TicTacToeGame();
-        ai = new AI(game);
+        ai = new AIv2(game);
 
 
         while (!game.gameOver()) {

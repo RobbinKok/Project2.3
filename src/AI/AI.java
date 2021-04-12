@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 public class AI {
 
-    private Game game;
+    private GameV2 game;
 
-    public AI(Game game) {
+    public AI(GameV2 game) {
         this.game = game;
     }
 
@@ -18,15 +18,17 @@ public class AI {
         int value = Integer.MIN_VALUE;
         int bestDepth = Integer.MAX_VALUE;
 
-        for (int[] move : game.getPossibleMoves(side)) {
+
+        int[][] board = this.game.getBoard();
+        for (int[] move : game.getPossibleMoves(board, side)) {
             int x = move[0];
             int y = move[1];
 
-            int current = game.getBoard()[y][x];
+            int current = board[y][x];
 
-            game.place(y, x, side);
-            MinMaxResult moveVal = minimax(opp, side, 2, x, y);
-            game.place(y, x, current);
+            board = game.place(board, y, x, side);
+            MinMaxResult moveVal = minimax(board, opp, side, 2, x, y);
+            board = game.place(board, y, x, current);
 
             if (moveVal.points > value/* || bestDepth < moveVal.depth*/) {
                 bX = x;
@@ -39,14 +41,13 @@ public class AI {
         return new AIBest(value, bX, bY, bestDepth);
     }
 
-    private MinMaxResult minimax(int side, int opp, int depth, int current_x, int current_y) {
-        int check = game.check(depth, current_x, current_y);
+    private MinMaxResult minimax(int[][] board, int side, int opp, int depth, int current_x, int current_y) {
+        int check = game.checkScore(board, depth, current_x, current_y);
 
         if (check != 0) {
             return new MinMaxResult(check, depth);
         }
-
-        ArrayList<int[]> moves = game.getPossibleMoves(side);
+        ArrayList<int[]> moves = game.getPossibleMoves(board, side);
 
 //        if (moves.isEmpty()) {
 //            return new MinMaxResult(0, depth);
@@ -61,25 +62,42 @@ public class AI {
 
 
 
+
         for (int[] move : moves) {
             int x = move[0];
             int y = move[1];
 
 
-            int[][] board = game.getBoard();
             int current = board[y][x];
-            game.place(x, y, side);
+            printBoard(board);
+            System.out.println("x = " + x + ", y = " + y + "current = " + side);
+            board = game.place(board, x, y, side);
 
-            MinMaxResult result = minimax(opp, side, depth + 1, x, y);
+            MinMaxResult result = minimax(board, opp, side, depth + 1, x, y);
             if (side == game.COMPUTER) { // todo: replace with boolean
                 max = Math.max(max, result.points);
             } else if (side == game.PLAYER) {
                 min = Math.min(min, result.points);
             }
 
-            game.place(x, y, current);
+//            board = game.place(board, x, y, current);
         }
 
         return new MinMaxResult(side == game.COMPUTER ? max : min, depth);
+    }
+
+    private void printBoard(int[][] board) {
+        String output = "";
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[j][i] != 2) {
+                    output += board[j][i] + " ";
+                } else {
+                    output += "- ";
+                }
+            }
+            output += "\n";
+        }
+        System.out.println(output);
     }
 }

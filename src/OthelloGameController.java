@@ -175,11 +175,11 @@ public class OthelloGameController extends GUIController
     {
         if(side == 0)
         {
-            movesList.getItems().add("Black to [" + x + "," + y + "]");
+//            movesList.getItems().add("Black to [" + x + "," + y + "]");
         }
         else
         {
-            movesList.getItems().add("White to [" + x + "," + y + "]");
+//            movesList.getItems().add("White to [" + x + "," + y + "]");
         }
     }
 

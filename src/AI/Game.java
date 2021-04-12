@@ -17,7 +17,7 @@ public abstract class Game implements Cloneable {
 
     public abstract ArrayList<int[]> getPossibleMoves(int side);
 
-    public abstract ArrayList<int[]> getPossibleMoves(int side, int[][] board);
+//    public abstract ArrayList<int[]> getPossibleMoves(int side, int[][] board);
 
     public abstract void place(int x, int y, int side);
 

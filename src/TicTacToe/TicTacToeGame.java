@@ -43,10 +43,10 @@ public class TicTacToeGame extends Game {
         return output;
     }
 
-    @Override
-    public ArrayList<int[]> getPossibleMoves(int side, int[][] board) {
-        return getPossibleMoves(side);
-    }
+//    @Override
+//    public ArrayList<int[]> getPossibleMoves(int side, int[][] board) {
+//        return getPossibleMoves(side);
+//    }
 
 
     // Place functions

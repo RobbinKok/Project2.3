@@ -101,7 +101,7 @@ public class AIv2 {
                 return new MinMaxResult(check, depth);
             }
 
-            ArrayList<int[]> moves = game.getPossibleMoves(side, board);
+            ArrayList<int[]> moves = game.getPossibleMoves(side/*, board*/);
 
             int max = Integer.MIN_VALUE;
             int min = Integer.MAX_VALUE;

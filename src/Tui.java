@@ -1,6 +1,6 @@
 import AI.AI;
 import AI.AIBest;
-import AI.Game;
+import AI.AIv2;
 import TicTacToe.TicTacToeGame;
 
 import java.util.Scanner;
@@ -9,13 +9,13 @@ public class Tui {
 
     private Scanner reader = new Scanner(System.in);
     private TicTacToeGame t;
-    private AI ai;
+    private AIv2 ai;
 
     public Tui() {
         do {
             System.out.println("*** new AI.Game ***\n");
             t = new TicTacToeGame();
-            ai = new AI(t);
+            ai = new AIv2(t);
             if (t.computerPlays())
                 System.out.println("I start:\n");
             else

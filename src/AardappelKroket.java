@@ -1,6 +1,6 @@
 import AI.AI;
 import AI.AIBest;
-import AI.Game;
+import AI.AIv2;
 
 import java.io.Reader;
 import java.util.Arrays;
@@ -9,13 +9,13 @@ import java.util.Scanner;
 public class AardappelKroket {
     private Scanner reader = new Scanner(System.in);
     private Reversie reversie;
-    private AI ai;
+    private AIv2 ai;
     private boolean playing = true;
 
     public AardappelKroket() {
         long startTime = System.currentTimeMillis();
         reversie = new Reversie();
-        ai = new AI(reversie);
+        ai = new AIv2(reversie);
         reversie.COMPUTER = Reversie.WHITE;
         reversie.PLAYER = Reversie.BLACK;
         reversie.side = Reversie.BLACK;
