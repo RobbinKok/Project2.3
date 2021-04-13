@@ -72,6 +72,11 @@ public class OthelloGameController extends GUIController {
 
                         reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (Exception ignored) {
+//                        }
+
 //                    networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
                     }
 
@@ -150,9 +155,9 @@ public class OthelloGameController extends GUIController {
 
     public void addMove(int side, int x, int y) {
         if (side == 0) {
-//            movesList.getItems().add("Black to [" + x + "," + y + "]");
+            movesList.getItems().add("Black to [" + x + "," + y + "]");
         } else {
-//            movesList.getItems().add("White to [" + x + "," + y + "]");
+            movesList.getItems().add("White to [" + x + "," + y + "]");
         }
     }
 

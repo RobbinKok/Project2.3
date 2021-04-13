@@ -68,6 +68,7 @@ public class Reversie extends Game {
         }
     }
 
+
     /**
      * UI en bord updaten
      *
@@ -104,7 +105,12 @@ public class Reversie extends Game {
             swapSides(side);
 
         } else {
-            isPlaying = false;
+            swapSides(side);
+
+            if (this.getPossibleMoves(playingBoard, this.side).size() < 1) {
+                isPlaying = false;
+            }
+
         }
 
     }
