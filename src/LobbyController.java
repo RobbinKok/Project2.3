@@ -66,9 +66,11 @@ public class LobbyController extends GUIController
 
         commandHandler.addCommand(CommandHandler.CommandType.Match, new MatchCommand(data -> {
             String gameType = data.get("GAMETYPE");
+            String opponent = data.get("OPPONENT");
 
             if (gameType.equals("Reversi")) {
                 networkClient.setFirstPlayer(data.get("PLAYERTOMOVE"));
+                networkClient.setOpponentName(opponent);
                 networkClient.setPlayAsAI(playAsAI.isSelected());
                 OthelloGameController othelloGameController = new OthelloGameController(networkClient);
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", othelloGameController);

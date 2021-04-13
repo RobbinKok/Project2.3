@@ -20,6 +20,7 @@ public class NetworkClient extends Observable {
 
     private String playerName;
     private String firstPlayer;
+    private String opponentName;
 
     private boolean playAsAI;
 
@@ -199,5 +200,13 @@ public class NetworkClient extends Observable {
 
     public boolean getPlayAsAI() {
         return this.playAsAI;
+    }
+
+    public String getOpponentName() {
+        return opponentName;
+    }
+
+    public void setOpponentName(String opponentName) {
+        this.opponentName = opponentName;
     }
 }

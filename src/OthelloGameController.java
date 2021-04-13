@@ -141,8 +141,15 @@ public class OthelloGameController extends GUIController {
     }
 
     public void setScore(int blackScore, int whiteScore) {
-        playerOne.setText("Black: " + blackScore);
-        playerTwo.setText("White: " + whiteScore);
+        if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
+            playerOne.setText("(" + networkClient.getPlayerName() + ") Black: " + blackScore);
+            playerTwo.setText("(" + networkClient.getOpponentName() + ") White: " + whiteScore);
+        }
+        else {
+            playerOne.setText("(" + networkClient.getOpponentName() + ") Black: " + blackScore);
+            playerTwo.setText("(" + networkClient.getPlayerName() + ") White: " + whiteScore);
+        }
+
     }
 
     public void updateCurrentPlayer(int side) {
