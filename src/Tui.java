@@ -1,15 +1,15 @@
 import AI.AI;
 import AI.AIBest;
 import AI.AIv2;
-import TicTacToe.TicTacToeGame;
+import TicTacToe.TicTacToeGameV2;
 
 import java.util.Scanner;
 
 public class Tui {
 
     private Scanner reader = new Scanner(System.in);
-    private TicTacToeGame t;
-    private AIv2 ai;
+    private TicTacToeGameV2 t;
+    private AI ai;
 
     public Tui() {
         do {
@@ -22,7 +22,8 @@ public class Tui {
                 System.out.println("You start:\n");
 
             while(!t.gameOver()) {
-                t.place(move());
+                int move = move();
+                t.playMove(move / 3, move % 3, t.side);
 
                 System.out.println(t);
             }

@@ -3,9 +3,9 @@ package AI;
 import java.util.ArrayList;
 
 public class AIv2 {
-    private GameV2 game;
+    private Game game;
 
-    public AIv2(GameV2 game) {
+    public AIv2(Game game) {
         this.game = game;
     }
 

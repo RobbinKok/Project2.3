@@ -3,7 +3,7 @@ import AI.AIBest;
 
 public class BamiSchijf {
 
-    private ReversieV2 reversie;
+    private Reversie reversie;
     private AIv2 ai;
     private boolean playing = true;
 
@@ -13,7 +13,7 @@ public class BamiSchijf {
 
     public BamiSchijf() {
         long startTime = System.currentTimeMillis();
-        reversie = new ReversieV2(ReversieV2.WHITE, ReversieV2.BLACK);
+        reversie = new Reversie(Reversie.WHITE, Reversie.BLACK);
         ai = new AIv2(reversie);
 //        reversie.COMPUTER = Reversie.WHITE;
 //        reversie.PLAYER = Reversie.BLACK;

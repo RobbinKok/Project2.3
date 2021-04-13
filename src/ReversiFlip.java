@@ -1,6 +1,4 @@
 import javafx.scene.paint.Color;
-import AI.Game;
-import AI.GameV2;
 
 public class ReversiFlip {
     private static final int EMPTY = 2;

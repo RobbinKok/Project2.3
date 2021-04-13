@@ -1,4 +1,4 @@
-import AI.AIv2;
+import AI.AI;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -17,9 +17,6 @@ import utils.commands.CommandHandler;
 import utils.commands.MatchCommand;
 import utils.commands.MoveCommand;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 public class OthelloGameController extends GUIController {
     @FXML
     private GridPane gridPane;
@@ -35,8 +32,8 @@ public class OthelloGameController extends GUIController {
     private Button giveUpButton;
 
     //int side = 0;
-    private final ReversieV2 reversie;
-    private final AIv2 ai;
+    private final Reversie reversie;
+    private final AI ai;
 
     private final NetworkClient networkClient;
 
@@ -52,8 +49,8 @@ public class OthelloGameController extends GUIController {
             computerColor = Reversie.BLACK;
         }
 
-        reversie = new ReversieV2(computerColor, playerColor, this);
-        ai = new AIv2(reversie);
+        reversie = new Reversie(computerColor, playerColor, this);
+        ai = new AI(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();

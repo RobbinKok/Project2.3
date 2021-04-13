@@ -2,20 +2,21 @@ package Test;
 
 import AI.AIv2;
 import AI.AIBest;
-import TicTacToe.TicTacToeGame;
+import TicTacToe.TicTacToeGameV2;
 
 public class GameLauncher {
-    private TicTacToeGame game;
+    private TicTacToeGameV2 game;
     private AIv2 ai;
 
 
     public GameLauncher() {
-        game = new TicTacToeGame();
+        game = new TicTacToeGameV2();
 //        ai = new AIv2(game);
 
 
         while (!game.gameOver()) {
-            game.place(move());
+            int move = move();
+            game.place(game.getBoard(),move / 3, move % 3, 0);
 
             System.out.println(game);
         }
@@ -24,7 +25,7 @@ public class GameLauncher {
 
 
     private int move() {
-        if (game.boardIsEmpty()) {
+        if (game.boardIsEmpty(game.getBoard())) {
             return 0;
         }
         AIBest aiBest = ai.chooseMove(game.computerPlays() ? game.COMPUTER : game.PLAYER);

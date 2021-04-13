@@ -1,13 +1,12 @@
 package AI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AI {
 
-    private GameV2 game;
+    private Game game;
 
-    public AI(GameV2 game) {
+    public AI(Game game) {
         this.game = game;
     }
 
@@ -24,7 +23,7 @@ public class AI {
             int x = move[0];
             int y = move[1];
 
-            int[][] oldBoard = board;
+            int[][] oldBoard = game.getBoard();
 
             board = game.place(board, y, x, side);
             MinMaxResult moveVal = minimax(board, opp, side, 2, x, y);
@@ -69,7 +68,7 @@ public class AI {
 
 
             int[][] current = board;
-            System.out.println("x = " + x + ", y = " + y + "current = " + side);
+//            System.out.println("x = " + x + ", y = " + y + "current = " + side);
             board = game.place(board, y, x, side);
 
             MinMaxResult result = minimax(board, opp, side, depth + 1, x, y);
