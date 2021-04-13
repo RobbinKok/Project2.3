@@ -19,6 +19,8 @@ public class ReversieV2 extends GameV2 {
     private int blackScore;
     private int whiteScore;
 
+    private boolean isPlaying = true;
+
     public ReversieV2(int playerColor, int computerColor) {
         this.PLAYER = playerColor;
         this.COMPUTER = computerColor;
@@ -75,30 +77,37 @@ public class ReversieV2 extends GameV2 {
      * @param side
      */
     public void playMove(int column, int row, int side) {
-        ReversiFlip flip = new ReversiFlip(playingBoard, gui);
-        flip.flip(side, column, row, 4);
-        playingBoard = flip.getBoard();
+        if (column != -1 && row != -1) {
 
-        playingBoard[column][row] = side;
+            ReversiFlip flip = new ReversiFlip(playingBoard, gui);
+            flip.flip(side, column, row, 4);
+            playingBoard = flip.getBoard();
 
-        findAllScores();
+            playingBoard[column][row] = side;
 
-        if (gui != null) {
-            if (side == BLACK)
-                gui.changeNodeColor(column, row, Color.BLACK);
-            else
-                gui.changeNodeColor(column, row, Color.WHITE);
+            findAllScores();
 
-            gui.updateCurrentPlayer(side);
+            if (gui != null) {
+                if (side == BLACK)
+                    gui.changeNodeColor(column, row, Color.BLACK);
+                else
+                    gui.changeNodeColor(column, row, Color.WHITE);
 
-            // sets the score in the gui
-            gui.setScore(blackScore, whiteScore);
+                gui.updateCurrentPlayer(side);
 
-            // adds the move to the movelist in the gui
-            gui.addMove(side, column + 1, row + 1);
+                // sets the score in the gui
+                gui.setScore(blackScore, whiteScore);
+
+                // adds the move to the movelist in the gui
+                gui.addMove(side, column + 1, row + 1);
+            }
+
+            swapSides(side);
+
+        } else {
+            isPlaying = false;
         }
 
-        swapSides(side);
     }
 
 
@@ -162,6 +171,7 @@ public class ReversieV2 extends GameV2 {
 //        return this.playingBoard;
         return Arrays.stream(this.playingBoard).map(int[]::clone).toArray(int[][]::new);
     }
+
     @Override
     public ArrayList<int[]> getPossibleMoves(int[][] board, int side) {
         ArrayList<int[]> output = new ArrayList<>();
@@ -210,27 +220,29 @@ public class ReversieV2 extends GameV2 {
      * @return
      */
     @Override
-    public boolean gameOver(int[][] board) {
-        boolean noEmpty = true;
-        boolean noMoves = false;
-        ArrayList<int[]> movesPlayer = this.getPossibleMoves(board, this.PLAYER);
-        ArrayList<int[]> movesComputer = this.getPossibleMoves(board, WHITE);
-        if (movesPlayer.size() == 0 && movesComputer.size() == 0) noMoves = true;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                if (board[j][i] == EMPTY) noEmpty = false;
-            }
-        }
-        if (noEmpty) {
-            System.out.println("Game Over");
-            return true;
-        }
-        if (noMoves) {
-            System.out.println("Game Over");
-            System.out.println("No moves possible");
-            return true;
-        }
-        return false;
+    public boolean gameOver() {
+//        boolean noEmpty = true;
+//        boolean noMoves = false;
+//        ArrayList<int[]> movesPlayer = this.getPossibleMoves(playingBoard, this.PLAYER);
+//        ArrayList<int[]> movesComputer = this.getPossibleMoves(playingBoard, WHITE);
+//        if (movesPlayer.size() == 0 && movesComputer.size() == 0) noMoves = true;
+//        for (int i = 0; i < playingBoard.length; i++) {
+//            for (int j = 0; j < playingBoard.length; j++) {
+//                if (playingBoard[j][i] == EMPTY) noEmpty = false;
+//            }
+//        }
+//        if (noEmpty) {
+//            System.out.println("Game Over");
+//            return true;
+//        }
+//        if (noMoves) {
+//            System.out.println("Game Over");
+//            System.out.println("No moves possible");
+//            return true;
+//        }
+//        return false;
+
+        return !isPlaying;
     }
 
     public boolean computerPlays() {

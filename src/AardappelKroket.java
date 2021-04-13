@@ -18,7 +18,7 @@ public class AardappelKroket {
 //        reversie.COMPUTER = Reversie.WHITE;
 //        reversie.PLAYER = Reversie.BLACK;
 //        reversie.side = Reversie.BLACK;
-        while (playing) {
+        while (!reversie.gameOver()) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
             System.out.println("White: " + reversie.getWhiteScore());
@@ -49,12 +49,12 @@ public class AardappelKroket {
             playing = false;
         }
         
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
 
         reversie.playMove(aiBest.column, aiBest.column, reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER);
         System.out.println(reversie.toString());

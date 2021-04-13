@@ -18,13 +18,15 @@ public class BamiSchijf {
 //        reversie.COMPUTER = Reversie.WHITE;
 //        reversie.PLAYER = Reversie.BLACK;
 //        reversie.side = Reversie.BLACK;
-        while (playing) {
+        while (!reversie.gameOver()) {
             reversie.findAllScores();
             System.out.println("Black: " + reversie.getBlackScore());
             System.out.println("White: " + reversie.getWhiteScore());
             System.out.println(reversie.toString());
-            System.out.println("Enter: X,Y");
+//            System.out.println("Enter: X,Y");
+//            long startMoveTime = System.currentTimeMillis();
             move();
+//            System.out.println(System.currentTimeMillis() - startMoveTime);
         }
         System.out.println("DONE!");
         long estimatedTime = System.currentTimeMillis() - startTime;
@@ -35,19 +37,18 @@ public class BamiSchijf {
     private void move() {
         int side = reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER;
         AIBest aiBest = ai.chooseMove(side);
-        System.out.println("x " + aiBest.row + " y " + aiBest.column);
+//        System.out.println("x " + aiBest.row + " y " + aiBest.column);
 
-        if (aiBest.row == -1 && aiBest.column == -1) {
-            playing = false;
-        }
+//        if (aiBest.row == -1 && aiBest.column == -1) {
+//            playing = false;
+//        }
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+//        try {
+//            Thread.sleep(500);
+//        } catch (InterruptedException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
 
         reversie.playMove(aiBest.row, aiBest.column, side);
 

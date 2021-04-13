@@ -12,7 +12,7 @@ public abstract class GameV2 {
 
     public abstract int checkScore(int[][] board, int row, int column, int depth);
 
-    public abstract boolean gameOver(int[][] board);
+    public abstract boolean gameOver();
 
     public abstract int[][] getBoard();
 }
