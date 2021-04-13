@@ -155,7 +155,7 @@ public class Reversie extends Game {
     /**
      * Arrays.stream(matrix).map(int[]::clone).toArray(int[][]::new)
      *
-     * @return
+     * @return the current state of the playingboard.Hai
      */
     @Override
     public int[][] getBoard() {
