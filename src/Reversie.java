@@ -18,7 +18,7 @@ public class Reversie extends Game {
     private int blackScore;
     private int whiteScore;
 
-    private boolean isPlaying = true;
+    public boolean isPlaying = true;
 
     public Reversie(int playerColor, int computerColor) {
         this.PLAYER = playerColor;

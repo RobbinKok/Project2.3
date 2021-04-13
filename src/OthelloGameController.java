@@ -17,6 +17,8 @@ import utils.commands.CommandHandler;
 import utils.commands.MatchCommand;
 import utils.commands.MoveCommand;
 
+import java.util.ArrayList;
+
 public class OthelloGameController extends GUIController {
     @FXML
     private GridPane gridPane;
@@ -68,9 +70,17 @@ public class OthelloGameController extends GUIController {
 //                        }
 //                        int[] move = moves.get(new Random().nextInt(moves.size()));
 
-                        networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
 
                         reversie.playMove(bestMove.row, bestMove.column, playerColor);
+
+                        if (bestMove.row != -1) {
+                            networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
+                        } else {
+                            ArrayList<int[]> possibleMoves = reversie.getPossibleMoves(reversie.getBoard(), playerColor);
+                            if (possibleMoves.size() > 0) {
+                                networkClient.move(possibleMoves.get(0)[0], possibleMoves.get(0)[1], NetworkClient.GameType.Reversi);
+                            }
+                        }
 
 //                        try {
 //                            Thread.sleep(1000);
