@@ -1,4 +1,4 @@
-import AI.AI;
+import AI.AIv2;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -33,7 +33,7 @@ public class OthelloGameController extends GUIController {
 
     //int side = 0;
     private final Reversie reversie;
-    private final AI ai;
+    private final AIv2 ai;
 
     private final NetworkClient networkClient;
 
@@ -50,7 +50,7 @@ public class OthelloGameController extends GUIController {
         }
 
         reversie = new Reversie(computerColor, playerColor, this);
-        ai = new AI(reversie);
+        ai = new AIv2(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
@@ -72,10 +72,10 @@ public class OthelloGameController extends GUIController {
 
                         reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception ignored) {
-                        }
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (Exception ignored) {
+//                        }
 
 //                    networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
                     }
@@ -155,9 +155,9 @@ public class OthelloGameController extends GUIController {
 
     public void addMove(int side, int x, int y) {
         if (side == 0) {
-//            movesList.getItems().add("Black to [" + x + "," + y + "]");
+            movesList.getItems().add("Black to [" + x + "," + y + "]");
         } else {
-//            movesList.getItems().add("White to [" + x + "," + y + "]");
+            movesList.getItems().add("White to [" + x + "," + y + "]");
         }
     }
 

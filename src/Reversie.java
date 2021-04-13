@@ -68,6 +68,7 @@ public class Reversie extends Game {
         }
     }
 
+
     /**
      * UI en bord updaten
      *
@@ -104,7 +105,12 @@ public class Reversie extends Game {
             swapSides(side);
 
         } else {
-            isPlaying = false;
+            swapSides(side);
+
+            if (this.getPossibleMoves(playingBoard, this.side).size() < 1) {
+                isPlaying = false;
+            }
+
         }
 
     }
@@ -283,7 +289,7 @@ public class Reversie extends Game {
         int score = 0;
         if (isRegion5(column, row)) {
             score = 10;
-        } else if (depth == 5) {
+        } else if (depth == 10) {
             if (isRegion5(column, row)) {
                 score = 10;
             } else if (isRegion4(column, row)) {

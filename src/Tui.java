@@ -14,7 +14,7 @@ public class Tui {
     public Tui() {
         do {
             System.out.println("*** new AI.Game ***\n");
-            t = new TicTacToeGame();
+            t = new TicTacToeGameV2();
 //            ai = new AIv2(t);
             if (t.computerPlays())
                 System.out.println("I start:\n");
@@ -37,7 +37,7 @@ public class Tui {
 
     private int move() {
         if (t.computerPlays()){
-            if (t.boardIsEmpty()) {
+            if (t.boardIsEmpty(t.getBoard())) {
                 return 0;
             } else {
                 AIBest aiBest = ai.chooseMove(t.COMPUTER);
