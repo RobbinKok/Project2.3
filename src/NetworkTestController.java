@@ -59,7 +59,7 @@ public class NetworkTestController extends Controller {
 
     @FXML
     private void onSubscribe() {
-        client.subscribe(NetworkClient.GameType.Reversi);
+        client.subscribe("reversi");
         printServerOutput("Subscribing to Reversi");
     }
 

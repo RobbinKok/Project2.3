@@ -283,7 +283,7 @@ public class Reversie extends Game {
         int score = 0;
         if (isRegion5(column, row)) {
             score = 10;
-        } else if (depth == 5) {
+        } else if (depth == 10) {
             if (isRegion5(column, row)) {
                 score = 10;
             } else if (isRegion4(column, row)) {

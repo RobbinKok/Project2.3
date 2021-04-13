@@ -84,16 +84,16 @@ public class NetworkClient extends Observable {
         sendMessage("get " + type.toString().toLowerCase());
     }
 
-    public void subscribe(GameType gameType) {
-        sendMessage("subscribe " + gameType.toString());
+    public void subscribe(String gameType) {
+        sendMessage("subscribe " + gameType);
     }
 
     public void move(int x, int y, GameType type) {
         sendMessage("move " + localToNetworkCoordinates(x, y, type));
     }
 
-    public void challengePlayer(String name, GameType gameType) {
-        sendMessage("challenge " + "\"" + name + "\"" + " " + "\"" + gameType.toString() + "\"");
+    public void challengePlayer(String name, String gameType) {
+        sendMessage("challenge " + "\"" + name + "\"" + " " + "\"" + gameType + "\"");
     }
 
     public void acceptChallenge(int challengeId) {

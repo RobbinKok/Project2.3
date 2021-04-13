@@ -9,12 +9,12 @@ public class Tui {
 
     private Scanner reader = new Scanner(System.in);
     private TicTacToeGameV2 t;
-    private AI ai;
+    private AIv2 ai;
 
     public Tui() {
         do {
             System.out.println("*** new AI.Game ***\n");
-            t = new TicTacToeGame();
+            t = new TicTacToeGameV2();
 //            ai = new AIv2(t);
             if (t.computerPlays())
                 System.out.println("I start:\n");
@@ -37,7 +37,7 @@ public class Tui {
 
     private int move() {
         if (t.computerPlays()){
-            if (t.boardIsEmpty()) {
+            if (t.boardIsEmpty(t.getBoard())) {
                 return 0;
             } else {
                 AIBest aiBest = ai.chooseMove(t.COMPUTER);

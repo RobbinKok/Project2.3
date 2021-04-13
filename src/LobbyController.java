@@ -132,8 +132,7 @@ public class LobbyController extends GUIController
 
         subscribeButton.setOnMouseClicked(mouseEvent -> {
             String gameType = gameTypes.getSelectionModel().getSelectedItem();
-            System.out.println(gameType);
-            networkClient.subscribe(NetworkClient.GameType.valueOf(gameType));
+            networkClient.subscribe(gameType);
         });
 
         goButton.setOnAction(value ->
@@ -165,11 +164,7 @@ public class LobbyController extends GUIController
                 return;
             }
 
-            if (selectedGame.equals("Reversi"))
-                this.networkClient.challengePlayer(name, NetworkClient.GameType.Reversi);
-            else if (selectedGame.equals("Tic-tac-toe")) {
-                this.networkClient.challengePlayer(name, NetworkClient.GameType.TicTacToe);
-            }
+            this.networkClient.challengePlayer(name, selectedGame);
         });
 
         this.networkClient.getList(NetworkClient.ListType.Playerlist);
