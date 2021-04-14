@@ -30,7 +30,7 @@ public class CommandHandler implements Runnable {
         if (socketChannel == null) {
             shouldExit = true;
         }
-        int number = 0;
+
         while (!shouldExit) {
             try {
                 ByteBuffer buffer = ByteBuffer.allocate(256);
@@ -42,8 +42,6 @@ public class CommandHandler implements Runnable {
                 for (String result : results)
                     unpackResponse(result);
 
-                number++;
-                System.out.println("Number of responses: " + number);
                 //TODO: Zero memory of buffer -> find a fix this is ugly.
                 for (int i = 0;  i < buffer.limit(); i++)
                     buffer.put(i, (byte)0);
@@ -70,14 +68,18 @@ public class CommandHandler implements Runnable {
         }
     }
 
+    public void removeCommand(CommandType type) {
+        this.commands.remove(type);
+    }
+
     private void unpackResponse(String response) {
         if (response.isBlank())
             return;
 
+        System.out.println(response);
+
         String[] explodedString = response.split("\\s+");
         String data = "";
-
-        System.out.println(response);
 
         switch (explodedString[0]) {
             case "OK":

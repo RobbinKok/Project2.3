@@ -1,12 +1,17 @@
 package AI;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AIv2 {
     private Game game;
 
+    private static ConcurrentHashMap<int[][], TableEntry> transpositionTable;
+    private static final int MAX_TRANSPOSITION_ENTRIES = 1000;
+
     public AIv2(Game game) {
         this.game = game;
+        this.transpositionTable = new ConcurrentHashMap<>();
     }
 
     public AIBest chooseMove(int side) {
@@ -64,7 +69,6 @@ public class AIv2 {
         return new AIBest(value, bRow, bColumn, bestDepth);
     }
 
-
     class MiniMax implements Runnable {
         // return value
         private volatile MinMaxResult value;
@@ -92,6 +96,24 @@ public class AIv2 {
         }
 
         private MinMaxResult miniMax(int side, int opp, int depth, int current_x, int current_y, int[][] board, int alpha, int beta) {
+            int alphaOriginal = alpha;
+            TableEntry entry = transpositionTable.get(board);
+
+            if (entry != null && entry.depth > depth) {
+                if (entry.flag == Flag.EXACT)
+                    return entry.value; // Entry.value
+                else if (entry.flag == Flag.LOWER_BOUND)
+                    alpha = Math.max(alpha, entry.value.points);
+                else if (entry.flag == Flag.UPPER_BOUND)
+                    beta = Math.min(beta, entry.value.points);
+
+                if (alpha > beta)
+                    return entry.value; // Entry.value
+            }
+            else {
+                entry = new TableEntry(new MinMaxResult(Integer.MIN_VALUE, 0), 0, Flag.EXACT);
+            }
+
             int check = game.checkScore(board, current_x, current_y, depth);
 
             if (check != 0) {
@@ -103,6 +125,7 @@ public class AIv2 {
             int max = Integer.MIN_VALUE;
             int min = Integer.MAX_VALUE;
 
+            MinMaxResult result = new MinMaxResult(Integer.MIN_VALUE, depth);
             for (int[] move : moves) {
                 int move_row = move[0];
                 int move_column = move[1];
@@ -111,7 +134,7 @@ public class AIv2 {
 //                board[move_column][move_row] = side;
                 board = game.place(board, column, row, side);
 
-                MinMaxResult result = miniMax(opp, side, depth + 1, move_row, move_column, board, alpha, beta);
+                result = miniMax(opp, side, depth + 1, move_row, move_column, board, alpha, beta);
                 if (side == game.COMPUTER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
                     alpha = Math.max(alpha, result.points);
@@ -129,6 +152,17 @@ public class AIv2 {
 //                game.place(board, column, row, current);
             }
 
+            entry.value = result;
+            if (result.points < alphaOriginal)
+                entry.flag = Flag.UPPER_BOUND;
+            else if (result.points > beta)
+                entry.flag = Flag.LOWER_BOUND;
+            else
+                entry.flag = Flag.EXACT;
+
+            entry.depth = depth;
+            transpositionTable.put(board, entry);
+
             return new MinMaxResult(side == game.COMPUTER ? max : min, depth);
         }
 
@@ -144,5 +178,23 @@ public class AIv2 {
         public int getColumn() {
             return column;
         }
+    }
+
+    public class TableEntry {
+        private MinMaxResult value;
+        private int depth;
+        private Flag flag;
+
+        public TableEntry(MinMaxResult value, int depth, Flag flag) {
+            this.value = value;
+            this.depth = depth;
+            this.flag = flag;
+        }
+    }
+
+    public enum Flag {
+        UPPER_BOUND,
+        EXACT,
+        LOWER_BOUND
     }
 }

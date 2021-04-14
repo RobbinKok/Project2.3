@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -60,17 +61,8 @@ public class OthelloGameController extends GUIController {
             commandHandler.addCommand(CommandHandler.CommandType.MyTurn, new Command() {
                 @Override
                 public void execute(String data) {
-                    if (networkClient.getPlayAsAI()) {
+//                    if (networkClient.getPlayAsAI()) {
                         AIBest bestMove = ai.chooseMove(playerColor);
-//                        reversie.playMove(bestMove.row, bestMove.column, playerColor);
-
-//                        ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), playerColor);
-//                        for (int[] coords : moves) {
-//                            System.out.println(NetworkClient.localToNetworkCoordinates(coords[0], coords[1], NetworkClient.GameType.Reversi));
-//                        }
-//                        int[] move = moves.get(new Random().nextInt(moves.size()));
-
-
                         reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
                         if (bestMove.row != -1) {
@@ -81,14 +73,7 @@ public class OthelloGameController extends GUIController {
                                 networkClient.move(possibleMoves.get(0)[0], possibleMoves.get(0)[1], NetworkClient.GameType.Reversi);
                             }
                         }
-
-//                        try {
-//                            Thread.sleep(1000);
-//                        } catch (Exception ignored) {
-//                        }
-
-//                    networkClient.move(bestMove.row, bestMove.column, NetworkClient.GameType.Reversi);
-                    }
+//                    }
 
                     System.out.println(reversie);
                     System.out.println("Making my move!");
@@ -101,35 +86,24 @@ public class OthelloGameController extends GUIController {
                 move = data.get("MOVE");
                 details = data.get("DETAILS");
 
-                if (name.equals(networkClient.getPlayerName())) {
+                if (name.equals(networkClient.getPlayerName()))
                     return;
-                }
-//                System.out.println("MOVE Playing for: " + reversie.side);
 
                 int[] coords = NetworkClient.networkToLocalCoordinates(Integer.parseInt(move), NetworkClient.GameType.Reversi);
-
                 reversie.playMove(coords[0], coords[1], computerColor);
 
-//                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
+                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
             }));
 
             commandHandler.addCommand(CommandHandler.CommandType.Result, new MatchCommand(data -> {
-                String scoreOne, scoreTwo, comment;
-
-                scoreOne = data.get("PLAYERONESCORE");
-                scoreTwo = data.get("PLAYERTWOSCORE");
-                comment = data.get("COMMENT");
-
                 Platform.runLater(() -> {
-//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//                    alert.setTitle("Results");
-//                    alert.setHeaderText("Score");
-//                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
-//                    alert.showAndWait();
-
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Results");
+                    alert.setHeaderText("Score");
+                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
+                    alert.showAndWait();
+                    switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
                 });
-
-//                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
             }));
         }
     }

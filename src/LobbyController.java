@@ -40,6 +40,9 @@ public class LobbyController extends GUIController
         this.networkClient = networkClient;
 
         CommandHandler commandHandler = this.networkClient.getCommandHandler();
+        commandHandler.removeCommand(CommandHandler.CommandType.PlayerList);
+        commandHandler.removeCommand(CommandHandler.CommandType.GameList);
+        commandHandler.removeCommand(CommandHandler.CommandType.Challenge);
 
         commandHandler.addCommand(CommandHandler.CommandType.Error, new ErrorCommand(data -> {
             Platform.runLater(() -> {
@@ -64,6 +67,16 @@ public class LobbyController extends GUIController
             this.challenges.add(new Challenge(name, number, type));
         }));
 
+        commandHandler.addCommand(CommandHandler.CommandType.ChallengeCancelled, new ChallengeCancelledCommand(data -> {
+            Challenge exists = null;
+
+            for (Challenge challenge : this.challenges)
+                if (challenge.getId().equals(data.get("CHALLENGENUMBER")))
+                    exists = challenge;
+
+            this.challenges.remove(exists);
+        }));
+
         commandHandler.addCommand(CommandHandler.CommandType.Match, new MatchCommand(data -> {
             String gameType = data.get("GAMETYPE");
             String opponent = data.get("OPPONENT");
@@ -81,21 +94,23 @@ public class LobbyController extends GUIController
 
         commandHandler.addCommand(CommandHandler.CommandType.GameList, new GameListCommand(data -> {
             Platform.runLater(() -> {
-                for (String type: data) {
-                    gameTypes.getItems().add(type);
-                }
+                System.out.println(gameTypes.hashCode());
+
+                gameTypes.getItems().removeAll();
+                gameTypes.getItems().addAll(data);
             });
         }));
 
         commandHandler.addCommand(CommandHandler.CommandType.PlayerList, new PlayerListCommand(data -> {
             Platform.runLater(() -> {
-                playerList.getItems().removeAll(playerList.getItems());
+                System.out.println(playerList.hashCode());
 
-                for(String name : data) {
+                playerList.getItems().removeAll(playerList.getItems());
+                for (String name : data) {
                     if (name.equals(networkClient.getPlayerName()))
-                        this.playerList.getItems().add(name + " (Me)");
+                        playerList.getItems().add(name + " (Me)");
                     else
-                        this.playerList.getItems().add(name);
+                        playerList.getItems().add(name);
                 }
             });
         }));
@@ -107,6 +122,8 @@ public class LobbyController extends GUIController
     @FXML
     private void initialize()
     {
+        System.out.println("Initialized with: " + this.hashCode());
+
         returnButton.setOnAction(value ->
         {
             switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/src/resources/MultiplayerMenu.fxml", new MainMenuController());
@@ -124,7 +141,7 @@ public class LobbyController extends GUIController
         tableView.getColumns().add(players);
         tableView.getColumns().add(invite);
         tableView.getColumns().add(type);
-
+        
         tableView.setItems(challenges);
 
         tableView.setOnMouseClicked(mouseEvent -> {
@@ -148,7 +165,7 @@ public class LobbyController extends GUIController
             if (name.isBlank() || name.isEmpty())
                 return;
 
-            if (name.contains(networkClient.getPlayerName())) {
+            if (name.equals(networkClient.getPlayerName())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Cannot Challenge Yourself!");

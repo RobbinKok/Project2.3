@@ -1,10 +1,12 @@
 package AI;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AI {
 
     private Game game;
+
 
     public AI(Game game) {
         this.game = game;
@@ -58,9 +60,6 @@ public class AI {
 
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
-
-
-
 
         for (int[] move : moves) {
             int x = move[0];
