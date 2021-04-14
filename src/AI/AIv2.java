@@ -96,7 +96,7 @@ public class AIv2 {
 
             ArrayList<int[]> moves = game.getPossibleMoves(board, side);
 
-            if (moves.size() == 0 || depth == 10) {
+            if (moves.size() == 0 || depth == 7) {
                 return new MinMaxResult(check, depth);
             }
 
@@ -113,7 +113,7 @@ public class AIv2 {
 //                board[move_column][move_row] = side;
                 board = game.place(board, column, row, side);
 
-                MinMaxResult result = miniMax(score, opp, side, depth + 1, move_row, move_column, board, alpha, beta);
+                MinMaxResult result = miniMax(check, opp, side, depth + 1, move_row, move_column, board, alpha, beta);
                 if (side == game.COMPUTER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
                     alpha = Math.max(alpha, result.points);
