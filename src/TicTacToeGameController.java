@@ -1,7 +1,11 @@
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
-import javax.lang.model.util.ElementScanner6;
-
+import AI.AI;
+import AI.AIv2;
+import AI.AIBest;
+import TicTacToe.TicTacToeGameV2;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -14,8 +18,12 @@ import javafx.scene.text.Text;
 
 public class TicTacToeGameController  extends GUIController
 {
-    Image image1 = new Image("O.png");
-    Image image2 = new Image("X.png");
+
+    Image image1;
+    Image image2;
+
+    private TicTacToeGameV2 t;
+    private AI ai;
 
     @FXML
     private Text outputText;
@@ -23,12 +31,9 @@ public class TicTacToeGameController  extends GUIController
     @FXML
     private Button returnButton;
 
-    int side = 0;
-
     @FXML
     private GridPane gridPane;
 
-    //private TicTacToe game;
     private NetworkClient networkClient;
 
     public TicTacToeGameController(NetworkClient networkClient) {
@@ -38,26 +43,27 @@ public class TicTacToeGameController  extends GUIController
     @FXML
     private void initialize() throws IOException
     {
+        FileInputStream inputstream = new FileInputStream(System.getProperty("user.dir") + "/resources/O.png");
+        image1 = new Image(inputstream);
+        inputstream = new FileInputStream(System.getProperty("user.dir") + "/resources/X.png");
+        image2 = new Image(inputstream);
+        inputstream.close();
         fillGrid();
-        // game = new TicTacToe(this);
         returnButton.setOnAction(value ->
         {
             switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/Resources/MainMenuv1.fxml", new MainMenuController());
         });
-    }
-
-    /*public void setOutputText()
-    {
-        if(game.computerPlays())
+        System.out.println("*** new AI.Game ***\n");
+        t = new TicTacToeGameV2();
+        ai = new AI(t);
+        if (t.computerPlays())
         {
-            outputText.setText("Opponents' turn");
-        }
+            computerMove();
+            System.out.println("I start:\n");
+        }        
         else
-        {
-            outputText.setText("Your turn");
-        }
-        
-    }*/
+            System.out.println("You start:\n");
+    }
 
     private void fillGrid()
     {
@@ -70,6 +76,42 @@ public class TicTacToeGameController  extends GUIController
         }
     }
 
+    
+    private void playerMove(int x, int y) 
+    {
+        setNode(y, x, t.side);
+        t.playMove(y, x, t.side);
+        if(!t.gameOver())
+        {
+            computerMove();
+            if(t.gameOver())
+            {
+                outputText.setText("Game over " + t.winner() + " wins");
+            }
+        }
+        else
+        {
+            outputText.setText("Game over " + t.winner() + " wins");
+        }
+        
+    }
+
+    private void computerMove()
+    {
+        int move = aiMove();
+        setNode(move / 3, move % 3, t.side);
+        t.playMove(move / 3, move % 3, t.side);
+    }
+    
+    private int aiMove() {
+        if (t.boardIsEmpty(t.getBoard())) {
+            return 0;
+        } else {
+            AIBest aiBest = ai.chooseMove(t.COMPUTER);
+            return aiBest.row * 3 + aiBest.column;
+        }
+}
+
     private void addNode(int x, int y)
     {
         ImageView node = new ImageView();
@@ -80,11 +122,17 @@ public class TicTacToeGameController  extends GUIController
         node.setOnMouseClicked(value -> {
             if(node.getOpacity() < 1)
             {
-                // todo
-                Image tmp = side==0 ? image1 : image2;
-                node.setImage(tmp);
-                node.setOpacity(1);
-                side= side==0 ? 1 : 0;
+                if(!t.computerPlays())
+                {
+                    if(!t.gameOver())
+                    {
+                        playerMove(x, y);
+                        if(t.gameOver())
+                        {
+                            outputText.setText("Game over " + t.winner() + " wins");
+                        }
+                    }
+                }
             }
         });
         gridPane.add(node, x, y);
@@ -96,12 +144,12 @@ public class TicTacToeGameController  extends GUIController
         ImageView node = (ImageView)getNodeByRowColumnIndex(row, column, gridPane);
         if(side == 0)
         {
-            node.setImage(image1);
+            node.setImage(image2);
             node.setOpacity(1);
         }
         else if(side == 1)
         {
-            node.setImage(image2);
+            node.setImage(image1);
             node.setOpacity(1);
         }
     }
