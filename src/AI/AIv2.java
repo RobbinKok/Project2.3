@@ -18,6 +18,7 @@ public class AIv2 {
     }
 
     public AIBest chooseMove(int side) {
+        long startTime = System.currentTimeMillis();
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
         int bRow = -1;
         int bColumn = -1;
@@ -29,7 +30,8 @@ public class AIv2 {
         ArrayList<Thread> threads = new ArrayList<>();
 
         int[][] board = game.getBoard();
-        for (int[] move : game.getPossibleMoves(board, side)) {
+        ArrayList<int[]> moves = game.getPossibleMoves(board, side);
+        for (int[] move : moves) {
             int row = move[0];
             int column = move[1];
 
@@ -38,7 +40,7 @@ public class AIv2 {
             board = game.place(board, column, row, side);
 
             // runnable
-            MiniMax miniMax = new MiniMax(board, opp, side, 2, row, column);
+            MiniMax miniMax = new MiniMax(board, opp, side, 2, row, column, startTime);
             Thread thread = new Thread(miniMax);
             thread.start();
             miniMaxArray.add(miniMax);
@@ -83,14 +85,16 @@ public class AIv2 {
         private int depth;
         private int row;
         private int column;
+        private long startTime;
 
-        public MiniMax(int[][] board, int side, int opp, int depth, int row, int column) {
+        public MiniMax(int[][] board, int side, int opp, int depth, int row, int column, long startTime) {
             this.board = board;
             this.side = side;
             this.opp = opp;
             this.depth = depth;
             this.row = row;
             this.column = column;
+            this.startTime = startTime;
         }
 
         @Override
@@ -102,14 +106,15 @@ public class AIv2 {
             int check = game.checkScore(score, board, current_x, current_y, depth);
 
             ArrayList<int[]> moves = game.getPossibleMoves(board, side);
-//            moves = orderMoves(board, moves, depth);
 
-            if (moves.size() == 0 || depth == 7) {
+
+            if (moves.size() == 0 || depth == 11 || System.currentTimeMillis() - startTime > 8500) {
                 return new MinMaxResult(check, depth);
             }
 
             int max = Integer.MIN_VALUE;
             int min = Integer.MAX_VALUE;
+
 
             for (int[] move : moves) {
                 int move_row = move[0];
@@ -120,11 +125,11 @@ public class AIv2 {
                 board = game.place(board, column, row, side);
 
                 MinMaxResult result = miniMax(check, opp, side, depth + 1, move_row, move_column, board, alpha, beta);
-
+//                depth = result.depth;
                 if (side == game.COMPUTER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
                     alpha = Math.max(alpha, result.points);
-                    if (beta <=  alpha)
+                    if (beta <= alpha)
                         break;
                 } else if (side == game.PLAYER) {
                     min = Math.min(min, result.points);

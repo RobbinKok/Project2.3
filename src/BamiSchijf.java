@@ -1,10 +1,12 @@
+import AI.AIv2;
 import AI.AIv3;
 import AI.AIBest;
 
 public class BamiSchijf {
 
     private Reversie reversie;
-    private AIv3 ai;
+    private AIv2 aiv2;
+    private AIv3 aiv3;
     private boolean playing = true;
 
     public static void main(String[] args) {
@@ -14,7 +16,8 @@ public class BamiSchijf {
     public BamiSchijf() {
         long startTime = System.currentTimeMillis();
         reversie = new Reversie(Reversie.WHITE, Reversie.BLACK);
-        ai = new AIv3(reversie);
+        aiv2 = new AIv2(reversie);
+        aiv3 = new AIv3(reversie);
 //        reversie.COMPUTER = Reversie.WHITE;
 //        reversie.PLAYER = Reversie.BLACK;
 //        reversie.side = Reversie.BLACK;
@@ -23,10 +26,7 @@ public class BamiSchijf {
             System.out.println("Black: " + reversie.getBlackScore());
             System.out.println("White: " + reversie.getWhiteScore());
             System.out.println(reversie.toString());
-//            System.out.println("Enter: X,Y");
-//            long startMoveTime = System.currentTimeMillis();
             move();
-//            System.out.println(System.currentTimeMillis() - startMoveTime);
         }
         System.out.println("DONE!");
         long estimatedTime = System.currentTimeMillis() - startTime;
@@ -40,8 +40,24 @@ public class BamiSchijf {
 
 
     private void move() {
+        long startTime = System.currentTimeMillis();
+        AIBest aiBest;
         int side = reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER;
-        AIBest aiBest = ai.chooseMove(side);
+        if (reversie.computerPlays()) {
+//            int[] move = reversie.getPossibleMoves(reversie.getBoard(), reversie.COMPUTER).get(0);
+//            aiBest = new AIBest(0, move[0], move[1], 1);
+            aiBest = aiv2.chooseMove(reversie.COMPUTER);
+        } else {
+            aiBest = aiv2.chooseMove(reversie.PLAYER);
+//            aiBest = aiv3.chooseMove(reversie.PLAYER);
+        }
+
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(side + ": " + estimatedTime);
+        System.out.println("AI: " + reversie.PLAYER);
+
+//        int side = reversie.computerPlays() ? reversie.COMPUTER : reversie.PLAYER;
+
 //        System.out.println("x " + aiBest.row + " y " + aiBest.column);
 
 //        if (aiBest.row == -1 && aiBest.column == -1) {

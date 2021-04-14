@@ -14,10 +14,11 @@ public class MiniMaxNode extends RecursiveTask<MinMaxResult> {
     private int alpha;
     private int beta;
     private int score;
+    private long startTime;
 
     private boolean running = true;
 
-    public MiniMaxNode(int score, Game game, int[][] board, int side, int opp, int depth, int row, int column, int alpha, int beta) {
+    public MiniMaxNode(int score, Game game, int[][] board, int side, int opp, int depth, int row, int column, int alpha, int beta, long startTime) {
         this.score = score;
         this.game = game;
         this.board = board;
@@ -28,6 +29,7 @@ public class MiniMaxNode extends RecursiveTask<MinMaxResult> {
         this.column = column;
         this.alpha = alpha;
         this.beta = beta;
+        this.startTime = startTime;
     }
 
     @Override
@@ -38,12 +40,16 @@ public class MiniMaxNode extends RecursiveTask<MinMaxResult> {
         ArrayList<int[]> moves = game.getPossibleMoves(board, side);
         orderMoves(board, moves, depth);
 
-        if (moves.size() == 0 || depth == 8) {
+        long currentTime = System.currentTimeMillis();
+        long over = currentTime - startTime;
+        if (moves.size() == 0 || depth == 5 || over > 8000) {
             return new MinMaxResult(check, depth);
         }
 
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
+
+        depth += 1;
 
         for (int[] move : moves) {
             int move_row = move[0];
@@ -53,7 +59,7 @@ public class MiniMaxNode extends RecursiveTask<MinMaxResult> {
 
             board = game.place(board, column, row, side);
 
-            MiniMaxNode miniMaxNode = new MiniMaxNode(check, game, board, opp, side, depth + 1, move_row, move_column, alpha, beta);
+            MiniMaxNode miniMaxNode = new MiniMaxNode(check, game, board, opp, side, depth, move_row, move_column, alpha, beta, startTime);
             MinMaxResult result = miniMaxNode.compute();
 
             if (side == game.PLAYER) {

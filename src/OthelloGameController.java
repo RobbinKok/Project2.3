@@ -1,4 +1,4 @@
-import AI.AIv3;
+import AI.AIv2;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -36,7 +36,7 @@ public class OthelloGameController extends GUIController {
 
     //int side = 0;
     private final Reversie reversie;
-    private final AIv3 ai;
+    private final AIv2 ai;
 
     private final NetworkClient networkClient;
 
@@ -59,7 +59,7 @@ public class OthelloGameController extends GUIController {
 
 
         reversie = new Reversie(computerColor, playerColor, this);
-        ai = new AIv3(reversie);
+        ai = new AIv2(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
