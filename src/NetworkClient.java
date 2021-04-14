@@ -24,6 +24,16 @@ public class NetworkClient extends Observable {
 
     private boolean playAsAI;
 
+    private boolean isInMatch;
+
+    public boolean getIsInMatch() {
+        return this.isInMatch;
+    }
+
+    public void setIsInMatch(boolean value) {
+        this.isInMatch = value;
+    }
+
     public NetworkClient(String host, int port) {
         this.hostAddress = new InetSocketAddress(host, port);
     }

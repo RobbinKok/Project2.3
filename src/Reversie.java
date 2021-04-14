@@ -89,18 +89,20 @@ public class Reversie extends Game {
             findAllScores();
 
             if (gui != null) {
-                if (side == BLACK)
-                    gui.changeNodeColor(column, row, Color.BLACK);
-                else
-                    gui.changeNodeColor(column, row, Color.WHITE);
+                Platform.runLater(() -> {
+                    if (side == BLACK)
+                        gui.changeNodeColor(column, row, Color.BLACK);
+                    else
+                        gui.changeNodeColor(column, row, Color.WHITE);
 
-                gui.updateCurrentPlayer(side);
+                    gui.updateCurrentPlayer(side);
 
-                // sets the score in the gui
-                gui.setScore(blackScore, whiteScore);
+                    // sets the score in the gui
+                    gui.setScore(blackScore, whiteScore);
 
-                // adds the move to the movelist in the gui
-                gui.addMove(side, column + 1, row + 1);
+                    // adds the move to the movelist in the gui
+                    gui.addMove(side, column + 1, row + 1);
+                });
             }
 
             swapSides(side);

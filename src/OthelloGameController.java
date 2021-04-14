@@ -122,15 +122,15 @@ public class OthelloGameController extends GUIController {
                 comment = data.get("COMMENT");
 
                 Platform.runLater(() -> {
-//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//                    alert.setTitle("Results");
-//                    alert.setHeaderText("Score");
-//                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
-//                    alert.showAndWait();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Results");
+                    alert.setHeaderText("Score");
+                    alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
+                    alert.showAndWait();
 
+                    switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
+                    networkClient.setIsInMatch(false);
                 });
-
-//                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
             }));
         }
     }
