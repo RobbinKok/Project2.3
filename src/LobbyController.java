@@ -36,6 +36,8 @@ public class LobbyController extends GUIController
 
     private ObservableList<Challenge> challenges = FXCollections.observableArrayList();
 
+    private Timeline getListTask;
+
     public LobbyController(NetworkClient networkClient) {
         this.networkClient = networkClient;
 
@@ -86,16 +88,16 @@ public class LobbyController extends GUIController
                 networkClient.setOpponentName(opponent);
                 networkClient.setPlayAsAI(playAsAI.isSelected());
                 OthelloGameController othelloGameController = new OthelloGameController(networkClient);
+                getListTask.stop();
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/OthelloGameview.fxml", othelloGameController);
             }
             else if (gameType.equals("Tic-tac-toe"))
+                getListTask.stop();
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/TicTacToe.fxml",  new TicTacToeGameController(networkClient));
         }));
 
         commandHandler.addCommand(CommandHandler.CommandType.GameList, new GameListCommand(data -> {
             Platform.runLater(() -> {
-                System.out.println(gameTypes.hashCode());
-
                 gameTypes.getItems().removeAll();
                 gameTypes.getItems().addAll(data);
             });
@@ -103,8 +105,6 @@ public class LobbyController extends GUIController
 
         commandHandler.addCommand(CommandHandler.CommandType.PlayerList, new PlayerListCommand(data -> {
             Platform.runLater(() -> {
-                System.out.println(playerList.hashCode());
-
                 playerList.getItems().removeAll(playerList.getItems());
                 for (String name : data) {
                     if (name.equals(networkClient.getPlayerName()))
@@ -122,8 +122,6 @@ public class LobbyController extends GUIController
     @FXML
     private void initialize()
     {
-        System.out.println("Initialized with: " + this.hashCode());
-
         returnButton.setOnAction(value ->
         {
             switchScene(returnButton.getScene(), System.getProperty("user.dir") + "/src/resources/MultiplayerMenu.fxml", new MainMenuController());
@@ -190,7 +188,7 @@ public class LobbyController extends GUIController
         this.networkClient.getList(NetworkClient.ListType.Gamelist);
 
         // Hacky timer on UI Thread, runs every 5 seconds.
-        Timeline getListTask = new Timeline(new KeyFrame(Duration.seconds(5), actionEvent -> networkClient.getList(NetworkClient.ListType.Playerlist)));
+        getListTask = new Timeline(new KeyFrame(Duration.seconds(5), actionEvent -> networkClient.getList(NetworkClient.ListType.Playerlist)));
         getListTask.setCycleCount(Timeline.INDEFINITE);
         getListTask.play();
     }

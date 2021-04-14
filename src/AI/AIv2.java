@@ -1,6 +1,9 @@
 package AI;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AIv2 {
@@ -20,6 +23,7 @@ public class AIv2 {
         int bColumn = -1;
         int value = Integer.MIN_VALUE;
         int bestDepth = Integer.MAX_VALUE;
+
 
         ArrayList<MiniMax> miniMaxArray = new ArrayList<>();
         ArrayList<Thread> threads = new ArrayList<>();
@@ -64,7 +68,6 @@ public class AIv2 {
                 bestDepth = result.depth;
             }
         }
-
 
         return new AIBest(value, bRow, bColumn, bestDepth);
     }
@@ -121,6 +124,7 @@ public class AIv2 {
             }
 
             ArrayList<int[]> moves = game.getPossibleMoves(board, side/*, board*/);
+//            moves = orderMoves(board, moves, depth);
 
             int max = Integer.MIN_VALUE;
             int min = Integer.MAX_VALUE;
@@ -166,6 +170,30 @@ public class AIv2 {
             return new MinMaxResult(side == game.COMPUTER ? max : min, depth);
         }
 
+        private ArrayList<int[]> orderMoves(int[][] board, ArrayList<int[]> moves, int depth) {
+            int[] scores = new int[moves.size()];
+
+            for (int i = 0; i < moves.size(); i++) {
+                int[] coord = moves.get(i);
+                scores[i] = game.checkScore(board, coord[0], coord[1], depth);
+            }
+
+            for (int i = 0; i < moves.size(); i++) {
+                int current = scores[i];
+                int[] currentMove = moves.get(i);
+                int previous = i - 1;
+
+                while (previous >= 0 && scores[previous] > current) {
+                    scores[previous + 1] = scores[previous];
+                    moves.set(previous + 1, moves.get(previous));
+                    previous -= 1;
+                }
+                scores[previous + 1] = current;
+                moves.set(previous + 1, currentMove);
+            }
+
+            return moves;
+        }
 
         public MinMaxResult getValue() {
             return value;

@@ -62,7 +62,11 @@ public class OthelloGameController extends GUIController {
                 @Override
                 public void execute(String data) {
 //                    if (networkClient.getPlayAsAI()) {
+                        long startTime = System.currentTimeMillis();
                         AIBest bestMove = ai.chooseMove(playerColor);
+                        long endTime = System.currentTimeMillis();
+                        System.out.println("Total time: " + (endTime - startTime));
+
                         reversie.playMove(bestMove.row, bestMove.column, playerColor);
 
                         if (bestMove.row != -1) {
