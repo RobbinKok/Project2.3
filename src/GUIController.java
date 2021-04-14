@@ -29,9 +29,11 @@ public class GUIController
                 loader.setController(gc);
                 AnchorPane root = (AnchorPane) loader.load(fxmlStream);
                 scene.setRoot(root);
+                fxmlStream.close();
             } 
             catch (IOException e) {
                 //TODO: handle exception
+                System.out.print(e);
             }
     }
     // w/o controller
@@ -47,6 +49,7 @@ public class GUIController
                 FileInputStream fxmlStream = new FileInputStream(fxmlDocPath);
                 AnchorPane root = (AnchorPane) loader.load(fxmlStream);
                 scene.setRoot(root);
+                fxmlStream.close();
             } 
             catch (IOException e) {
                 //TODO: handle exception
