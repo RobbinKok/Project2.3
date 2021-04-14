@@ -95,41 +95,22 @@ public class AIv2 {
 
         @Override
         public void run() {
-            value = miniMax(this.opp, this.side, this.depth, this.row, this.column, this.board, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            value = miniMax(0, this.opp, this.side, this.depth, this.row, this.column, this.board, Integer.MIN_VALUE, Integer.MAX_VALUE);
         }
 
-        private MinMaxResult miniMax(int side, int opp, int depth, int current_x, int current_y, int[][] board, int alpha, int beta) {
-            int alphaOriginal = alpha;
-            TableEntry entry = transpositionTable.get(board);
+        private MinMaxResult miniMax(int score, int side, int opp, int depth, int current_x, int current_y, int[][] board, int alpha, int beta) {
+            int check = game.checkScore(score, board, current_x, current_y, depth);
 
-            if (entry != null && entry.depth > depth) {
-                if (entry.flag == Flag.EXACT)
-                    return entry.value; // Entry.value
-                else if (entry.flag == Flag.LOWER_BOUND)
-                    alpha = Math.max(alpha, entry.value.points);
-                else if (entry.flag == Flag.UPPER_BOUND)
-                    beta = Math.min(beta, entry.value.points);
+            ArrayList<int[]> moves = game.getPossibleMoves(board, side);
+//            moves = orderMoves(board, moves, depth);
 
-                if (alpha > beta)
-                    return entry.value; // Entry.value
-            }
-            else {
-                entry = new TableEntry(new MinMaxResult(Integer.MIN_VALUE, 0), 0, Flag.EXACT);
-            }
-
-            int check = game.checkScore(board, current_x, current_y, depth);
-
-            if (check != 0) {
+            if (moves.size() == 0 || depth == 7) {
                 return new MinMaxResult(check, depth);
             }
-
-            ArrayList<int[]> moves = game.getPossibleMoves(board, side/*, board*/);
-//            moves = orderMoves(board, moves, depth);
 
             int max = Integer.MIN_VALUE;
             int min = Integer.MAX_VALUE;
 
-            MinMaxResult result = new MinMaxResult(Integer.MIN_VALUE, depth);
             for (int[] move : moves) {
                 int move_row = move[0];
                 int move_column = move[1];
@@ -138,7 +119,8 @@ public class AIv2 {
 //                board[move_column][move_row] = side;
                 board = game.place(board, column, row, side);
 
-                result = miniMax(opp, side, depth + 1, move_row, move_column, board, alpha, beta);
+                MinMaxResult result = miniMax(check, opp, side, depth + 1, move_row, move_column, board, alpha, beta);
+
                 if (side == game.COMPUTER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
                     alpha = Math.max(alpha, result.points);
@@ -156,17 +138,6 @@ public class AIv2 {
 //                game.place(board, column, row, current);
             }
 
-            entry.value = result;
-            if (result.points < alphaOriginal)
-                entry.flag = Flag.UPPER_BOUND;
-            else if (result.points > beta)
-                entry.flag = Flag.LOWER_BOUND;
-            else
-                entry.flag = Flag.EXACT;
-
-            entry.depth = depth;
-            transpositionTable.put(board, entry);
-
             return new MinMaxResult(side == game.COMPUTER ? max : min, depth);
         }
 
@@ -175,7 +146,7 @@ public class AIv2 {
 
             for (int i = 0; i < moves.size(); i++) {
                 int[] coord = moves.get(i);
-                scores[i] = game.checkScore(board, coord[0], coord[1], depth);
+                scores[i] = game.checkScore(0, board, coord[0], coord[1], depth);
             }
 
             for (int i = 0; i < moves.size(); i++) {

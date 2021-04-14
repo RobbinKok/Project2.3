@@ -43,7 +43,7 @@ public class AI {
     }
 
     private MinMaxResult minimax(int[][] board, int side, int opp, int depth, int current_x, int current_y) {
-        int check = game.checkScore(board, depth, current_x, current_y);
+        int check = game.checkScore(0, board, depth, current_x, current_y);
 
         if (check != 0) {
             return new MinMaxResult(check, depth);

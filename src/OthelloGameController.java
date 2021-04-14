@@ -1,4 +1,4 @@
-import AI.AIv2;
+import AI.AIv3;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -36,7 +36,7 @@ public class OthelloGameController extends GUIController {
 
     //int side = 0;
     private final Reversie reversie;
-    private final AIv2 ai;
+    private final AIv3 ai;
 
     private final NetworkClient networkClient;
 
@@ -44,16 +44,22 @@ public class OthelloGameController extends GUIController {
         this.networkClient = networkClient;
         int playerColor, computerColor;
 
-        if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
+        if (isMultiplayer()) {
+            if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
+                playerColor = Reversie.BLACK;
+                computerColor = Reversie.WHITE;
+            } else {
+                playerColor = Reversie.WHITE;
+                computerColor = Reversie.BLACK;
+            }
+        } else {
             playerColor = Reversie.BLACK;
             computerColor = Reversie.WHITE;
-        } else {
-            playerColor = Reversie.WHITE;
-            computerColor = Reversie.BLACK;
         }
 
+
         reversie = new Reversie(computerColor, playerColor, this);
-        ai = new AIv2(reversie);
+        ai = new AIv3(reversie);
 
         if (isMultiplayer()) {
             CommandHandler commandHandler = networkClient.getCommandHandler();
@@ -106,7 +112,9 @@ public class OthelloGameController extends GUIController {
                     alert.setHeaderText("Score");
                     alert.setContentText("Black: " + reversie.getBlackScore() + " White: " + reversie.getWhiteScore());
                     alert.showAndWait();
+
                     switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new LobbyController(this.networkClient));
+                    networkClient.setIsInMatch(false);
                 });
             }));
         }

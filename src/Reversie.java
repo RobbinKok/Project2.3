@@ -266,6 +266,12 @@ public class Reversie extends Game {
         return (r == 0 || r == 7) && (c == 0 || c == 7);
     }
 
+    public int region1Counter = 0;
+    public int region2Counter = 0;
+    public int region3Counter = 0;
+    public int region4Counter = 0;
+    public int region5Counter = 0;
+
     /**
      * Board with regions
      * Region 1 = 1, point = 3
@@ -288,27 +294,25 @@ public class Reversie extends Game {
      * @return
      */
     @Override
-    public int checkScore(int[][] board, int row, int column, int depth) {
-        int score = 0;
-        if (isRegion5(column, row)) {
-            score = 10;
-        } else if (depth == 11) {
-            if (isRegion5(column, row)) {
-                score = 10;
-            } else if (isRegion4(column, row)) {
-                score = -5;
-            } else if (isRegion3(column, row)) {
-                score = 5;
-            } else if (isRegion2(column, row)) {
-                score = 2;
-            } else {
-                score = 3;
-            }
+    public int checkScore(int score, int[][] board, int row, int column, int depth) {
+        if (isRegion2(column, row)) {
+            score += 2;
+            region2Counter++;
+        } else if (isRegion4(column, row)) {
+            score += -50;
+            region4Counter++;
+        } else if (isRegion3(column, row)) {
+            score += 5;
+            region3Counter++;
+        } else if (isRegion5(column, row)) {
+            score += 10;
+            region5Counter++;
         } else {
-            return 0;
+            score += 3;
+            region1Counter++;
         }
 
-        return side == PLAYER ? score : -score;
+        return side == COMPUTER ? score : -score;
     }
 
 

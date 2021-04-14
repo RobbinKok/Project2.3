@@ -1,10 +1,13 @@
 package TicTacToe;
 
-import AI.Game;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import AI.AI;
+import AI.AIv2;
+import AI.AIBest;
+import AI.Game;;
 
 public class TicTacToeGameV2 extends Game {
 
@@ -21,11 +24,10 @@ public class TicTacToeGameV2 extends Game {
     private char computerChar, humanChar;
     private int position = UNCLEAR;
 
-    private boolean isPlaying = true;
-
     public TicTacToeGameV2() {
         clearBoard();
         initSide();
+        
     }
 
     private void initSide() {
@@ -133,7 +135,7 @@ public class TicTacToeGameV2 extends Game {
     }
 
     @Override
-    public int checkScore(int[][] board, int row, int column, int depth) {
+    public int checkScore(int score, int[][] board, int row, int column, int depth) {
         if (isAWin(this.COMPUTER, board)) {
             return 10;
         } else if (isAWin(this.PLAYER, board)) {
@@ -142,14 +144,20 @@ public class TicTacToeGameV2 extends Game {
         return 0;
     }
 
-    private int positionValue() {
-        if (isAWin(this.COMPUTER, playingBoard)) {
+    private int positionValue() 
+    {
+
+        if (isAWin(this.COMPUTER, playingBoard)) 
+        {
             return COMPUTER_WIN;
-        } else if (isAWin(this.PLAYER, playingBoard)) {
-            return PLAYER;
-        } else if (boardIsFull(playingBoard)) {
+        } else if (isAWin(this.PLAYER, playingBoard)) 
+        {
+            return PLAYER_WIN;
+        } else if (boardIsFull(playingBoard)) 
+        {
             return DRAW;
-        } else {
+        } else 
+        {
             return UNCLEAR;
         }
     }
@@ -157,6 +165,7 @@ public class TicTacToeGameV2 extends Game {
     @Override
     public boolean gameOver() {
         this.position = positionValue();
+        System.out.println(position);
         return this.position != UNCLEAR;
     }
 

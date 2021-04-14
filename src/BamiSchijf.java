@@ -1,10 +1,10 @@
-import AI.AIv2;
+import AI.AIv3;
 import AI.AIBest;
 
 public class BamiSchijf {
 
     private Reversie reversie;
-    private AIv2 ai;
+    private AIv3 ai;
     private boolean playing = true;
 
     public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class BamiSchijf {
     public BamiSchijf() {
         long startTime = System.currentTimeMillis();
         reversie = new Reversie(Reversie.WHITE, Reversie.BLACK);
-        ai = new AIv2(reversie);
+        ai = new AIv3(reversie);
 //        reversie.COMPUTER = Reversie.WHITE;
 //        reversie.PLAYER = Reversie.BLACK;
 //        reversie.side = Reversie.BLACK;
@@ -31,6 +31,11 @@ public class BamiSchijf {
         System.out.println("DONE!");
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println(estimatedTime);
+        System.out.println("Region 1 = " + reversie.region1Counter);
+        System.out.println("Region 2 = " + reversie.region2Counter);
+        System.out.println("Region 3 = " + reversie.region3Counter);
+        System.out.println("Region 4 = " + reversie.region4Counter);
+        System.out.println("Region 5 = " + reversie.region5Counter);
     }
 
 
