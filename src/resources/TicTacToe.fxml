@@ -22,6 +22,6 @@
         </rowConstraints>
       </GridPane>
       <Button fx:id="returnButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Return" />
-      <Text fx:id="outputText" layoutX="289.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text fx:id="outputText" layoutX="289.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" />
    </children>
 </AnchorPane>
