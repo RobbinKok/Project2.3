@@ -10,7 +10,7 @@ public abstract class Game {
 
     public abstract int[][] place(int[][] board, int row, int column, int side);
 
-    public abstract int checkScore(int[][] board, int row, int column, int depth);
+    public abstract int checkScore(int score, int[][] board, int row, int column, int depth);
 
     public abstract boolean gameOver();
 

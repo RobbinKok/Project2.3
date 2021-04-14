@@ -1,4 +1,5 @@
 import AI.Game;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -285,25 +286,19 @@ public class Reversie extends Game {
      * @return
      */
     @Override
-    public int checkScore(int[][] board, int row, int column, int depth) {
-        int score = 0;
+    public int checkScore(int score, int[][] board, int row, int column, int depth) {
         if (isRegion5(column, row)) {
-            score = 10;
-        } else if (depth == 10) {
-            if (isRegion5(column, row)) {
-                score = 10;
-            } else if (isRegion4(column, row)) {
-                score = -5;
-            } else if (isRegion3(column, row)) {
-                score = 5;
-            } else if (isRegion2(column, row)) {
-                score = 2;
-            } else {
-                score = 3;
-            }
+            score += 10;
+        } else if (isRegion4(column, row)) {
+            score += -5;
+        } else if (isRegion3(column, row)) {
+            score += 5;
+        } else if (isRegion2(column, row)) {
+            score += 2;
         } else {
-            return 0;
+            score += 3;
         }
+
 
         return side == COMPUTER ? score : -score;
     }

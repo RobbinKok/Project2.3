@@ -68,6 +68,9 @@ public class LobbyController extends GUIController
             String gameType = data.get("GAMETYPE");
             String opponent = data.get("OPPONENT");
 
+            if (networkClient.getIsInMatch())
+                return;
+
             if (gameType.equals("Reversi")) {
                 networkClient.setFirstPlayer(data.get("PLAYERTOMOVE"));
                 networkClient.setOpponentName(opponent);
@@ -77,6 +80,8 @@ public class LobbyController extends GUIController
             }
             else if (gameType.equals("Tic-tac-toe"))
                 switchScene(goButton.getScene(), System.getProperty("user.dir") + "/src/resources/TicTacToe.fxml",  new TicTacToeGameController(networkClient));
+
+            networkClient.setIsInMatch(true);
         }));
 
         commandHandler.addCommand(CommandHandler.CommandType.GameList, new GameListCommand(data -> {

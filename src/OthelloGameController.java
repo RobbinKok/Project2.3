@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -110,7 +111,7 @@ public class OthelloGameController extends GUIController {
 
                 reversie.playMove(coords[0], coords[1], computerColor);
 
-//                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
+                System.out.println("Player: " + name + " made move " + move + " with message: " + details);
             }));
 
             commandHandler.addCommand(CommandHandler.CommandType.Result, new MatchCommand(data -> {

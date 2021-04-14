@@ -133,7 +133,7 @@ public class TicTacToeGameV2 extends Game {
     }
 
     @Override
-    public int checkScore(int[][] board, int row, int column, int depth) {
+    public int checkScore(int score, int[][] board, int row, int column, int depth) {
         if (isAWin(this.COMPUTER, board)) {
             return 10;
         } else if (isAWin(this.PLAYER, board)) {
