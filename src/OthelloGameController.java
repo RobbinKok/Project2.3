@@ -136,17 +136,24 @@ public class OthelloGameController extends GUIController {
         });
     }
 
-    public void setScore(int blackScore, int whiteScore) {
-        if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
-            playerOne.setText("(" + networkClient.getPlayerName() + ") Black: " + blackScore);
-            playerTwo.setText("(" + networkClient.getOpponentName() + ") White: " + whiteScore);
-        }
-        else {
-            playerOne.setText("(" + networkClient.getOpponentName() + ") Black: " + blackScore);
-            playerTwo.setText("(" + networkClient.getPlayerName() + ") White: " + whiteScore);
+
+        public void setScore ( int blackScore, int whiteScore) {
+            if (isMultiplayer()) {
+                if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
+                    playerOne.setText("(" + networkClient.getPlayerName() + ") Black: " + blackScore);
+                    playerTwo.setText("(" + networkClient.getOpponentName() + ") White: " + whiteScore);
+                } else {
+                    playerOne.setText("(" + networkClient.getOpponentName() + ") Black: " + blackScore);
+                    playerTwo.setText("(" + networkClient.getPlayerName() + ") White: " + whiteScore);
+                }
+            }
+            else
+            {
+                playerOne.setText("Black: " + blackScore);
+                playerTwo.setText("White: " + whiteScore);
+            }
         }
 
-    }
 
     public void updateCurrentPlayer(int side) {
         if (side == 0) {
@@ -188,7 +195,31 @@ public class OthelloGameController extends GUIController {
                 node.setOpacity(1);
                 side = side==0 ? 1 : 0;*/
 
-                reversie.playMove(x, y, reversie.side);
+                if (!isMultiplayer()) {
+                    ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), reversie.side);
+                    if (moves.size()==0) {
+                        reversie.playMove(-1, -1, reversie.side);
+                        System.out.println("No moves available");
+                        System.out.println("Move for: "+reversie.side);
+                    }
+                    // player
+                    if (reversie.side==reversie.BLACK) {
+                        if (reversie.isLegal(x, y, reversie.side)) {
+                            reversie.playMove(x, y, reversie.side);
+                        }
+                    }
+                    if(reversie.gameOver()) {
+                        currentPlayer.setText(reversie.winner() + " wins the match");
+                    }
+                    // ai do move
+                    if (reversie.side==reversie.WHITE) {
+                        AIBest bestMove = ai.chooseMove(reversie.WHITE);
+                        reversie.playMove(bestMove.row, bestMove.column, reversie.WHITE);
+                    }
+                    if(reversie.gameOver()) {
+                        currentPlayer.setText(reversie.winner() + " won the match");
+                    }
+                }
 
                 if (isMultiplayer())
                     networkClient.move(x, y, NetworkClient.GameType.Reversi);

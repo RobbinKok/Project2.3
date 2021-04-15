@@ -186,15 +186,23 @@ public class Reversie extends Game {
         return output;
     }
 
-    public void winner() {
+    public String winner() {
         findAllScores();
         if (blackScore > whiteScore) {
-            System.out.println("Black Wins!");
+            return "Black";
         } else if (blackScore < whiteScore) {
-            System.out.println("White Wins!");
+            return "White";
         } else {
-            System.out.println("It's a draw");
+            return "Nobody";
         }
+    }
+
+    public boolean isLegal(int x, int y, int side) {
+        ArrayList<int[]> moves = getPossibleMoves(getBoard(), side);
+        for (int[] move : moves) {
+            if (move[0]==x && move[1]==y) return true;
+        }
+        return false;
     }
 
     /**
