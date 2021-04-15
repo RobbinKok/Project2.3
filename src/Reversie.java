@@ -220,28 +220,27 @@ public class Reversie extends Game {
      */
     @Override
     public boolean gameOver() {
-//        boolean noEmpty = true;
-//        boolean noMoves = false;
-//        ArrayList<int[]> movesPlayer = this.getPossibleMoves(playingBoard, this.PLAYER);
-//        ArrayList<int[]> movesComputer = this.getPossibleMoves(playingBoard, WHITE);
-//        if (movesPlayer.size() == 0 && movesComputer.size() == 0) noMoves = true;
-//        for (int i = 0; i < playingBoard.length; i++) {
-//            for (int j = 0; j < playingBoard.length; j++) {
-//                if (playingBoard[j][i] == EMPTY) noEmpty = false;
-//            }
-//        }
-//        if (noEmpty) {
-//            System.out.println("Game Over");
-//            return true;
-//        }
-//        if (noMoves) {
-//            System.out.println("Game Over");
-//            System.out.println("No moves possible");
-//            return true;
-//        }
-//        return false;
-
-        return !isPlaying;
+        boolean noEmpty = true;
+        boolean noMoves = false;
+        ArrayList<int[]> movesPlayer = this.getPossibleMoves(playingBoard, this.PLAYER);
+        ArrayList<int[]> movesComputer = this.getPossibleMoves(playingBoard, WHITE);
+        if (movesPlayer.size() == 0 && movesComputer.size() == 0) noMoves = true;
+        for (int i = 0; i < playingBoard.length; i++) {
+            for (int j = 0; j < playingBoard.length; j++) {
+                if (playingBoard[j][i] == EMPTY) noEmpty = false;
+            }
+        }
+        if (noEmpty) {
+            System.out.println("Game Over");
+            return true;
+        }
+        if (noMoves) {
+            System.out.println("Game Over");
+            System.out.println("No moves possible");
+            return true;
+        }
+        return false;
+        //return !isPlaying;
     }
 
     public boolean computerPlays() {
