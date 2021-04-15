@@ -1,4 +1,7 @@
+import AI.AI;
+import AI.AbstractAI;
 import AI.AIv2;
+import AI.AIv3;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -34,9 +37,11 @@ public class OthelloGameController extends GUIController {
     @FXML
     private Button giveUpButton;
 
+    private String difficulty;
+
     //int side = 0;
     private final Reversie reversie;
-    private final AIv2 ai;
+    private final AbstractAI ai;
 
     private final NetworkClient networkClient;
 
@@ -120,6 +125,33 @@ public class OthelloGameController extends GUIController {
         }
     }
 
+    // constructor for singleplayer
+    public OthelloGameController(NetworkClient networkClient, String difficulty) {
+        int playerColor, computerColor;
+        // sets networkclient to null anyway
+        this.networkClient = networkClient;
+
+        playerColor = Reversie.BLACK;
+        computerColor = Reversie.WHITE;
+
+        reversie = new Reversie(computerColor, playerColor, this);
+        switch (difficulty)
+        {
+            case "Easy":
+                ai = new AI(reversie);
+                break;
+            case "Medium":
+                ai = new AIv2(reversie);
+                break;
+            case "Hard":
+                ai = new AIv3(reversie);
+                break;
+            default:
+                ai = new AI(reversie);
+                break;
+        }
+    }
+
     @FXML
     private void initialize() {
         fillGrid();
@@ -132,24 +164,40 @@ public class OthelloGameController extends GUIController {
 
         giveUpButton.setOnAction(value ->
         {
-            switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
+            giveUpButton.setText("return");
+            if(isMultiplayer())
+            {
+                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new SpMenuController());
+            }
+            else
+            {
+                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
+            }
+
         });
     }
 
-    public void setScore(int blackScore, int whiteScore) {
-        if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
-            playerOne.setText("(" + networkClient.getPlayerName() + ") Black: " + blackScore);
-            playerTwo.setText("(" + networkClient.getOpponentName() + ") White: " + whiteScore);
-        }
-        else {
-            playerOne.setText("(" + networkClient.getOpponentName() + ") Black: " + blackScore);
-            playerTwo.setText("(" + networkClient.getPlayerName() + ") White: " + whiteScore);
+
+        public void setScore ( int blackScore, int whiteScore) {
+            if (isMultiplayer()) {
+                if (networkClient.getPlayerName().equals(networkClient.getFirstPlayer())) {
+                    playerOne.setText("(" + networkClient.getPlayerName() + ") Black: " + blackScore);
+                    playerTwo.setText("(" + networkClient.getOpponentName() + ") White: " + whiteScore);
+                } else {
+                    playerOne.setText("(" + networkClient.getOpponentName() + ") Black: " + blackScore);
+                    playerTwo.setText("(" + networkClient.getPlayerName() + ") White: " + whiteScore);
+                }
+            }
+            else
+            {
+                playerOne.setText("Black: " + blackScore);
+                playerTwo.setText("White: " + whiteScore);
+            }
         }
 
-    }
 
     public void updateCurrentPlayer(int side) {
-        if (side == 0) {
+        if (side == 1) {
             currentPlayer.setText("Current Player: Black");
         } else {
             currentPlayer.setText("Current Player: White");
@@ -188,14 +236,38 @@ public class OthelloGameController extends GUIController {
                 node.setOpacity(1);
                 side = side==0 ? 1 : 0;*/
 
-                reversie.playMove(x, y, reversie.side);
+                if (!isMultiplayer()) {
+                    ArrayList<int[]> moves = reversie.getPossibleMoves(reversie.getBoard(), reversie.side);
+                    if (moves.size()==0) {
+                        reversie.playMove(-1, -1, reversie.side);
+                        System.out.println("No moves available");
+                        System.out.println("Move for: "+reversie.side);
+                    }
+                    // player
+                    if (reversie.side==reversie.BLACK) {
+                        if (reversie.isLegal(x, y, reversie.side)) {
+                            reversie.playMove(x, y, reversie.side);
+                        }
+                    }
+                    if(reversie.gameOver()) {
+                        currentPlayer.setText(reversie.winner() + " wins the match");
+                    }
+                    // ai do move
+                    if (reversie.side==reversie.WHITE) {
+                        AIBest bestMove = ai.chooseMove(reversie.WHITE);
+                        reversie.playMove(bestMove.row, bestMove.column, reversie.WHITE);
+                    }
+                    if(reversie.gameOver()) {
+                        currentPlayer.setText(reversie.winner() + " won the match");
+                    }
+                }
 
                 if (isMultiplayer())
                     networkClient.move(x, y, NetworkClient.GameType.Reversi);
             }
         });
         gridPane.add(node, x, y);
-        gridPane.add(new Text(String.valueOf(NetworkClient.localToNetworkCoordinates(x, y, NetworkClient.GameType.Reversi))), x, y);
+        //gridPane.add(new Text(String.valueOf(NetworkClient.localToNetworkCoordinates(x, y, NetworkClient.GameType.Reversi))), x, y);
         GridPane.setHalignment(node, HPos.CENTER);
     }
 

@@ -3,7 +3,7 @@ package AI;
 import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 
-public class AIv3 {
+public class AIv3 extends AbstractAI{
 
     public Game game;
 
@@ -11,6 +11,7 @@ public class AIv3 {
         this.game = game;
     }
 
+    @Override
     public AIBest chooseMove(int side) {
         long startTime = System.currentTimeMillis();
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;

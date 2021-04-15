@@ -186,15 +186,23 @@ public class Reversie extends Game {
         return output;
     }
 
-    public void winner() {
+    public String winner() {
         findAllScores();
         if (blackScore > whiteScore) {
-            System.out.println("Black Wins!");
+            return "Black";
         } else if (blackScore < whiteScore) {
-            System.out.println("White Wins!");
+            return "White";
         } else {
-            System.out.println("It's a draw");
+            return "Nobody";
         }
+    }
+
+    public boolean isLegal(int x, int y, int side) {
+        ArrayList<int[]> moves = getPossibleMoves(getBoard(), side);
+        for (int[] move : moves) {
+            if (move[0]==x && move[1]==y) return true;
+        }
+        return false;
     }
 
     /**
@@ -220,28 +228,27 @@ public class Reversie extends Game {
      */
     @Override
     public boolean gameOver() {
-//        boolean noEmpty = true;
-//        boolean noMoves = false;
-//        ArrayList<int[]> movesPlayer = this.getPossibleMoves(playingBoard, this.PLAYER);
-//        ArrayList<int[]> movesComputer = this.getPossibleMoves(playingBoard, WHITE);
-//        if (movesPlayer.size() == 0 && movesComputer.size() == 0) noMoves = true;
-//        for (int i = 0; i < playingBoard.length; i++) {
-//            for (int j = 0; j < playingBoard.length; j++) {
-//                if (playingBoard[j][i] == EMPTY) noEmpty = false;
-//            }
-//        }
-//        if (noEmpty) {
-//            System.out.println("Game Over");
-//            return true;
-//        }
-//        if (noMoves) {
-//            System.out.println("Game Over");
-//            System.out.println("No moves possible");
-//            return true;
-//        }
-//        return false;
-
-        return !isPlaying;
+        boolean noEmpty = true;
+        boolean noMoves = false;
+        ArrayList<int[]> movesPlayer = this.getPossibleMoves(playingBoard, this.PLAYER);
+        ArrayList<int[]> movesComputer = this.getPossibleMoves(playingBoard, WHITE);
+        if (movesPlayer.size() == 0 && movesComputer.size() == 0) noMoves = true;
+        for (int i = 0; i < playingBoard.length; i++) {
+            for (int j = 0; j < playingBoard.length; j++) {
+                if (playingBoard[j][i] == EMPTY) noEmpty = false;
+            }
+        }
+        if (noEmpty) {
+            System.out.println("Game Over");
+            return true;
+        }
+        if (noMoves) {
+            System.out.println("Game Over");
+            System.out.println("No moves possible");
+            return true;
+        }
+        return false;
+        //return !isPlaying;
     }
 
     public boolean computerPlays() {
@@ -312,7 +319,7 @@ public class Reversie extends Game {
             region1Counter++;
         }
 
-        return side == COMPUTER ? score : -score;
+        return side == PLAYER ? score : -score;
     }
 
 

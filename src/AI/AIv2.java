@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AIv2 {
+public class AIv2 extends AbstractAI {
     private Game game;
 
     private static ConcurrentHashMap<int[][], TableEntry> transpositionTable;
@@ -17,6 +17,7 @@ public class AIv2 {
         this.transpositionTable = new ConcurrentHashMap<>();
     }
 
+    @Override
     public AIBest chooseMove(int side) {
         long startTime = System.currentTimeMillis();
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
@@ -108,7 +109,7 @@ public class AIv2 {
             ArrayList<int[]> moves = game.getPossibleMoves(board, side);
 
 
-            if (moves.size() == 0 || depth == 11 || System.currentTimeMillis() - startTime > 8500) {
+            if (moves.size() == 0 || depth == 5 || System.currentTimeMillis() - startTime > 8500) {
                 return new MinMaxResult(check, depth);
             }
 
@@ -126,12 +127,12 @@ public class AIv2 {
 
                 MinMaxResult result = miniMax(check, opp, side, depth + 1, move_row, move_column, board, alpha, beta);
 //                depth = result.depth;
-                if (side == game.COMPUTER) { // todo: replace with boolean
+                if (side == game.PLAYER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
                     alpha = Math.max(alpha, result.points);
                     if (beta <= alpha)
                         break;
-                } else if (side == game.PLAYER) {
+                } else if (side == game.COMPUTER) {
                     min = Math.min(min, result.points);
                     beta = Math.min(beta, result.points);
                     if (beta <= alpha)
