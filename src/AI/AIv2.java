@@ -126,12 +126,12 @@ public class AIv2 {
 
                 MinMaxResult result = miniMax(check, opp, side, depth + 1, move_row, move_column, board, alpha, beta);
 //                depth = result.depth;
-                if (side == game.COMPUTER) { // todo: replace with boolean
+                if (side == game.PLAYER) { // todo: replace with boolean
                     max = Math.max(max, result.points);
                     alpha = Math.max(alpha, result.points);
                     if (beta <= alpha)
                         break;
-                } else if (side == game.PLAYER) {
+                } else if (side == game.COMPUTER) {
                     min = Math.min(min, result.points);
                     beta = Math.min(beta, result.points);
                     if (beta <= alpha)

@@ -312,7 +312,7 @@ public class Reversie extends Game {
             region1Counter++;
         }
 
-        return side == COMPUTER ? score : -score;
+        return side == PLAYER ? score : -score;
     }
 
 
