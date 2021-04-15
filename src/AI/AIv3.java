@@ -12,6 +12,7 @@ public class AIv3 {
     }
 
     public AIBest chooseMove(int side) {
+        long startTime = System.currentTimeMillis();
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
         int bRow = -1;
         int bColumn = -1;
@@ -31,7 +32,7 @@ public class AIv3 {
 
             board = game.place(board, column, row, side);
 
-            MiniMax miniMax = new MiniMax(board, opp, side, 2, row, column);
+            MiniMax miniMax = new MiniMax(board, side, opp, 2, row, column, move.length, startTime);
             Thread thread = new Thread(miniMax);
             thread.start();
             miniMaxArray.add(miniMax);
@@ -65,10 +66,16 @@ public class AIv3 {
                 bRow = miniMax.getRow();
                 bColumn = miniMax.getColumn();
                 value = result.points;
+            }
+
+            if (result.depth > bestDepth) {
                 bestDepth = result.depth;
             }
+
+            miniMax.shutdown();
         }
 
+        System.out.println("Depth2 = " + bestDepth);
         return new AIBest(value, bRow, bColumn, bestDepth);
     }
 
@@ -77,31 +84,41 @@ public class AIv3 {
         // return value
         private volatile MinMaxResult value;
 
+        private ForkJoinPool forkJoinPool;
+
         private int[][] board;
         private int side;
         private int opp;
         private int depth;
         private int row;
         private int column;
+        private int divider;
+        private long start;
 
-        public MiniMax(int[][] board, int side, int opp, int depth, int row, int column) {
+        public MiniMax(int[][] board, int side, int opp, int depth, int row, int column, int divider, long start) {
             this.board = board;
             this.side = side;
             this.opp = opp;
             this.depth = depth;
             this.row = row;
             this.column = column;
+            this.divider = divider;
+            this.start = start;
         }
 
         @Override
         public void run() {
             int nThreads = Runtime.getRuntime().availableProcessors();
 
-            ForkJoinPool forkJoinPool = new ForkJoinPool(nThreads);
+            forkJoinPool = new ForkJoinPool(nThreads / this.divider);
 
-            value = forkJoinPool.invoke(new MiniMaxNode(0, game, board, opp, side, 2, row, column, Integer.MIN_VALUE, Integer.MAX_VALUE));
+            value = forkJoinPool.invoke(new MiniMaxNode(0, game, board, opp, side, 2, row, column, Integer.MIN_VALUE, Integer.MAX_VALUE, start));
+            System.out.println(value.depth);
+            forkJoinPool.shutdown();
         }
 
+        public void shutdown() {
+        }
 
         public MinMaxResult getValue() {
             return value;

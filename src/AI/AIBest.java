@@ -4,7 +4,7 @@ public class AIBest {
     public int row;
     public int column;
     int val;
-    int depth;
+    public int depth;
 
     public AIBest(int v) {
         this(v, 0, 0, 0);

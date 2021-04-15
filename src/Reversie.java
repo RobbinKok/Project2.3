@@ -296,10 +296,10 @@ public class Reversie extends Game {
     @Override
     public int checkScore(int score, int[][] board, int row, int column, int depth) {
         if (isRegion2(column, row)) {
-            score += 2;
+            score += 1;
             region2Counter++;
         } else if (isRegion4(column, row)) {
-            score += -50;
+            score += -5;
             region4Counter++;
         } else if (isRegion3(column, row)) {
             score += 5;
@@ -308,7 +308,7 @@ public class Reversie extends Game {
             score += 10;
             region5Counter++;
         } else {
-            score += 3;
+            score += 1;
             region1Counter++;
         }
 
