@@ -163,13 +163,7 @@ public class NetworkClient extends Observable {
         else if (type.equals(GameType.TicTacToe))
             dimension = 3;
 
-        int networkCoordinate = 0;
-        for (int i = 0; i < y; i++) {
-            networkCoordinate += dimension;
-        }
-        networkCoordinate += x;
-
-        return networkCoordinate;
+        return y * dimension + x;
     }
 
     public static int[] networkToLocalCoordinates(int coord, GameType type) {
