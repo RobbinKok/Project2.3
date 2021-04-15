@@ -1,4 +1,7 @@
+import AI.AI;
+import AI.AbstractAI;
 import AI.AIv2;
+import AI.AIv3;
 import AI.AIBest;
 
 import javafx.application.Platform;
@@ -34,9 +37,11 @@ public class OthelloGameController extends GUIController {
     @FXML
     private Button giveUpButton;
 
+    private String difficulty;
+
     //int side = 0;
     private final Reversie reversie;
-    private final AIv2 ai;
+    private final AbstractAI ai;
 
     private final NetworkClient networkClient;
 
@@ -120,6 +125,33 @@ public class OthelloGameController extends GUIController {
         }
     }
 
+    // constructor for singleplayer
+    public OthelloGameController(NetworkClient networkClient, String difficulty) {
+        int playerColor, computerColor;
+        // sets networkclient to null anyway
+        this.networkClient = networkClient;
+
+        playerColor = Reversie.BLACK;
+        computerColor = Reversie.WHITE;
+
+        reversie = new Reversie(computerColor, playerColor, this);
+        switch (difficulty)
+        {
+            case "Easy":
+                ai = new AI(reversie);
+                break;
+            case "Medium":
+                ai = new AIv2(reversie);
+                break;
+            case "Hard":
+                ai = new AIv3(reversie);
+                break;
+            default:
+                ai = new AI(reversie);
+                break;
+        }
+    }
+
     @FXML
     private void initialize() {
         fillGrid();
@@ -132,7 +164,16 @@ public class OthelloGameController extends GUIController {
 
         giveUpButton.setOnAction(value ->
         {
-            switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
+            giveUpButton.setText("return");
+            if(isMultiplayer())
+            {
+                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/Lobby.fxml", new SpMenuController());
+            }
+            else
+            {
+                switchScene(giveUpButton.getScene(), System.getProperty("user.dir") + "/src/resources/SingleplayerMenu.fxml", new SpMenuController());
+            }
+
         });
     }
 
@@ -156,7 +197,7 @@ public class OthelloGameController extends GUIController {
 
 
     public void updateCurrentPlayer(int side) {
-        if (side == 0) {
+        if (side == 1) {
             currentPlayer.setText("Current Player: Black");
         } else {
             currentPlayer.setText("Current Player: White");
@@ -226,7 +267,7 @@ public class OthelloGameController extends GUIController {
             }
         });
         gridPane.add(node, x, y);
-        gridPane.add(new Text(String.valueOf(NetworkClient.localToNetworkCoordinates(x, y, NetworkClient.GameType.Reversi))), x, y);
+        //gridPane.add(new Text(String.valueOf(NetworkClient.localToNetworkCoordinates(x, y, NetworkClient.GameType.Reversi))), x, y);
         GridPane.setHalignment(node, HPos.CENTER);
     }
 

@@ -13,7 +13,7 @@ public class SpMenuController extends GUIController
     private ChoiceBox<String> difficultyChoiceBox;
 
     String gameType = "Othello";
-
+    String difficulty = "Easy";
     @FXML
     private void initialize()
     {
@@ -35,7 +35,7 @@ public class SpMenuController extends GUIController
         difficultyChoiceBox.setOnAction(value -> 
         {
             String selectedDifficulty = difficultyChoiceBox.getSelectionModel().getSelectedItem();
-            System.out.println("Selected Difficulty: " + selectedDifficulty);
+            difficulty = selectedDifficulty;
         });
 
         returnButton.setOnAction(value ->

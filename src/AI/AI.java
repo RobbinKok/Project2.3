@@ -3,7 +3,7 @@ package AI;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AI {
+public class AI extends AbstractAI{
 
     private Game game;
 
@@ -12,6 +12,7 @@ public class AI {
         this.game = game;
     }
 
+@Override
     public AIBest chooseMove(int side) {
         int opp = side == game.PLAYER ? game.COMPUTER : game.PLAYER;
         int bX = -1;

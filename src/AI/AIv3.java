@@ -3,7 +3,7 @@ package AI;
 import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 
-public class AIv3 {
+public class AIv3 extends AbstractAI{
 
     public Game game;
 
